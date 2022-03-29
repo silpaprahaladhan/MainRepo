@@ -1,0 +1,275 @@
+﻿@model Nirast.Pcms.Web.Models.HolidayViewModel
+@{
+    ViewBag.Title = "Holiday Settings";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<head>
+    @*<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>*@
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script type="text/javascript" language="javascript" src="~/js/CustomScript.js"></script>
+
+    <link href="~/css/CustomStyles.css" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
+
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="~/js/jquery.timepicker.min.js"></script>
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+</head>
+
+<script>
+
+    $(function () {
+        var year = (new Date).getFullYear();
+        $('#HolidayDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: '@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()',
+            minDate: new Date(year, 0, 1)
+        });
+    });
+
+    var changeDateFormat = function (dateToConvert) {
+        var date = new Date(Number(dateToConvert.match(/\d+/)[0]));
+        var day = date.getDate();
+        day = day = (day < 10) ? ("0" + day) : day;
+        var month = date.getMonth() + 1;
+        month = (month < 10) ? ("0" + month) : month;
+        var dateStr = month + "/" + day + "/" + date.getFullYear();
+        return dateStr;
+    }
+
+    function LoadCountryStates() {
+        showHoliday();
+        $.ajax({
+            url: '/Admin/LoadStatesByCountryId',
+            type: "GET",
+            dataType: "JSON",
+            data: { CountryId: $('#CountryId').val() },
+            success: function (data) {
+                $("#StateId").html(""); // clear before appending new list
+                $("#StateId").append(
+                    $('<option></option>').val(0).html("--Select--"));
+                $.each($.parseJSON(data), function (i, state) {
+
+                    $("#StateId").append(
+                        $('<option></option>').val(state.StateId).html(state.Name));
+                });
+            },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while populating the States for CountryId: ' + countryId + '. Function: LoadCountryStates(). Page: HolidaySettings.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+                    }
+        });
+    }
+</script>
+
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["PaySuccess"] != null)
+                    {
+                        <p class="alert alert-success statusmessage">@TempData["PaySuccess"]</p>
+                    }
+                    @if (TempData["PayFailure"] != null)
+                    {
+                        <p class="alert alert-danger statusmessage">@TempData["PayFailure"]</p>
+                    }
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Holidays Pay Settings</h4>
+                        </div>
+                        <div class="panel-body">
+
+                            @using (Html.BeginForm("CreateHolidayPay", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.Label("Holiday Pay (In Times)", new { @class = "control-label label-style marginTopStyle" })
+                                            @Html.TextBoxFor(Model => Model.HolidayPayTimes, (String)ViewBag.PayTimes, new { @class = "form-control labelStyle", @autocomplete = "off", ondrop = "return false", onpaste = "return false", onkeypress = "return isNumberKey(this, event)" })
+
+                                        </div>
+
+                                    </div>
+                                    <div class="text-center form-group">
+                                        @if (ViewBag.AllowEdit)
+                                        {
+                                            <input type="submit" class="btn btn-primary  m-t-10" value="Save">
+                                            <label class="btn btn-primary  m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                        }
+                                        else
+                                        {
+                                            <div class="wrapper">
+                                                <input type="submit" class="btn btn-primary  m-t-10" value="Save" disabled>
+                                                <label class="btn btn-primary  m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Holiday Settings</h4>
+                        </div>
+                        <div class="panel-body">
+                            @if (TempData["Success"] != null)
+                            {
+                                <p class="alert alert-success  statusmessage">@TempData["Success"]</p>
+                            }
+                            @if (TempData["Failure"] != null)
+                            {
+                                <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                            }
+
+                            @using (Html.BeginForm("CreateHoliday", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            @Html.Label("Country", new { @class = "control-label label-style marginTopStyle" })
+                                            @if (ViewData["CountryList"] != null)
+                                            {
+                                                @Html.DropDownListFor(model => model.CountryId, ViewData["CountryList"] as SelectList, "--Select--", new { @class = "form-control labelStyle", @onchange = "LoadCountryStates()" })
+                                            }
+                                            @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "col-md-8 no-padding required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.Label("State", new { @class = "control-label label-style marginTopStyle" })
+                                            @Html.DropDownListFor(model => model.StateId, ViewData["StateList"] as SelectList, "--Select--", new { @class = "form-control labelStyle", @onchange = "showHoliday()" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.TextBoxFor(Model => Model.HolidayId, "", new { @class = "hidden" })
+                                            @Html.Label("Holiday", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(Model => Model.HolidayName, "", new { @class = "form-control labelStyle", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.HolidayName, "", new { @class = "col-md-8 no-padding required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.Label("Date", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(Model => Model.HolidayDate, "", new { @class = "datetimepicker form-control labelStyle", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.HolidayDate, "", new { @class = "col-md-8 no-padding required" })
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="text-center form-group">
+                                    @if (ViewBag.AllowEdit)
+                                    {
+                                        <input type="submit" class="btn btn-primary m-t-10" value="Save">
+                                        <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                    }
+                                    else
+                                    {
+                                        <div class="wrapper">
+                                            <input type="submit" class="btn btn-primary m-t-10" value="Save" disabled>
+                                            <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <label id="lblyear" class="label-style">Choose a year :</label>
+                    @Html.DropDownList("ddlHolidayYear", ViewData["listYears"] as SelectList, new { @class = "form-control col-md-12 labelStyle" })
+                </div>
+                <div class="col-lg-1">
+                    <label id="lblyear" class="label-style" ></label>
+                    <button class="btn btn-primary m-t-15 m-b-0" type="button" id="overrideHoliday" title="Override current year holidays to next year." onclick="overrideHoliday()">Override Holiday</button>
+                </div>
+                <div id="divHolidayList" class="col-lg-12 col-md-12 col-sm-12">
+                    @*@{Html.RenderAction("HolidayList");}*@
+                </div>
+            }
+
+
+        </div>
+    </div>
+</div>
+<div id="spinner">
+
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            $('#HolidayList').DataTable({
+                "responsive": "true",
+                "pagingType": "full_numbers"
+            });
+        });
+        showHoliday();
+    });
+    $('#ddlHolidayYear').on('change', function () {
+        showHoliday();
+    })
+
+    function showHoliday() {
+        var holidayYear = $('#ddlHolidayYear').val();
+        var countryId = $('#CountryId').val();
+        var stateId = $('#StateId').val();
+        showProgress();
+        $.ajax({
+            url: '/Admin/HolidayList',
+            type: "POST",
+            data: {
+                HolidayId: 0,
+                HolidayYear: holidayYear,
+                CountryId: countryId,
+                StateId: stateId,
+            },
+            success: function (data) {
+                $("#divHolidayList").html(""); // clear before appending new list
+                $("#divHolidayList").html(data);
+                spinnerVisible = true;
+                hideProgress();
+            },
+            error: function (data) {
+                spinnerVisible = true;
+                hideProgress();
+                logError(data.statusText + ' - Error occurred while populating the Holidays. Function: showHoliday(). Page: HolidaySettings.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+
+    function overrideHoliday() {
+        showProgress();
+        $.ajax({
+            url: '/Admin/OverrideHoliday',
+            type: "GET",
+            success: function (data) {
+                spinnerVisible = true;
+                hideProgress();
+                reload();
+            },
+            error: function (data) {
+                spinnerVisible = true;
+                hideProgress();
+                logError(data.statusText + ' - Error occurred while overriding the Holidays. Function: overrideHoliday(). Page: HolidaySettings.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+                reload();
+            }
+        });
+    }
+</script>
+
+
+

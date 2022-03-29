@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Notification";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<h2>Notification</h2>
+
+<form role="form">
+
+    <button type="button" class="btn btn-primary" id="send-notification">Send to All</button>
+</form>
+
+
+
+@{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            $(function () {     //execute on document ready
+
+               //access the global hubConnector object created by master page
+                window.notifyApp.hubConnector.done(function () {
+
+                    $('#send-notification').click(function () {
+
+                        //Call the notifyAll method on the hub. Notice camelCasing on the method name.
+                        $.connection.notificationHub.server.notifyAll('', 'Notify page', '');
+
+                        //Clear values and reset focus for next comment.
+                        $('#title').val('').focus();
+                        $('#message').val('');
+
+                    });   //end send notification click handler
+
+                });     //end hub started handler
+            });
+        });//end document ready event handler
+    </script>
+}

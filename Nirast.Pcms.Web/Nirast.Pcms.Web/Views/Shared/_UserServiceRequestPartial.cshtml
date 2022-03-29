@@ -1,0 +1,162 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.BookingHistoryViewModel>
+    <h5 class="title-1 m-b-25">Notifications</h5>
+    <div class="" style="padding-bottom:30px;">
+        <div class="table-responsive table-responsive-data2">
+            <table class="table table-data2">
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var pay in Model)
+                        {
+                            <tr class="notification-row">
+
+                                <td>
+                                    <div>
+                                        <div class="notification-btn--DivLabel name">
+                                            <label>@pay.BookingDateString</label>
+                                            <span> | </span><label>@pay.BookedUser</label><span> | </span><label>@pay.UserLocation</label>
+                                        </div>
+                                        <div>
+                                            @pay.BookingPurpose
+                                        </div>
+
+                                        <div class="notification-btn--div">
+                                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                                @Html.ActionLink("View Details", "UserBookingDetails", "PublicUser", null, null)
+                                            </button>
+                                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                                Accept
+                                            </button>
+                                            <button class="notification-btn notification-btn--blue notification-btn--small">
+                                                Decline
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr class="spacer"></tr>
+
+                        }
+                    }
+                        @*<tr class="tr-shadow">
+
+                <td>
+                    <div>
+                        <div class="notification-btn--DivLabel">
+                            <label>05-24-2018</label>
+                            <span> | </span><label>Adams Scott</label><span> | </span><label>Florida</label>
+                        </div>
+                        <div>
+                            I am thinking about having an in house nanny take care of an infant as I work from home.Expecting joining immediately. It will be better, if you are willing to stay with us
+                        </div>
+
+                        <div class="notification-btn--div">
+                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                @Html.ActionLink("View Details", "UserBookingDetails", "PublicUser", null, null)
+                            </button>
+                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                Accept
+                            </button>
+                            <button class="notification-btn notification-btn--blue notification-btn--small">
+                                Decline
+                            </button>
+                        </div>
+                    </div>
+                </td>
+
+                <td></td>
+            </tr>*@
+                        @*<tr class="spacer"></tr>
+            <tr class="tr-shadow">
+
+                <td>
+                    <div>
+                        <div class="notification-btn--DivLabel">
+                            <label>05-24-2018</label>
+                            <span> | </span><label>Jennifer Anderson</label><span> | </span><label>New York</label>
+                        </div>
+                        <div>
+                            An experienced professional nanny for a full-time, long-term position.Expecting joining immediately. It will be better, if you are willing to stay with us
+                        </div>
+
+                        <div class="notification-btn--div">
+                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                @Html.ActionLink("View Details", "UserBookingDetails", "PublicUser", null, null)
+                            </button>
+                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                Accept
+                            </button>
+                            <button class="notification-btn notification-btn--blue notification-btn--small">
+                                Decline
+                            </button>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <tr class="spacer"></tr>
+            <tr class="tr-shadow">
+
+                <td>
+                    <div>
+                        <div class="notification-btn--DivLabel">
+                            <label>05-24-2018</label>
+                            <span> | </span><label>Thomas Lopez</label><span> | </span><label>Virginia</label>
+                        </div>
+                        <div>
+                            I need an experienced caretaker for my 70 year old father, who is half paralized.Expecting joining immediately.
+                            It will be better, if you are willing to stay with us.
+                        </div>
+
+                        <div class="notification-btn--div">
+                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                @Html.ActionLink("View Details", "UserBookingDetails", "PublicUser", null, null)
+                            </button>
+                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                Accept
+                            </button>
+                            <button class="notification-btn notification-btn--blue notification-btn--small">
+                                Decline
+                            </button>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <tr class="spacer"></tr>
+            <tr class="tr-shadow">
+
+                <td>
+                    <div>
+                        <div class="notification-btn--DivLabel">
+                            <label>05-24-2018</label>
+                            <span> | </span><label>Thomas Lopez</label><span> | </span><label>Virginia</label>
+                        </div>
+                        <div>
+                            <span>
+                                My husband is 95 yrs old retired and became disabled at age 85 due to stroke.I need a
+                                full-time house nurse for him .You can stay with us.
+                            </span>
+                        </div>
+
+                        <div class="notification-btn--div">
+                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                @Html.ActionLink("View Details", "UserBookingDetails", "PublicUser", null, null)
+                            </button>
+                            <button class="notification-btn notification-btn--green notification-btn--small">
+                                Accept
+                            </button>
+                            <button class="notification-btn notification-btn--blue notification-btn--small">
+                                Decline
+                            </button>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+            </tr>*@
+                    </tbody>
+            </table>
+        </div>
+    </div>
+

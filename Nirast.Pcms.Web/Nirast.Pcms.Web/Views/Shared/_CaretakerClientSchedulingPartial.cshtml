@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.CaretakerScheduleList>
+@*<h6>Client Schedulings</h6>*@
+   
+<div class=" table--no-card table-responsive  m-b-40">
+    <table class="table table-borderless table-striped table-earning padding-top-10 table-font" id="Scheduling">
+        <thead>
+            <tr>
+                <th>Start Date &amp; Time</th>
+                <th>Client Name</th>
+                <th>Work Mode</th>
+                <th>Time Shift</th>
+                <th>Description</th>
+
+            </tr>
+        </thead>
+        <tbody class="table-font">
+
+            @if (Model != null)
+            {
+                if (Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.StartDateTime</td>
+                            <td>@item.ClientName</td>
+                            <td>@item.WorkShiftName</td>
+                            <td>@item.TimeShiftName</td>
+                            <td>@((item.Description == null) ? (item.Description2 == null ? "NA" : item.Description2) : item.Description)</td>
+                            @*<td>
+                                                    <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" data-target="#modal-default"><span class="fa fa-edit"></span></button>
+
+                                    <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                                </td>*@
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>No record found</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>No record found</td>
+                </tr>
+            }
+        </tbody>
+
+
+    </table>
+</div>

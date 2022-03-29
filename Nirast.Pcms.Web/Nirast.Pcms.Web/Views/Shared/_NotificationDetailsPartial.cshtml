@@ -1,0 +1,133 @@
+﻿@model Nirast.Pcms.Web.Models.NotificationDetails
+<div class="form-group col-md-12 padding-top-15">
+    <div class="col-md-6">
+        @Html.Label("Booking Date", new { @class = "control-label labelStyle bold-heading" })
+        @*@Html.DisplayFor(modelIte => modelIte.BookingDate, "{dd/MM/yyyy}", new { @class = "col -md-6 control-label labelStyle" })*@
+        <label class="col-md-6 form-control labelStyle">@Model.BookingDate</label>
+    </div>
+    <div class="col-md-6">
+
+        @Html.Label("Care Recipient", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@Model.CareRecipient</label>
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="col-md-6">
+        @Html.Label("Location", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@(Model.Location == string.Empty || Model.Location == null ? "NA" : Model.Location)</label>
+    </div>
+    <div class="col-md-6">
+        @Html.Label("Phone No", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@Model.Phone1</label>
+
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="col-md-6">
+        @Html.Label("Caregiver", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@Model.BookedUser</label>
+    </div>
+    <div class="col-md-6">
+        @Html.Label("Service", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@Model.Service</label>
+
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="col-md-6">
+        @Html.Label("From Date", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@Model.FromDateTime.ToString("MM/dd/yyyy")</label>
+        @*@Html.DisplayFor(modelIte => modelIte.FromDateTime.ToString("MM/dd/yyyy"), new { @class = "col-md-6 control-label labelStyle" })*@
+    </div>
+    <div class="col-md-6">
+        @Html.Label("To Date", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@Model.ToDateTime.ToString("MM/dd/yyyy")</label>
+        @*@Html.DisplayFor(modelIte => modelIte.BookingStartTime, new { @class = "col-md-6 control-label labelStyle" })*@
+    </div>
+
+</div>
+
+
+<div class="form-group col-md-12">
+    <div class="col-md-6">
+        @Html.Label("From Time", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@Model.FromDateTime.ToString("hh:mm tt")</label>
+    </div>
+    <div class="col-md-6">
+        @Html.Label("To Time", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@Model.ToDateTime.ToString("hh:mm tt")</label>
+        @*@Html.DisplayFor(modelIte => modelIte.BookingStartTime, new { @class = "col-md-6 control-label labelStyle" })*@
+    </div>
+
+</div>
+
+<div class="form-group col-md-12">
+    <div class="col-md-6">
+        @Html.Label("Booking Status", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col-md-6 form-control labelStyle">@Model.Status</label>
+
+    </div>
+
+</div>
+
+<div class="form-group col-md-12">
+    <table class="table table-striped bordered-table" style="font-size:17px;">  
+        <thead>
+            <tr>
+                <th class="custom-table-header" colspan="2">Questionnaire Details</th>
+            </tr>
+        </thead>
+        <tr>
+            <td class="p-b-5 col-md-6">
+                @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 1).FirstOrDefault() == null ? "What are the services required?" : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 1).FirstOrDefault().Questions))
+            </td>
+            <td class="p-b-5 col-md-6">
+                @(Model.Answer1 == null ? "NA" : Model.Answer1)
+            </td>
+        </tr>
+        <tr>
+            <td class="p-b-5 col-md-6">
+                @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 2).FirstOrDefault() == null ? "Explain the health condition of Care Receipient." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 2).FirstOrDefault().Questions))
+            </td>
+            <td class="p-b-5 col-md-6">
+                @(Model.Answer2 == null ? "NA" : Model.Answer2)
+            </td>
+        </tr>
+        <tr>
+            <td class="p-b-5 col-md-6">
+                @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 3).FirstOrDefault() == null ? "Any medication history? If any." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 3).FirstOrDefault().Questions))
+            </td>
+            <td class="p-b-5 col-md-6">
+                @(Model.Answer3 == null ? "NA" : Model.Answer3)
+            </td>
+        </tr>
+        <tr>
+            <td class="p-b-5 col-md-6">
+                @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 4).FirstOrDefault() == null ? "Explain the allergy details.If any." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 4).FirstOrDefault().Questions))
+            </td>
+            <td class="p-b-5 col-md-6">
+                @(Model.Answer4 == null ? "NA" : Model.Answer4)
+            </td>
+        </tr>
+        <tr>
+            <td class="p-b-5 col-md-6">
+                @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 5).FirstOrDefault() == null ? "Extra services required? If any." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 5).FirstOrDefault().Questions))
+            </td>
+            <td class="p-b-5 col-md-6">
+                @(Model.Answer5 == null ? "NA" : Model.Answer5)
+            </td>
+        </tr>
+        <tr>
+            <td class="p-b-5 col-md-6">
+                @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 6).FirstOrDefault() == null ? "Any remarks?" : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 6).FirstOrDefault().Questions))
+            </td>
+            <td class="p-b-5 col-md-6">
+                @(Model.Answer6 == null ? "NA" : Model.Answer6)
+            </td>
+        </tr>
+    </table>
+</div>
+

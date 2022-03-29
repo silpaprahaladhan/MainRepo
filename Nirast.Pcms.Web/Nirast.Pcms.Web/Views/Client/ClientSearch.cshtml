@@ -1,0 +1,499 @@
+﻿@using Nirast.Pcms.Web.Models;
+@model List<Nirast.Pcms.Web.Models.ClientModel>
+@{
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+    var country = Session["CountryId"].ToString();
+    var state = Session["StateID"].ToString();
+    var city = Session["CityIdk"].ToString();
+}
+<head>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+    <meta name="viewport" content="width=device-width" />
+    <title>ClientSearch</title>
+</head>
+@*<div class="product-easy">*@
+@*<div class="container">*@
+<div class="container animsition">
+    @if (ViewBag.Error != null)
+    {
+        <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+    }
+    else
+    {
+        <div class="row profile_Style">
+            <div class="panel panel-default report-style " id="main">
+                <div class="panel-heading">
+                    <h4>Select Location</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-2" id="countrydiv">
+                                <label class="label-style" id="lblcountry">Country</label>
+                                @Html.DropDownListFor(model => model[0].CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                @Html.ValidationMessageFor(model => model[0].CountryId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="statediv">
+                                <label class="label-style">State</label>
+                                @Html.DropDownListFor(model => model[0].StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                @Html.ValidationMessageFor(model => model[0].StateId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="citydiv">
+                                <label class="label-style">City</label>
+                                @Html.DropDownListFor(model => model[0].CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                @Html.ValidationMessageFor(model => model[0].CityId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="branchdiv">
+                                <label class="label-style">Franchise/Branch</label>
+                                @Html.DropDownListFor(model => model[0].BranchId2, ViewData["ListBranch"] as SelectList, "--Select--", new { @Id = "Branch1", @class = "form-control labelStyle"})
+                                @Html.ValidationMessageFor(model => model[0].BranchId2, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-3" style="margin-top:39px;">
+                                <button class="btn btn-primary float-left editButton" title="Edit" onclick="searchClientByLocation()">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="equal-height-panels">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["Success"] != null)
+                    {
+                        <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                    }
+                    @if (TempData["Failure"] != null)
+                    {
+                        <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                    }
+
+                    <h3 class="h4-label">Manage Clients</h3>
+                    <div class="col-lg-12 col-md-12 col-sm-12 ">
+                        <div class="row padding-top-10">
+                            <div class="col-lg-12">
+                                <div class="filterable table-responsive">
+                                    <input type="hidden" id="hdnClientId" />
+                                    <table class="table table-borderless table-striped table-earning padding-top-10" id="clientSearchList">
+                                        <thead>
+                                            <tr class="row">
+                                                <th style="width:25%">Client Name</th>
+                                                <th style="width:20%">Address</th>
+                                                <th style="width:20%">State</th>
+                                                <th style="width:20%">City</th>
+                                                <th style="width:15%">Phone No</th>
+                                                <th style="width:15%">Login Status</th>
+                                                <th class="text-right">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+
+                                                var status = @item.ClientStatus == Enums.ClientStatus.Active ? "Active" : "Disabled";
+                                                <tr class="row">
+                                                    <td style="width:25%" onclick="location.href ='@(Url.Action("ClientDetails", "Client", new {clientId = item.ClientId }))'"> @item.ClientName</td>
+                                                    <td style="width:20%" onclick="location.href ='@(Url.Action("ClientDetails", "Client", new {clientId = item.ClientId }))'">@item.Address1</td>
+                                                    <td style="width:20%" onclick="location.href ='@(Url.Action("ClientDetails", "Client", new {clientId = item.ClientId }))'">@item.State1</td>
+                                                    <td style="width:20%" onclick="location.href ='@(Url.Action("ClientDetails", "Client", new {clientId = item.ClientId }))'">@item.City1</td>
+                                                    <td style="width:15%" onclick="location.href ='@(Url.Action("ClientDetails", "Client", new {clientId = item.ClientId }))'">@item.PhoneNo1</td>
+                                                    <td style="width:15%" onclick="location.href ='@(Url.Action("ClientDetails", "Client", new {clientId = item.ClientId }))'">@status</td>
+
+
+                                                    <td align="right">
+                                                        <a class="btn btn-xs btn-primary fa" title="View" href="@Url.Action("ClientDetails", "Client", new { clientId = item.ClientId })"><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                        @{
+                                                            if (item.ClientStatus == Enums.ClientStatus.Active)
+                                                            {
+                                                                <button class="btn btn-xs btn-warning fa" title="Active" onclick="location.href='@Url.Action("ModifyClientStatus", "Client", new { clientId = item.ClientId, status = Convert.ToInt32(Enums.ClientStatus.InActive) })'"><span class="fa fa-toggle-on"></span></button>
+                                                            }
+                                                            else if (item.ClientStatus == Enums.ClientStatus.InActive)
+                                                            {
+                                                                <button class="btn btn-xs btn-warning fa" title="InActive" onclick="location.href='@Url.Action("ModifyClientStatus", "Client", new { clientId = item.ClientId, status = Convert.ToInt32(Enums.ClientStatus.Active) })'"><span class="fa fa-toggle-off"></span></button>
+                                                            }
+                                                        }
+
+                                                        <button href="#" class="btn btn-xs theme-button fa fa-key" title="Reset password" onclick="showUserDetails('@item.UserId')"></button>
+                                                        <a style="background-color: deepskyblue;border-color:deepskyblue" class="btn btn-xs btn-primary btn-warning fa fa-hospital-o" title="View Schedules" onclick="viewSchedule(@item.ClientId,  @Convert.ToInt32(item.ClientStatus))"></a>
+                                                        @*<i class="fa fa-hospital-o"></i>@Html.ActionLink("View Schedules", "ScheduledCalenderView", new { clientId = item.ClientId }, null)*@
+                                                        <button style="background-color: royalblue;border-color:royalblue" class="btn btn-xs btn-primary btn-warning fa fa-user-md" title="Mapped Caregivers" data-toggle="modal" onclick="changeStatus('@item.ClientId')" data-target="#modal-delete"></button>
+                                                        @{
+                                                            if (item.ClientEmailStatus == Enums.ClientEmailStatus.Active)
+                                                            {
+                                                                <button class="btn btn-xs btn-success fa" title="Schedule Email Enabled" onclick="location.href='@Url.Action("ChangeEmailStatus", "Client", new { clientId = item.ClientId, emailstatus = Convert.ToInt32(Enums.ClientEmailStatus.InActive) })'"><span class="fa fa-toggle-on"></span></button>
+                                                            }
+                                                            else if (item.ClientEmailStatus == Enums.ClientEmailStatus.InActive)
+                                                            {
+                                                                <button class="btn btn-xs btn-danger fa" title="Schedule Email Disabled" onclick="location.href='@Url.Action("ChangeEmailStatus", "Client", new { clientId = item.ClientId, emailstatus = Convert.ToInt32(Enums.ClientEmailStatus.Active) })'"><span class="fa fa-toggle-off"></span></button>
+                                                            }
+                                                        }
+                                                        @if (ViewBag.AllowDelete)
+                                                        {
+                                                            <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" onclick="setClientId('@item.ClientId')" data-target="#modal-deleteclient"><span class="fa fa-minus-circle"></span></button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="wrapper">
+                                                                <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                                                            </div>
+                                                        }
+
+                                                    </td>
+
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <div id="ResultList"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal-deleteclient">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                        <h4 class="modal-title">Delete Client</h4>
+                    </div>
+                    <div class="modal-body">
+                        Record will be deleted from the system.Are you sure to delete?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="deleteClient()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+
+        <div class="modal fade" id="modal-delete">
+            <div class="modal-dialog">
+                <div class="panel panel-group panel-success">
+                    <div class="panel-heading" style="padding:10px 15px">
+                        <h4 class="modal-title"> Mapped Caretakers <span class="fa fa-close float-right" data-dismiss="modal"></span></h4>
+                    </div>
+                    <div class="modal-body" style="height:250px">
+                        <div class="form-group">
+                            <div class="col-md-12 labelStyle table-responsive mapped_Style">
+                                <table class="table table-bordered table-striped table-earning dynamic-table" id="tblCaretaker">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th class="col-md-6">Caretaker Name</th>
+                                            @*<th class="col-md-2">Rate</th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody id="addedCaretakerList"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div class="modal fade" id="bookingDetailDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <!-- Modal content-->
+                <div class="modal-content panel">
+                    <div class="modal-header panel-heading padding-10">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                        <h4 class="modal-title">Reset Password</h4>
+                    </div>
+                    <div id="bookingDetail" class="modal-body no-padding">
+
+                    </div>
+
+                    <div class="modal-footer">
+
+
+
+                        <button type="button" class="btn btn-primary " onclick="SavePassword()">Save</button>
+                        <button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="modal fade" id="inactiveAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content panel">
+            <div class="modal-header alert-danger padding-10">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Inactive Client</h4>
+            </div>
+            <div class="modal-body">
+                <p>Selected Client is inactive.</p>
+                <p>To view the schedule for current client, please change the status to active.</p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-xs btn btn-primary " data-dismiss="modal">Close</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#clientSearchList').DataTable({
+            "pagingType": "full_numbers"
+        });
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+        if (role == 1) {
+
+
+            document.getElementById('countrydiv').style.display = "none";
+
+        }
+        if (role == 2) {
+
+            document.getElementById('countrydiv').style.display = "none";
+            document.getElementById('statediv').style.display = "none";
+
+        }
+        if (role == 3) {
+            document.getElementById('countrydiv').style.display = "none";
+            document.getElementById('statediv').style.display = "none";
+            document.getElementById('citydiv').style.display = "none";
+            //document.getElementById('branchdiv').style.display = "none";
+        }
+        if (role == 4) {
+            document.getElementById('countrydiv').style.display = "none";
+            document.getElementById('statediv').style.display = "none";
+            document.getElementById('citydiv').style.display = "none";
+            document.getElementById('branchdiv').style.display = "none";
+            document.getElementById('main').style.display = "none";
+        }
+    });
+    function setClientId(clientId) {
+        debugger;
+        $('#hdnClientId').val(clientId);
+    }
+    function searchClientByLocation() {
+        SetDropdownValuesByRole();
+        showProgress();
+        $.ajax({
+            type: 'POST',
+            url: "/Client/ClientSearchByLocation",
+            data: {
+                countryId: $('#ddlCountry1').val(),
+                stateId: $('#ddlStates1').val(),
+                cityId: $('#ddlCity1').val()
+            },
+            success: function (feed) {
+                spinnerVisible = true;
+                hideProgress();
+                $('#clientSearchList').hide();
+                $('#ResultList').html(feed);
+
+
+            },
+            error: function (data) {
+                spinnerVisible = true;
+                hideProgress();
+                logError(data.statusText + ' - Error occurred while fetching data. Function: searchClientByLocation(). Page: ManageClient.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+    function SetDropdownValuesByRole() {
+
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+            if (role == 1) {
+                $('#ddlCountry1').val(@country);
+                return;
+            }
+            if (role == 2) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                return;
+            }
+            if (role == 3) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                $('#ddlCity1').val(@city);
+                return;
+        }
+        return;
+        }
+
+    function deleteClient() {
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: "/Client/DeleteClient",
+            data: { clientId: $('#hdnClientId').val(), status: '3' },
+            success: function () {
+                window.location.reload();
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while deleting a Caregiver. Function: deleteUser(). Page: ManageCaretaker.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+    function changeStatus(clientId) {
+        debugger;
+        $.ajax({
+            url: '/Client/LoadCaretakersByClientID',
+            type: "GET",
+            dataType: "JSON",
+            data: { categoryId: clientId },
+            success: function (data) {
+                $('#addedCaretakerList').html('');
+                if (data == "[]") {
+                    $('#addedCaretakerList').html("<tr>" + "<td colspan='3'>No mapped caretakers found.</td>" + "</tr>");
+                }
+                else if (data.length > 0) {
+                    var strQual = "";
+                    $.each($.parseJSON(data), function (i, care) {
+                        strQual = strQual + "<tr>" + "<td class='col-md-3'>" + care.CategoryName + "</td>" +
+                            "<td class='col-md-3'>" + care.CareTakerName + "</td>" + "</tr>";
+                    });
+
+                    $('#addedCaretakerList').html(strQual);
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while changing Client status. Function: changeStatus(clientId). Page: ClientSearch.cshtml');
+                //alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    }
+    function viewSchedule(clientId, clientStatus) {
+        if (clientStatus == 2) {
+            $('#inactiveAlert').modal('show');
+            return false;
+        } else {
+            //location.href = '/Client/ScheduledCalenderView?clientId=' + clientId;
+            localStorage.setItem("clientId", clientId);
+            location.href = '/Client/ScheduledCalenderView';
+        }
+    }
+    function showUserDetails(userId) {
+        debugger;
+        if (userId > 0) {
+            showProgress();
+            $.ajax({
+                url: "../Admin/UserLoginDetails/",
+                data: {
+                    bookingId: userId
+                },
+                success: function (feed) {
+                    $('#bookingDetail').html(feed);
+                    $('#bookingDetailDialog').modal('show');
+                    spinnerVisible = true;
+                    hideProgress();
+                },
+                error: function (feed) {
+                    spinnerVisible = true;
+                    hideProgress();
+                    console.log(feed.responseText);
+                    logError(data.statusText + ' - Error occurred while showing a Client login details . Function: showUserDetails(bookingId). Page: ClientSearch.cshtml');
+                    //alert('Some network error has occurred. Please try again after some time.');
+                }
+            });
+        }
+        else {
+            alert("User not found");
+        }
+    }
+
+    function SavePassword() {
+        var newPswd = $("#newpswd").val();
+        var cnfrmPswd = $("#cnfrmpswd").val();
+        var emailID = $("#lblemail").text();
+        // var password = $("#lblpassword").text();
+
+        //if (newPswd.length < 8 || cnfrmPswd.length < 8) {
+        //    alert("Password must be minimum 8 characters long");
+        //    return;
+        //}
+
+        //var reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$!%*#@@?&])[A-Za-z\d$@@!%*#?&]{8,}$/;
+        var reg = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~`!@@#\$%\^&\*,.])(?=.{8,})');
+        if (reg.test(newPswd) == false) {
+            alert('Password must be minimum 8 characters including 1 uppercase , one special character and alphanumeric characters.');
+            return;
+        }
+        else if (newPswd != cnfrmPswd) {
+            alert("'New Password' and 'Confirm Password' doesn't match.");
+        }
+
+        if (newPswd == cnfrmPswd) {
+            $.ajax({
+                url: "../Admin/ChangePswd/",
+                data: {
+                    newPswd: newPswd,
+                    emailID: emailID
+                },
+                success: function (feed) {
+                    $('#bookingDetailDialog').modal('hide');
+                    alert("Password has been changed");
+                },
+                error: function (feed) {
+                    console.log(feed.responseText);
+                    logError(data.statusText + ' - Error occurred while changing a Caretaker login password. Function: SavePassword(). Page: ManageCaretaker.cshtml');
+                    //alert('Some network error has occurred. Please try again after some time.');
+                }
+            });
+        }
+    }
+
+    $("#ddlCity1").change(function () {
+        var cityId = $('#ddlCity1').val();
+        //alert(stateId);
+
+        $.ajax({
+            url: '/Admin/GetBranch?city=' + cityId,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            success: function (data) {
+                console.log(data);
+                var ddlState = $("#Branch1");
+                ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                $.each(data, function (data, value) {
+
+                    ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                });
+
+            }
+        });
+    });
+
+</script>
+<style>
+    .mapped_Style {
+        max-height: 194px;
+        overflow: auto;
+    }
+</style>

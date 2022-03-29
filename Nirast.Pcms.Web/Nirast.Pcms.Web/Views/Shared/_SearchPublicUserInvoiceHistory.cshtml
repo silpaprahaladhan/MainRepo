@@ -1,0 +1,139 @@
+﻿@using Nirast.Pcms.Web.Models
+@model IEnumerable<Nirast.Pcms.Web.Models.UserInvoiceParams>
+
+<div>
+    <div class="filterable table-responsive">
+        <input type="hidden" id="hdnCTId" />
+        <input type="hidden" id="hdnSTId" />
+        <input type="hidden" id="PublicUserNameforEmail" name="PublicUserNameforEmail" value="">
+        <table id="tableInvoiceHistory" class="table table-borderless table-striped table-earning padding-top-10">
+            <thead>
+                <tr>
+                    <th>UserName</th>
+                    <th>ServiceName</th>
+                    <th>InvoiceNumber</th>
+                    <th>InvoicePrefix</th>
+                    <th>InvoiceDate</th>
+                    <th>Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td onclick="viewSchedule('@item.InvoiceSearchInputId','@item.UserEmail','@item.UserName','@item.InvoicePath')">@item.UserName</td>
+                            <td onclick="viewSchedule('@item.InvoiceSearchInputId','@item.UserEmail','@item.UserName','@item.InvoicePath')">@item.ServiceName</td>
+                            <td onclick="viewSchedule('@item.InvoiceSearchInputId','@item.UserEmail','@item.UserName','@item.InvoicePath')">@item.InvoiceNumber</td>
+                            <td onclick="viewSchedule('@item.InvoiceSearchInputId','@item.UserEmail','@item.UserName','@item.InvoicePath')">@item.InvoicePrefix</td>
+                            <td onclick="viewSchedule('@item.InvoiceSearchInputId','@item.UserEmail','@item.UserName','@item.InvoicePath')">@item.InvoiceDate.ToString("dd-MMM-yyyy")</td>
+
+
+
+                            <td>
+                                <button class="btn btn-xs btn-primary" title="View Invoice" data-toggle="modal" onclick="viewSchedule('@item.InvoiceSearchInputId','@item.UserEmail','@item.UserName','@item.InvoicePath')"> <span class="fa fa-eye"></span></button>
+
+                                @if (Convert.ToString(Session["UserType"]) == "ADMINISTRATOR"|| Convert.ToString(Session["UserType"]) == "ADMINISTRATOR")
+                                {
+                                    <a class="btn btn-xs btn-primary fa" title="Regenerate" href="@Url.Action("RegenerateUserInvoiceDetails", "PublicUser", new { InvoiceSearchInputId = item.InvoiceSearchInputId })"><span class="glyphicon glyphicon-repeat"></span></a>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="modal-invoice">
+    <div class="modal-dialog" style="width: 80%;">
+        <div class="modal-custom">
+            <div class="panel panel-group panel-success">
+                <div class="panel-heading" style="padding:10px 15px">
+                    <h4 class="modal-title"> Invoice <span class="fa fa-close float-right" data-dismiss="modal"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @if (Convert.ToString(Session["UserType"]) == "ADMINISTRATOR")
+                        {
+                            <div class="row">
+                                <div class="col-md-12" style="margin-top:5px;">
+                                    <label class=" label-style no-padding">Email ID</label><span class="mandatoryField">*</span>
+                                    @Html.TextBox("EmailTxt", new { @class = "form-control labelStyle" })
+                                    <input type="hidden" id="hdnSearchInputId" name="hdnSearchInputId" />
+                                    <button class="btn btn-primary" onclick="SendEmail()" value="" id="SendMail" style="margin-bottom: inherit;margin-left: 15px;">Send</button>
+                                    <span class="col-md-12 no-padding labelStyle info" title="" style="margin-bottom:10px;">Report will be sent to the above Email ID</span>
+                                </div>
+                            </div>
+                        }
+
+                        <div id="policyContent" class="policyContent" type="text" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#tableInvoiceHistory').DataTable({
+        "pagingType": "full_numbers"
+    });
+    function viewSchedule(InvoicePath) {
+        debugger;
+        $("#policyContent").html('<iframe src="' + InvoicePath + '" style="width: 100%; height: 700px" onload="hideProgress()"></iframe>');
+        $('#modal-invoice').modal('toggle');
+    }
+    function viewSchedule(fileId, email, clientName, InvoicePath) {
+        debugger;
+        
+        $("#policyContent").html('<iframe src="' + InvoicePath + '" style="width: 100%; height: 700px" onload="hideProgress()"></iframe>');
+        $('#modal-invoice').modal('toggle');
+        document.getElementById('EmailTxt').value = email;
+        document.getElementById('hdnSearchInputId').value = fileId;
+        document.getElementById('PublicUserNameforEmail').value = clientName;
+
+    }
+
+    function SendEmail() {
+        debugger;
+        var email = document.getElementById('EmailTxt').value;
+        var re = /^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (email == "") {
+            alert("Email Field Required");
+        }
+        else if (!re.test(email)) {
+            alert("You have entered an invalid email address!")
+            return (false)
+        }
+        //var fileId = document.getElementById('FileId').value;
+        var fileId = document.getElementById('hdnSearchInputId').value;
+
+        var username = document.getElementById('PublicUserNameforEmail').value;
+        $.ajax({
+            type: 'POST',
+            url: "../PublicUser/SendUserInvoiceEmail",
+            data: { username: username, email: email, fileId: fileId },
+            success: function (data) {
+                if (data == "")
+                    window.alert("Invoice sent to " + email + " Successfully");
+                else
+                    window.alert("Invoice sent to " + email + " Failed");
+                //window.location.reload();
+            },
+            error: function (data) {
+                window.alert("Invoice sent to " + email + " Failed");
+                logError(data.statusText + ' - Error occurred while sending Email. Function:SendEmail(). Page: _InvoiceHistoryPartial.cshtml');
+                window.location.reload();
+            }
+        });
+    }
+</script>
+
+

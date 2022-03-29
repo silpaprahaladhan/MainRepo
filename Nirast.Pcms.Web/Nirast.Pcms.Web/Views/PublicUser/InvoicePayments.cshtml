@@ -1,0 +1,511 @@
+﻿@using Nirast.Pcms.Web.Helpers
+@model Nirast.Pcms.Web.Models.UserPaymentInvoiceModel
+@{
+    ViewBag.Title = "InvoicePayments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+</head>
+<script>
+    $('#sdate_search').datepicker();
+    $('#edate_search').datepicker();
+</script>
+@*<link href="~/css/CustomStyles.css" rel="stylesheet" />*@
+@*<h2>InvoicePayments</h2>*@
+<style>
+    .tableLength {
+        padding: 0px;
+    }
+</style>
+<div class="container">
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="bootstrap-tab animated wow slideInUp animated " data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: slideInUp;">
+                    @if (TempData["TxnStaus"] != null)
+                    {
+                        if (Convert.ToBoolean(TempData["TxnStaus"]) == false)
+                        {
+                            <div id="failedMessage" class="alert alert-danger alert-dismissible statusmessage" role="alert">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Failed!</strong> @TempData["Message"]
+                            </div>
+                        }
+                        else if (Convert.ToBoolean(TempData["TxnStaus"]) == true)
+                        {
+                            <div id="sucessMessage" class="alert alert-success alert-dismissible statusmessage" role="alert">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Success!</strong> @TempData["Message"]
+                            </div>
+                        }
+                    }
+                    <h3 class="register h4-label"> Invoice Payment</h3>
+                    <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                        <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
+                            <li id="liPaymentPage" role="presentation" class="active"><a href="#PaymentPage" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Payment</a></li>
+                            <li id="liAllInvoices" role="presentation"><a href="#AllInvoices" role="tab" id="profile1-tab" data-toggle="tab" aria-controls="profile">All Invoices</a></li>
+                            <li id="liUnpaidInvoices" role="presentation"><a href="#UnpaidInvoices" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">Unpaid Invoices</a></li>
+                            <li id="liPaymentHistory" role="presentation" class=""><a href="#PaymentHistory" role="tab" id="profile2-tab" data-toggle="tab" aria-controls="profile">Payment History</a></li>
+                        </ul>
+                        <div id="search-container" class="relative-box" style="display: none;">
+                            <form id="search-form" class="form-horizontal">
+                                <div id="search-launch-top">
+                                    <a href="#" class="grey-box-close js-search-close">Cancel Search</a>
+                                </div>
+                                <br>
+                                <span id="search_errors"></span>
+                                <table width="100%" cellpadding="0" cellspacing="0" class="table-with-fields">
+                                    <tbody>
+                                        <tr>
+                                            <td width="150">
+                                                <label class="search-label" for="invoiceid_search">Invoice #</label>&nbsp;
+                                            </td>
+                                            <td width="150">
+                                                <input type="text" id="txtInvNo" value="" placeholder="" class="input-span-7 search-invoiceid_search search-text">
+                                            </td>
+                                            <td>
+                                                <label class="search-label" for="sdate_search_">Date Range</label>&nbsp;
+                                            </td>
+                                            <td>
+                                                <input class="datetimepicker" type="text" id="txtDtRangeFrom" value="" size="8" onkeypress="return numbersonly(this, event)">
+                                                &nbsp;to&nbsp;
+                                                <input class="datetimepicker" type="text" id="txtDtRangeTo" value="" size="8" onkeypress="return numbersonly(this, event)">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="search-label" for="item_search">Item Name</label>&nbsp;
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtItemName" value="" placeholder="" class="input-span-7 search-item_search search-text">
+                                            </td>
+                                            <td>
+                                                <label class="search-label" for="txtAmtFrom">Invoice Total</label>&nbsp;
+                                            </td>
+                                            <td>
+                                                <input class="input-small allownumericwithdecimal" type="text" id="txtAmtFrom" value="" size="8" onkeypress="return numbersonly(this, event)">
+                                                &nbsp;to&nbsp;
+                                                <input class="input-small allownumericwithdecimal" type="text" id="txtAmtTo" value="" size="8" onkeypress="return numbersonly(this, event)">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="search-label" for="description_search">Item Description</label>&nbsp;
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtDescription" value="" placeholder="" class="input-span-7 search-description_search search-text">
+                                            </td>
+                                            <td>
+                                                <label class="search-label" for="paid_search">Paid/Unpaid</label>&nbsp;
+                                            </td>
+                                            <td>
+                                                <select id="ddlPaid" class="formSelect  search-paid_search search-select">
+                                                    <option value="">---Select---</option>
+                                                    <option value="1">
+                                                        Paid
+                                                    </option>
+                                                    <option value="0">
+                                                        Unpaid
+                                                    </option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="buttons prepend-top-half text-center">
+                                    <span class="append-half">
+                                        <button class="button medium inline" id="search-submit" type="button">Search</button>
+                                    </span>
+                                    <button class="button medium inline" id="search-reset" type="button">Reset</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="myTabContent" class="tab-content grid-panel">
+                            <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body invoicePayment active in" id="PaymentPage" aria-labelledby="home-tab">
+                                @if (Model != null)
+                                {
+                                    using (Html.BeginForm("PaymentWithPaypal", "PublicUser", new { invNumber = Model.InvoiceNumber, amount = Model.Amount, tax = Model.TaxAmount, total = Model.TotalAmount, curr = Model.Currency }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "invoiceForm" }))
+                                    {
+                                        @Html.HiddenFor(x => x.FirstName)
+                                        <div class="row payment-page-tab">
+                                            <div class="col-md-6">
+                                                <div>
+                                                    <h3>
+                                                        @{
+                                                            string name = Model.FirstName + " " + Model.LastName;
+                                                        }
+                                                        @name
+                                                    </h3>
+                                                    <p>
+                                                        @Html.DisplayFor(x => x.Address)
+                                                    </p>
+                                                    @{
+                                                        string city = Model.City + ", " + Model.State;
+                                                    }
+                                                    @if (city != ", ")
+                                                    {
+                                                        <p>
+                                                            @city
+                                                        </p>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div>
+                                                    <p class="right-align-text">
+                                                        Invoice #:  @Html.DisplayFor(x => x.InvoiceNumber)
+                                                    </p>
+                                                    <p class="right-align-text">
+                                                        @{
+                                                            string date = Model.Date.ToShortDateString();
+                                                        }
+                                                        Invoice Date: @date
+                                                    </p>
+                                                    <p class="right-align-text">
+                                                        @{
+                                                            string status = Model.PaidStatus ? "Paid" : "Unpaid";
+                                                            string invClass = Model.PaidStatus ? "invoice-paid" : "invoice-unpaid";
+                                                        }
+                                                        Status:<font class=@invClass>@status </font>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="col-md-12">
+                                                <div class="payment-amt-row">
+                                                    <div class="row col-md-6 no-padding">
+                                                        <div class="amount-div-small">
+                                                            Amount:
+                                                            <span>
+                                                                @{
+                                                                    string amount = Model.Amount.ToString("0.00");
+                                                                }
+                                                                @ViewData["CurrencySymbol"] @amount
+                                                            </span>
+
+                                                        </div>
+                                                        <div class="clearfix"></div>
+                                                        <div class="amount-div-small">
+                                                            Tax:
+                                                            <span>
+                                                                @{
+                                                                    string tax = Model.TaxAmount.ToString("0.00");
+                                                                }
+                                                                @ViewData["CurrencySymbol"] @tax
+                                                            </span>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+                                                        <div class="amount-div-small amount-div-large">
+                                                            Total Amount:
+                                                            <span>
+                                                                @{
+                                                                    string amt = Model.TotalAmount.ToString("0.00");
+                                                                }
+                                                                @ViewData["CurrencySymbol"] @amt
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="buttons prepend-top-half text-center">
+                                                <span class="append-half">
+                                                    <button class="btn btn-custome " id="btnpay" type="submit" name="action" @((Model.PaidStatus) ? "disabled" : "") value="action">Pay Now</button>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    }
+                                }
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body invoicePayment in tableLength" id="AllInvoices" aria-labelledby="home-tab">
+                                <div class="table-responsive table--no-card m-b-40">
+                                    <div class="action-bar">
+                                        <div class="actions button-set">
+                                            @*<span class="arrow"></span>
+                                                <ul>
+                                                    <li>
+                                                        <button class="button small narrow " type="submit" name="form_action" value="Print" id="form-action-print" data-ids-field="invoiceid[]" data-sort-dir="asc" data-sort-field="invoice_number">
+                                                            <span>Print</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>*@
+                                            <div class="search">
+                                                <div id="search-launch" style="display: block;">
+                                                    <a href="#" class="button small btn-search js-search-open">Search</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <table class="table table-borderless table-striped table-earning padding-top-10" id="allPaymentsTable">
+                                        <thead>
+                                            <tr class="headings table-font">
+                                                @*<th class="col-checkbox">
+                                                        <input class="checkbox" type="checkbox" name="check">
+                                                    </th>*@
+                                                <th class="column-title" style="display: table-cell;">Invoice Number</th>
+                                                <th class="column-title" style="display: table-cell;"> Description </th>
+                                                <th class="column-title" style="display: table-cell;">Date </th>
+                                                <th class="column-title" style="display: table-cell;">Amount </th>
+                                                <th class="column-title" style="display: table-cell;">Tax </th>
+                                                <th class="column-title" style="display: table-cell;">Total </th>
+                                                <th class="column-title" style="display: table-cell;">Status </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="allpaymentsTbody" class="table-font">
+                                            @{ string paidstatus = string.Empty;}
+                                            @if (Model != null)
+                                            {
+                                                foreach (var item in Model.AllPayments)
+                                                {
+                                                    {
+                                                        paidstatus = item.PaidStatus == true ? "Paid" : "Unpaid";
+                                                    }
+                                                    <tr class="even pointer" onclick="location.href ='@(Url.Action("InvoicePayments", "PublicUser", new { @invoice =  item.InvoiceNumber.ToString() }))'">
+                                                        @*<td class="col-checkbox"><input class="checkbox" type="checkbox"></td>*@
+                                                        <td>@item.InvoiceNumber</td>
+                                                        <td>@item.Description</td>
+                                                        <td>@item.Date.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) @item.Date.ToString("h:mm tt") </td>
+                                                        <td>@ViewData["CurrencySymbol"] @item.Amount.ToString("0.00") </td>
+                                                        <td>@ViewData["CurrencySymbol"] @item.TaxAmount.ToString("0.00") </td>
+                                                        <td>@ViewData["CurrencySymbol"] @item.TotalAmount.ToString("0.00") </td>
+                                                        <td>@paidstatus</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body invoicePayment tableLength" id="UnpaidInvoices" aria-labelledby="home-tab">
+                                <div class="table-responsive table--no-card m-b-40">
+
+                                    <div class="action-bar">
+                                        <div class="actions button-set">
+                                            @*<span class="arrow"></span>
+                                                <ul>
+                                                    <li>
+                                                        <button class="button small narrow " type="submit" name="form_action" value="Print" id="form-action-print" data-ids-field="invoiceid[]" data-sort-dir="asc" data-sort-field="invoice_number">
+                                                            <span>Print</span>
+                                                        </button>
+                                                    </li>
+                                                </ul>*@
+                                            <div class="search">
+                                                <div id="search-launch" style="display: block;">
+                                                    <a href="#" class="button small btn-search js-search-open">Search</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table table-borderless table-striped table-earning padding-top-10 " id="unPaidPaymentsTable">
+                                        <thead>
+                                            <tr class="headings table-font">
+                                                @*<th class="col-checkbox">
+                                                        <input class="checkbox" type="checkbox" name="check">
+                                                    </th>*@
+                                                <th class="column-title" style="display: table-cell;">Invoice Number </th>
+                                                <th class="column-title" style="display: table-cell;"> Description </th>
+                                                <th class="column-title" style="display: table-cell;">Date </th>
+                                                <th class="column-title" style="display: table-cell;">Amount </th>
+                                                <th class="column-title" style="display: table-cell;">Tax </th>
+                                                <th class="column-title" style="display: table-cell;">Total </th>
+                                                <th class="column-title" style="display: table-cell;">Status </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="unPaidTbody" class="table-font">
+                                            @{ string paidstatusUnpaid = string.Empty;}
+                                            @if (Model != null)
+                                            {
+                                                foreach (var item in Model.AllPayments.Where(x => x.PaidStatus == false))
+                                                {
+                                                    paidstatusUnpaid = item.PaidStatus == true ? "Paid" : "Unpaid";
+                                                    <tr class="even pointer" onclick="location.href ='@(Url.Action("InvoicePayments", "PublicUser", new { @invoice =  item.InvoiceNumber.ToString() }))'">
+                                                        @*<td class="col-checkbox"><input class="checkbox" type="checkbox"></td>*@
+                                                        <td>@item.InvoiceNumber</td>
+                                                        <td>@item.Description</td>
+                                                        <td>@item.Date.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) @item.Date.ToString("h:mm tt") </td>
+                                                        <td>@ViewData["CurrencySymbol"] @item.Amount.ToString("0.00") </td>
+                                                        <td>@ViewData["CurrencySymbol"] @item.TaxAmount.ToString("0.00") </td>
+                                                        <td>@ViewData["CurrencySymbol"] @item.TotalAmount.ToString("0.00") </td>
+                                                        <td>@paidstatusUnpaid</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body invoicePayment tableLength" id="PaymentHistory" aria-labelledby="home-tab">
+                                <div style="margin-bottom:0px;">
+                                    &nbsp;
+                                </div>
+                                <div>
+                                    <table class="table table-borderless table-striped table-earning padding-top-10" id="invoicelist">
+                                        <thead>
+                                            <tr class="headings table-font">
+                                                <th class="column-title" style="display: table-cell;">Invoice Number </th>
+                                                <th class="column-title" style="display: table-cell;">Method </th>
+                                                <th class="column-title" style="display: table-cell;">Notes </th>
+                                                <th class="column-title" style="display: table-cell;">Date </th>
+                                                <th class="column-title" style="display: table-cell;">Amount </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-font">
+                                            @if (Model != null)
+                                            {
+                                                foreach (var item in Model.PaymentHistory)
+                                                {
+                                                    <tr class="even pointer" onclick="location.href ='@(Url.Action("InvoicePayments", "PublicUser", new { @invoice = item.InvoiceNumber.ToString() }))'">
+                                                        <td>@item.InvoiceNumber</td>
+                                                        <td>@item.Method</td>
+                                                        <td>@item.Description </td>
+                                                        <td>@item.Date.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) @item.Date.ToString("h:mm tt")</td>
+                                                        <td>@item.CurrencySymbol @item.Amount.ToString("0.00")</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        function GetDateFormat(date) {
+            var nowDate = new Date(parseInt(date.substr(6)));
+            var result = "";
+            result = nowDate.format("mm/dd/yyyy hh:MM:ss TT");
+            return result;
+        }
+        $('.table-borderless').DataTable({
+            "pagingType": "full_numbers"
+        });
+
+        $('.datetimepicker').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            //'dateFormat': 'dd-MM-yy'
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href") // activated tab
+            if (target == "#PaymentHistory" || target == "#PaymentPage") {
+                $('#search-container').hide(500);
+            }
+        });
+        $(".allownumericwithdecimal").on("keypress keyup blur", function (event) {
+            //this.value = this.value.replace(/[^0-9\.]/g,'');
+            $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+            if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+        $('#search-submit').click(function () {
+            var model = @Html.Raw(Json.Encode(Model));
+
+            model.Date = new Date(parseInt(model.Date.replace("/Date(", "").replace(")/", ""), 10));
+            $.each(model.AllPayments, function (i) {
+                model.AllPayments[i].Date = new Date(parseInt(model.AllPayments[i].Date.replace("/Date(", "").replace(")/", ""), 10));
+            });
+            $.each(model.PaymentHistory, function (i) {
+                model.PaymentHistory[i].Date = new Date(parseInt(model.PaymentHistory[i].Date.replace("/Date(", "").replace(")/", ""), 10));
+            });
+
+            $.ajax({
+                url: "../PublicUser/SearchInvoice",
+                contentType: 'application/json; charset=utf-8',
+                type: "POST",
+                data: JSON.stringify({
+                    invNo: $('#txtInvNo').val(), dateFrom: $('#txtDtRangeFrom').val(), dateTo: $('#txtDtRangeTo').val(), item: $('#txtItemName').val(), amtFrom: $('#txtAmtFrom').val(),
+                    amtTo: $('#txtAmtTo').val(), desc: $('#txtDescription').val(), status: $('#ddlPaid').val(), invModel: model
+                }),
+                success: function (data) {
+                    var allpaymentsTbody = $("#allpaymentsTbody");
+                    allpaymentsTbody.html("");
+                    var unPaidTbody = $("#unPaidTbody");
+                    unPaidTbody.html("");
+
+                    $.each(data.AllPayments, function (k, v) {
+                        var paidStatus = v.PaidStatus == true ? 'Paid' : 'Unpaid';
+                        var tr = $("<tr class='even pointer'></tr>");
+                        tr.html(("<td></td>")
+                            + ("<td>" + v.InvoiceNumber + "</td>")
+                            + ("<td>" + v.Description + "</td>")
+                            + ("<td>" + GetDateFormat(v.Date) + "</td>")
+                            + ("<td>" + v.Amount + "</td>")
+                            + ("<td>" + paidStatus + "</td>"));
+                        allpaymentsTbody.append(tr);
+                        if (v.PaidStatus == false) {
+                            var tr = $("<tr class='even pointer'></tr>");
+                            tr.html(("<td></td>")
+                                + ("<td>" + v.InvoiceNumber + "</td>")
+                                + ("<td>" + v.Description + "</td>")
+                                + ("<td>" + GetDateFormat(v.Date) + "</td>")
+                                + ("<td>" + v.Amount + "</td>")
+                                + ("<td>" + paidStatus + "</td>"));
+                            unPaidTbody.append(tr);
+                        }
+                    });
+                },
+                error: function (ex) {
+                    logError(ex.statusText + ' - Error occurred while Invoice Searching. Function: $("#search-submit").click(function ()). Page: InvoicePayments.cshtml');
+                    //alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+        });
+    });
+
+    $(".js-search-open").click(function (e) {
+        $('#search-container').show(500);
+
+    });
+
+    $(".js-search-close").click(function (e) {
+        $('#search-container').hide(500);
+
+    });
+
+    $(function () {
+        $('.datetimepicker').datepicker();
+        $('.datetimepicker').datepicker();
+
+    });
+    //$('#myTab').tabs({
+    //    select: function (event) {
+    //        // You need Firebug or the developer tools on your browser open to see these
+    //        console.log(event);
+    //        // This will get you the index of the tab you selected
+    //        console.log(event.options.selected);
+    //        // And this will get you it's name
+    //        console.log(event.tab.text);
+    //    }
+    //});
+</script>
+<style>
+    .register {
+        color: lightslategrey;
+        margin-bottom: 5px;
+    }
+
+    .table-font {
+        font-size: 16px;
+    }
+
+    .label_width {
+        width: 20%;
+    }
+</style>
+
+

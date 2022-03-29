@@ -1,0 +1,517 @@
+﻿@model Nirast.Pcms.Web.Models.ClientModel
+@{
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+    var country = Session["CountryId"].ToString();
+    var state = Session["StateID"].ToString();
+    var city = Session["CityIdk"].ToString();
+}
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+@*<script type="text/javascript" src="~/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="~/js/app.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.10/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/CustomScript.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/js/jquery.timepicker.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
+
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />*@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script type="text/javascript">
+        function hideLoading() {
+            document.getElementById('divLoading').style.display = "none";
+            document.getElementById('divFrameHolder').style.display = "block";
+        }
+    </script>
+    <meta name="viewport" content="width=device-width" />
+    <title>Scheduling Rates Report</title>
+</head>
+<body>
+    <hr />
+    @{
+        if (ViewBag.Error != null)
+        {
+            <div class="padT25"><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+        }
+        else
+        {
+            <div class="row profile_Style">
+                <div class="panel panel-default report-style " id="main">
+                    <div class="panel-heading">
+                        <h4>Select Location</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-2" id="countrydiv">
+                                    <label class="label-style">Country</label>
+                                    @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                    @Html.ValidationMessageFor(model => model.CountryId1, "", new { @class = "no-padding required" })
+                                </div>
+                                <div class="col-md-2" id="statediv">
+                                    <label class="label-style">State</label>
+                                    @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                    @Html.ValidationMessageFor(model => model.StateId1, "", new { @class = "no-padding required" })
+                                </div>
+                                <div class="col-md-2" id="citydiv">
+                                    <label class="label-style">City</label>
+                                    @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                    @Html.ValidationMessageFor(model => model.CityId1, "", new { @class = "no-padding required" })
+                                </div>
+                                <div class="col-md-2" id="branchdiv">
+                                    <label class="label-style">Franchise/Branch</label>
+                                    @Html.DropDownListFor(model => model.BranchId2, ViewData["ListBranch"] as SelectList, "--Select--", new { @Id = "Branch1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                    @Html.ValidationMessageFor(model => model.BranchId2, "", new { @class = "no-padding required" })
+                                </div>
+                                <div class="col-md-3" style="margin-top:39px;">
+                                    <button class="btn btn-primary float-left editButton" title="Edit" onclick="LoadClientByLocation()">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-default report-style ">
+                    <div class="panel-heading">
+                        <h4>Invoice Report</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="col-md-12 innerDiv">
+                                <div class="row">
+                                    <div class="col-lg-4 col-lg-4">
+                                        <label class="label-style">Client Name:</label><span class="mandatoryField">*</span>
+                                        <select id="ddlClient" class="form-control  col-md-12  labelStyle"></select>
+                                    </div>
+                                    <div class="col-md-4  col-lg-4">
+                                        <label class="label-style">Category</label><span class="mandatoryField"></span><select id="ddCategory" class="form-control"> </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4  col-lg-4">
+                                        <label class="label-style">Date Range :</label>
+                                        @Html.DropDownList("ddlSearchRange", ViewData["listPaySearch"] as SelectList, new { @class = "form-control col-md-3 labelStyle", autocomplete = "off" })
+                                    </div>
+                                    <div class="col-md-4 col-lg-4">
+                                        <label id="lblfrmdate" class="label-style">From Date :</label>
+                                        @Html.TextBox("FromDate", "", new { @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtFromDate", @placeholder = "From Date", @onchange = "dateRangeValidation(this.value)", @autocomplete = "off" })
+
+                                        <label id="lblyear" class="label-style">Year :</label>
+                                        @Html.DropDownList("ddlyear", ViewData["listYears"] as SelectList, new { @class = "form-control col-md-12 labelStyle", @id = "ddlYearly", @onchange = "setYear()" })
+                                    </div>
+                                    <div class="col-md-4 col-lg-4">
+                                        <label id="lblmonth" class="label-style">Month :</label>
+                                        @Html.DropDownList("ddlMonth", ViewData["listMonths"] as SelectList, new { @class = "form-control col-md-12 labelStyle", @id = "ddlMonthly", @onchange = "setMonth()" })
+                                        <label id="lbltodate" class="label-style">To Date :</label>
+                                        @Html.TextBox("ToDate", "", new { @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtToDate", @placeholder = "To Date", @onchange = "dateRangeValidation(this.value)", @autocomplete = "off" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12 col-lg-12" style="padding-top:10px;padding-left:inherit">
+                                        <input type="checkbox" id="chkOrientation" value=""> Include Orientation
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="padding-top: 15px;">
+                                <div class="col-md-5"></div>
+                                <div class="col-md-3 text-center">
+                                    <button type="submit" id="btnSearch" class="btn btn-primary ">Search</button>
+                                    <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container animsition" style="padding-bottom: 15px;">
+
+                <div class="row">
+                    <div class="equal-height-panels">
+                        <div class="ui segment">
+                            <div id="dvMain" name="dvMain">
+                                <div class="clr"></div>
+                                <div class="col-md-12">
+                                    <div class="signature-pad col-md-12">
+
+                                        <div class="panel panel-group panel-success">
+                                            <div class="panel-heading"><h5>Report View</h5></div>
+                                            <div class="panel-body">
+                                                <div id="policyContent" type="text" readonly="readonly">
+
+                                                    @*<iframe src=@Model.policyContent frameBorder="0"></iframe>*@
+                                                    @*<iframe src='@Url.Action("GetPDF", "Admin")' width="100%" height="1000" frameBorder="0"></iframe>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="spinner">
+
+            </div>
+            <script>
+
+                    $(document).ready(function () {
+
+                    var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+                    if (role == 1) {
+
+
+                        document.getElementById('countrydiv').style.display = "none";
+
+                    }
+                    if (role == 2) {
+
+                        document.getElementById('countrydiv').style.display = "none";
+                        document.getElementById('statediv').style.display = "none";
+
+                    }
+                    if (role == 3) {
+                        document.getElementById('countrydiv').style.display = "none";
+                        document.getElementById('statediv').style.display = "none";
+                        document.getElementById('citydiv').style.display = "none";
+                        document.getElementById('branchiv').style.display = "none";
+                    }
+                        if (role == 4) {
+                            document.getElementById('main').style.display = "none";
+                        }
+                });
+
+                $.ajax({
+                    url: "/Client/LoadClient",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+
+                        $("#ddlClient").html(""); // clear before appending new list
+                        $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+                        $.each($.parseJSON(result), function (i, care) {
+                            $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+                        })
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Clients. Function: "/Client/LoadClient". Page: ClientInvoiceReport.cshtml');
+                        //alert('Some network error has occurres. Please try again after some time.');
+                    }
+                });
+
+
+                $.ajax({
+                    url: "/Client/LoadWorkShift",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+
+                        $("#ddWorkMode").html(""); // clear before appending new list
+                        $("#ddWorkMode").append($('<option></option>').val("").html("--Select--"));
+                        $.each($.parseJSON(result), function (i, care) {
+
+                            $("#ddWorkMode").append($('<option></option>').val(care.ShiftId).html(care.ShiftName));
+                        })
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Work Shift. Function: "/Client/LoadWorkShift". Page: ClientInvoiceReport.cshtml');
+                        //alert('Some network error has occurres. Please try again after some time.');
+                    }
+                });
+
+                $.ajax({
+                    url: "/Client/LoadCategory",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+
+                        $("#ddCategory").html(""); // clear before appending new list
+                        $("#ddCategory").append($('<option></option>').val("").html("--Select--"));
+                        $.each($.parseJSON(result), function (i, care) {
+                            $("#ddCategory").append($('<option></option>').val(care.CategoryId).html(care.Name));
+                        })
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Caretaker Types. Function: "/Client/LoadCategory". Page: ClientInvoiceReport.cshtml');
+                        //alert('Some network error has occurres. Please try again after some time.');
+                    }
+                });
+
+                function setYear() {
+                    $('#Year').val($("#ddlYearly").val());
+                }
+
+                function setMonth() {
+                    var d = new Date();
+                    $('#Month').val($('#ddlMonthly').val());
+                }
+
+                $(function () {
+
+
+
+                    $('#txtFromDate').datepicker({
+                        dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+                        showStatus: true,
+                        showWeeks: true,
+                        currentText: 'Now',
+                        autoSize: true,
+                        gotoCurrent: true,
+                        showAnim: 'blind',
+                        changeMonth: true,
+                        changeYear: true,
+                        highlightWeek: true
+                    });
+
+                    $('#txtToDate').datepicker({
+                        dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+                        showStatus: true,
+                        showWeeks: true,
+                        currentText: 'Now',
+                        autoSize: true,
+                        gotoCurrent: true,
+                        showAnim: 'blind',
+                        changeMonth: true,
+                        changeYear: true,
+                        highlightWeek: true
+                    });
+                    $("#divyear").hide();
+                    $("#divmonth").hide();
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    $("#lblyear").hide();
+                    $("#lblmonth").hide();
+                    $("#lblfrmdate").hide();
+                    $("#lbltodate").hide();
+
+
+                    $("#ddlSearchRange").change(function () {
+                        var currentTime = new Date();
+                        var year = currentTime.getFullYear();
+                        if ($(this).val() == "1") { // It doesn't work over here.
+                            $("#ddlYearly").show();
+                            $("#divyear").show();
+                            $("#divmonth").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").show();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            $("#ddlYearly").val(year);
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                            setYear();
+                            setMonth();
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+
+                        } else if ($(this).val() == "2") {
+                            $("#divyear").show();
+                            $("#divmonth").show();
+                            $("#ddlYearly").show();
+                            $("#ddlMonthly").show();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").show();
+                            $("#lblmonth").show();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            $("#ddlYearly").val(year);
+                            $("#ddlMonthly").val(currentTime.getMonth() + 1);
+                            setYear();
+                            setMonth();
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+                        }
+                        else if ($(this).val() == "3") {
+                            $("#divyear").show();
+                            $("#divmonth").show();
+                            $("#ddlYearly").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").show();
+                            $("#txtToDate").show();
+
+                            $("#lblyear").hide();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").show();
+                            $("#lbltodate").show();
+                            $("#ddlYearly").val(year);
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                            setYear();
+                            setMonth();
+                        }
+                        else {
+                            $("#divyear").hide();
+                            $("#divmonth").hide();
+                            $("#ddlYearly").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").hide();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+                            $("#ddlYearly").val(year);
+                            $("#ddlMonthly").val(currentTime.getMonth() + 1);
+                        }
+                    });
+
+
+
+
+                    $('#btnSearch').click(function () {
+                        var searchText = $("#ddlClient").val();
+                        var work = $("#ddWorkMode").val();
+                        var category = ($("#ddCategory").val() != "" && $("#ddCategory").val() != null && $("#ddCategory").val() != NaN) ? $("#ddCategory").val():0;
+                        var caretaker = $("#ddCareTaker").val();
+                        var year = $("#ddlYearly").val();
+                        var month = $("#ddlMonthly").val();
+                        var monthText = $("#ddlMonthly option:selected").text()
+                        var fromdate = $("#txtFromDate").val();
+                        var todate = $("#txtToDate").val();
+                        var isorientation = $("#chkOrientation").prop("checked");
+
+                        //ASPX page URL to load report
+                        var src = '../Reports/ClientInvoiceReport.aspx?';
+
+                        var range = $("#ddlSearchRange").val();
+
+                        //We can add parameters here
+                        if (searchText == "") {
+                            alert("Please Select any client!");
+                            return false;
+                        }
+                        if (range == 2 && month == 0) {
+                            alert("Please select any month.");
+                            return false;
+                        }
+                        if (range == 3)
+                        {
+                            if (fromdate == '') {
+                                alert('Select from date.');
+                                return false;
+                            }
+                            if (todate == '') {
+                                alert('Select to date.');
+                                return false;
+                            }
+                        }
+                        showProgress();
+                        src = src + "clientId=" + searchText
+                        src = src + "&year=" + year
+                        src = src + "&month=" + month
+                        src = src + "&monthText=" + monthText
+                        src = src + "&fromdate=" + fromdate
+                        src = src + "&todate=" + todate
+                        src = src + "&isOrientation=" + isorientation
+                        src = src + "&category=" + category
+                        //setTimeout(function () {
+
+                        //    hideProgress();
+
+                        //}, 6000);
+
+                        $("#policyContent").html('<iframe  src="' + src + '"style="width: 100%; height: 900px" onload="hideProgress()" ></iframe>');
+                    });
+                });
+                function LoadClientByLocation() {
+                    SetDropdownValuesByRole();
+                    $.ajax({
+                        url: "/Client/LoadClientByLocationInvoiceReport",
+                        type: "POST",
+                        data: {
+                            countryId: $('#ddlCountry1').val(),
+                            stateId: $('#ddlStates1').val(),
+                            cityId: $('#ddlCity1').val()
+                        },
+                        success: function (result) {
+                            $("#ddlClient").html(""); // clear before appending new list
+                            $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+                            $.each($.parseJSON(result), function (i, care) {
+                                $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+                            })
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while loading Clients. Function: "/Client/LoadClient". Page: AvailableCaretakerReport.cshtml');
+                            //alert('Some network error has occurres. Please try again after some time.');
+                        }
+                    });
+                }
+
+
+                 function SetDropdownValuesByRole() {
+
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+            if (role == 1) {
+                $('#ddlCountry1').val(@country);
+                return;
+            }
+            if (role == 2) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                return;
+            }
+            if (role == 3) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                $('#ddlCity1').val(@city);
+                return;
+        }
+        return;
+        }
+                $("#ddlCity1").change(function () {
+                    var cityId = $('#ddlCity1').val();
+                    $.ajax({
+                        url: '/Admin/GetBranch?city=' + cityId,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (data) {
+                            console.log(data);
+                            var ddlState = $("#Branch1");
+                            ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                            $.each(data, function (data, value) {
+
+                                ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                            });
+
+                        }
+                    });
+                });
+
+            </script>
+        }
+    }
+
+</body>
+</html>
+

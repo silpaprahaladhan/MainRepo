@@ -1,0 +1,340 @@
+﻿@using Nirast.Pcms.Web.Models
+@model List<Nirast.Pcms.Web.Models.BookingHistorySearch>
+@{
+    ViewBag.Title = "RejectedBookingHistory";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+    var country = Session["CountryId"].ToString();
+    var state = Session["StateID"].ToString();
+    var city = Session["CityIdk"].ToString();
+}
+<head>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+    <meta name="viewport" content="width=device-width" />
+    <title>Rejected Booking List</title>
+</head>
+<div>
+    @if (ViewBag.Error != null)
+    {
+        <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+    }
+    else
+    {
+        <div class="row profile_Style">
+            <div class="panel panel-default report-style " id="main">
+                <div class="panel-heading">
+                    <h4>Select Location</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-2" id="countrydiv">
+                                <label class="label-style">Country</label>
+                                @Html.DropDownListFor(model => model[0].CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                @Html.ValidationMessageFor(model => model[0].CountryId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="statediv">
+                                <label class="label-style">State</label>
+                                @Html.DropDownListFor(model => model[0].StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                @Html.ValidationMessageFor(model => model[0].StateId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="citydiv">
+                                <label class="label-style">City</label>
+                                @Html.DropDownListFor(model => model[0].CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                @Html.ValidationMessageFor(model => model[0].CityId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="branchdiv">
+                                <label class="label-style">Franchise/Branch</label>
+                                @Html.DropDownListFor(model => model[0].BranchId2, ViewData["ListBranch"] as SelectList, "--Select--", new { @Id = "Branch1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                @Html.ValidationMessageFor(model => model[0].BranchId2, "", new { @class = "no-padding required" })
+                            </div>
+
+                            <div class="col-md-3" style="margin-top:39px;">
+                                <button class="btn btn-primary float-left editButton" title="Edit" onclick="LoadCareTakerByLocation()">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-default report-style ">
+                <div class="panel-heading">
+                    <h4>Rejected Booking List</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="col-md-12 innerDiv">
+                            <div class="row">
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="label-style">Caregiver:</label>
+                                    @*@Html.TextBox("Caretaker", "", new { @class = "form-control col-md-3 labelStyle" })*@
+                                    @Html.DropDownList("Caretaker", new SelectList(ViewBag.Caretaker, "Value", "Text"), "--Select--", new { @class = "form-control col-md-3 labelStyle", @autocomplete = "off" })
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label id="lblfrmdate" class="label-style">From Date :</label>
+                                    @Html.TextBox("FromDate", "", new { @class = "datePickerControlStyle datetimepicker form-control labelStyle", @placeholder = "From Date", @autocomplete = "off", onchange = "checkDate()" })
+
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label id="lbltodate" class="label-style">To Date :</label>
+                                    @Html.TextBox("ToDate", "", new { @class = "datePickerControlStyle datetimepicker form-control labelStyle", @placeholder = "To Date", @autocomplete = "off", onchange = "checkDate()" })
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-12" style="padding-bottom: 15px;">
+                            <div class="col-md-5"></div>
+                            <div class="col-md-3 text-center">
+                                <button type="submit" id="btnSearch" class="btn btn-primary m-t-10" onclick="submitSearch()">Search</button>
+                                <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ResultList" class="filterable table-responsive">
+
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="bookingDetailDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content panel">
+            <div class="modal-header panel-heading padding-10">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Booking Details</h4>
+            </div>
+            <div id="bookingDetail" class="modal-body no-padding">
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-xs btn btn-primary " data-dismiss="modal">Close</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="spinner">
+
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            var caretaker = [];
+            $.ajax({
+                url: "../Client/LoadCareTaker",
+                success: function (feed) {
+                    $.each($.parseJSON(feed), function (index, value) {
+                        console.log(value.CareTakerName);
+                        caretaker.push(value.CareTakerName);
+                    });
+                    $("#Caretaker").autocomplete({
+                        source: caretaker
+                    });
+                },
+                error: function (feed) {
+                    logError(feed.statusText + ' - Error occurred while loading Caretakers. Function: $(document).ready(function ()). Page: RejectedBookingDetails.cshtml');
+                    //alert("An error has occurred. " + feed);
+                }
+            });
+
+        });
+    });
+    function showBookingDetails(bookingId) {
+        showProgress();
+        $.ajax({
+            url: "../Admin/UserBookingDetails/",
+            data: {
+                bookingId: bookingId
+            },
+            success: function (feed) {
+                $('#bookingDetail').html(feed);
+                spinnerVisible = true;
+                hideProgress();
+                $('#bookingDetailDialog').modal('show');
+            },
+            error: function (feed) {
+                spinnerVisible = true;
+                hideProgress();
+                console.log(feed.responseText);
+                logError(feed.statusText + ' - Error occurred while showing details of a booking. Function: showBookingDetails(bookingId). Page: RejectedBookingDetails.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+    $('#tblBookingHistory').DataTable({
+        "pagingType": "full_numbers"
+    });
+
+    function submitSearch() {
+        showProgress();
+        //var data = $('#myForm').serialize();
+        $.ajax({
+            url: "../Admin/RejectedBookingDetails",
+            method: 'POST',
+            data: { StatusId: 3, Caretaker: ($('#Caretaker').val() == '') ? null : $('#Caretaker').val(), FromDate: ($('#FromDate').val() == '') ? null : $('#FromDate').val(), ToDate: ($('#ToDate').val() == '') ? null : $('#ToDate').val() } ,
+            success: function (feed) {
+                $('#ResultList').html(feed);
+                spinnerVisible = true;
+                hideProgress();
+                $('#tblBookingHistory').DataTable({
+                    "pagingType": "full_numbers",
+                    "pageLength": 25
+                });
+            },
+            error: function (feed) {
+                spinnerVisible = true;
+                hideProgress();
+                logError(feed.statusText + ' - Error occurred while searching details of a booking. Function: submitSearch(). Page: RejectedBookingDetails.cshtml');
+                //alert("An error has occurred. " + feed);
+            }
+        });
+    }
+    function checkDate() {
+        var fromDate = $('#FromDate').val();
+        var toDate = $('#ToDate').val();
+        if (fromDate != "") {
+            if (toDate != "") {
+                if (Date.parse(fromDate) > Date.parse(toDate)) {
+                    alert("To date cannot be less than From date.");
+                    $('#ToDate').val(fromDate);
+                    localStorage.setItem("bookingToDate", fromDate);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    $(document).ready(function () {
+        submitSearch();
+        //dropdown disable as per Role
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+        if (role == 1) {
+            document.getElementById('countrydiv').style.display = "none";
+        }
+        if (role == 2) {
+            document.getElementById('countrydiv').style.display = "none";
+            document.getElementById('statediv').style.display = "none";
+        }
+        if (role == 3) {
+            document.getElementById('countrydiv').style.display = "none";
+            document.getElementById('statediv').style.display = "none";
+            document.getElementById('citydiv').style.display = "none";
+
+        }
+        if (role == 4) {
+            document.getElementById('main').style.display = "none";
+
+
+        }
+        $('#FromDate').datepicker({
+        dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+        showStatus: true,
+        showWeeks: true,
+        currentText: 'Now',
+        autoSize: true,
+        gotoCurrent: true,
+            showAnim: 'blind',
+            changeMonth: true,
+            changeYear: true,
+        highlightWeek: true
+    });
+
+    $('#ToDate').datepicker({
+        dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+        showStatus: true,
+        showWeeks: true,
+        currentText: 'Now',
+        autoSize: true,
+        gotoCurrent: true,
+        showAnim: 'blind',
+        changeMonth: true,
+        changeYear: true,
+        highlightWeek: true
+    });
+    });
+
+    function LoadCareTakerByLocation() {
+        SetDropdownValuesByRole();
+        var caretaker = [];
+        $.ajax({
+            url: "/Client/LoadCareTakerByLocation",
+            type: "POST",
+            data: {
+                countryId: $('#ddlCountry1').val(),
+                stateId: $('#ddlStates1').val(),
+                cityId: $('#ddlCity1').val()
+            },
+            success: function (feed) {
+                $("#Caretaker").html(""); // clear before appending new list
+                $("#Caretaker").append($('<option></option>').val("").html("--Select--"));
+                $.each($.parseJSON(feed), function (i, care) {
+                    $("#Caretaker").append($('<option></option>').val(care.CareTakerId).html(care.CareTakerName));
+                })
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while populating the Caretakers. Function: $(document).ready(function ()). Page: CaretakerWiseBooking.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+  function SetDropdownValuesByRole() {
+
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+            if (role == 1) {
+                $('#ddlCountry1').val(@country);
+                return;
+            }
+            if (role == 2) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                return;
+            }
+            if (role == 3) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                $('#ddlCity1').val(@city);
+                return;
+        }
+        return;
+        }
+    $("#ddlCity1").change(function () {
+        var cityId = $('#ddlCity1').val();
+        //alert(stateId);
+
+        $.ajax({
+            url: '/Admin/GetBranch?city=' + cityId,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            success: function (data) {
+                console.log(data);
+                var ddlState = $("#Branch1");
+                ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                $.each(data, function (data, value) {
+
+                    ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                });
+
+            }
+        });
+    });
+</script>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.UserBooking>
+@*<h6>Client Schedulings</h6>*@
+
+@*<script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">*@
+<div class=" table--no-card table-responsive  m-b-40 ">
+    <table class="table table-borderless table-striped table-earning padding-top-10 table-font dataTable" id="PublicUserBooking">
+        <thead>
+            <tr>
+                <th class="label_width">Booking Date</th>
+                <th class="label_width">Caregiver</th>
+                <th class="label_width">Service</th>
+                @*<th>Location</th>*@
+                <th class="label_width">From Date Time</th>
+                <th class="label_width">To Date Time</th>
+                <th class="label_width">Action</th>
+
+            </tr>
+        </thead>
+        <tbody class="table-font">
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td onclick="showNotificationDetails('@item.BookingId')" class="label_width">
+                            @item.BookingDate.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString())
+                        </td>
+                        <td onclick="showNotificationDetails('@item.BookingId')" class="label_width">@item.BookedUser</td>
+                        <td onclick="showNotificationDetails('@item.BookingId')" class="label_width">@item.Service</td>
+                        @*<td>@item.Location</td>*@
+                        <td onclick="showNotificationDetails('@item.BookingId')" class="label_width">@item.FromDateTime.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) @item.FromDateTime.ToString("h:mm tt") </td>
+                        <td onclick="showNotificationDetails('@item.BookingId')" class="label_width">@item.FromDateTime.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) @item.ToDateTime.ToString("h:mm tt")</td>
+                        <td class="label_width">
+                            <button class="btn btn-xs btn-primary" title="View Details" data-toggle="modal" onclick="showNotificationDetails('@item.BookingId')"><span class="fa fa-eye"></span></button>
+                            @if (item.InvoiceNo != 0)
+                            {
+                                <button class="btn btn-info btn-dashboard" title="View Invoice" onclick="viewSchedule('@(item.InvoicePath)')">View Invoice</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-info btn-dashboard" title="View Invoice" onclick="viewSchedule('@(item.InvoicePath)')" disabled>View Invoice</button>
+                            }
+                        </td>
+                        @*<td>
+                                <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" data-target="#modal-default"><span class="fa fa-edit"></span></button>
+
+                                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                            </td>*@
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<style>
+    .table-font {
+        font-size: 16px;
+    }
+
+    .label_width {
+        width: 20%;
+    }
+</style>
+
+<script type="text/javascript">
+    $('#PublicUserBooking').DataTable({
+        "pagingType": "full_numbers"
+    });
+
+    function viewSchedule(InvoicePath) {
+        debugger;
+        $("#policyContent").html('<iframe src="' + InvoicePath + '" style="width: 100%; height: 700px" onload="hideProgress()"></iframe>');
+        $('#modal-invoice').modal('toggle');
+    }
+</script>

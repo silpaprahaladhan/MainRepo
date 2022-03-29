@@ -1,0 +1,196 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+
+<script type="text/javascript">
+    $(document).ready(function ($) {
+        //for scrolling from other page
+        if ($(window.location.hash).length) {
+            $('html,body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            });
+            window.location.hash = '';
+        }
+        $('li').removeClass('menu__item--current');
+        $('#liScheduleHistory').addClass('menu__item--current');
+
+        $('ul.nav').find('a').click(function () {
+            var $href = $(this).attr('href');
+            var li = $(this).parent('li');
+            $('li').removeClass('menu__item--current');
+            $(li).addClass('menu__item--current');
+            $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+            var $anchor = $($href).offset();
+            $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+            return false;
+        });
+    });
+
+
+</script>
+
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage alert_messages">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Schedule Rejected History</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-12 innerDiv">
+                                <div class=" col-md-3 col-lg-6">
+                                    <label id="lblfrmdate" class="label-style">From Date :</label>
+
+                                    @Html.TextBox("FromDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtFromDate", @placeholder = "From Date" })
+                                </div>
+                                <div class="col-md-3 col-lg-6">
+                                    <label id="lblfrmdate" class="label-style">To Date :</label>
+
+                                    @Html.TextBox("ToDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtToDate", @placeholder = "To Date" })
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-center form-group padT25">
+                                <button type="button" onclick="submitSearch()" id="btnSearch" class="btn btn-primary ">Search</button>
+                                <button type="submit" onclick="window.location.reload();" id="btnCancel" class="btn btn-primary ">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 no-padding">
+                        <div id="Result"></div>
+                    </div>
+                    <div id="spinner">
+
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="notificationDetailDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content panel">
+            <div class="modal-header panel-heading padding-10">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Booking Details</h4>
+            </div>
+            <div id="notificationDetails" class="modal-body no-padding">
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-xs btn btn-primary " data-dismiss="modal">Close</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+
+        $('#txtFromDate').datepicker({
+            dateFormat: '@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()',
+            showStatus: true,
+            showWeeks: true,
+            currentText: 'Now',
+            autoSize: true,
+            gotoCurrent: true,
+            showAnim: 'blind',
+            changeMonth: true,
+            changeYear: true,
+            highlightWeek: true
+        });
+
+        $('#txtToDate').datepicker({
+            dateFormat: '@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()',
+            showStatus: true,
+            showWeeks: true,
+            currentText: 'Now',
+            autoSize: true,
+            gotoCurrent: true,
+            showAnim: 'blind',
+            changeMonth: true,
+            changeYear: true,
+            highlightWeek: true
+        });
+
+
+    });
+    function submitSearch() {
+        showProgress();
+        //var data = $('#myForm').serialize();
+        $.ajax({
+            url: "../CareTaker/ScheduleRejected",
+            method: 'POST',
+            data: { fromDate: ($('#txtFromDate').val() != '') ? $('#txtFromDate').val() : null, toDate: ($('#txtToDate').val() != '') ? $('#txtToDate').val() : null },
+            success: function (feed) {
+                debugger;
+                spinnerVisible = true;
+                hideProgress();
+                $('#Result').html(feed);
+                $('#RejectedSchedule').DataTable({
+                    stateSave: true,
+                    'paging': true,
+                    "lengthChange": true,
+                    "pageLength": 10,
+                    "order": [[1, "desc"]]
+                });
+
+            },
+            error: function (feed) {
+                spinnerVisible = true;
+                hideProgress();
+                logError(feed.statusText + ' - Error occurred while searching User Bookings. Function: submitSearch(). Page: CaretakerBookingHistory.cshtml');
+                //alert("An error has occurred. " + feed);
+            }
+
+        });
+    }
+
+</script>
+
+<style>
+    .table-font {
+        font-size: 30px;
+    }
+
+    .table-margin {
+        margin-bottom: 50px;
+        margin-top: 20px;
+    }
+
+    .panel .panel-heading {
+        padding: 10px 15px;
+    }
+
+    .table > thead > tr > th {
+        padding: 8px;
+    }
+</style>
+<style>
+    .table-font {
+        font-size: 16px
+    }
+</style>
+
+
+

@@ -1,0 +1,1193 @@
+﻿@model Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "CareTakerProfile";
+}
+
+@if (ViewBag.Unauthorized == null)
+{
+    <style>
+        .td-padding-zero {
+            padding-left: 0px;
+        }
+
+        .btn-bs-file {
+            position: relative;
+        }
+
+            .btn-bs-file input[type="file"] {
+                position: absolute;
+                top: -9999999;
+                filter: alpha(opacity=0);
+                opacity: 0;
+                width: 0;
+                height: 0;
+                outline: none;
+                cursor: inherit;
+            }
+
+        .box-footer {
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            $('#txtFromDate').datepicker({
+                maxDate: 0,
+                changeMonth: true,
+                changeYear: true,
+            });
+            $('#txtToDate').datepicker({
+                maxDate: 0,
+                changeMonth: true,
+                changeYear: true,
+            });
+        });
+
+        function removeImage() {
+            $('#imgCaretaker').attr('src', "data:image;base64,@System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg")))");
+            $('#ProfilePicByte').val($('#imgCaretaker').attr('src').split(',')[1]);
+        }
+
+
+        function showDocument(content, filename) {
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            var modelConsentValue = content;
+                @*var modelConsentValue = @Html.Raw(Json.Encode(Convert.ToBase64String((Model == null || Model.ConsentForm == null) ? new byte[0]: Model.ConsentForm)));*@
+                var byteCharacters = atob(modelConsentValue);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            var blob = new Blob([byteArray], { type: 'octet/stream' });
+            var objectURL = URL.createObjectURL(blob);
+            a.href = objectURL;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(objectURL);
+            //$("#documentContent").html('<iframe type="application/pdf" style="width: 100%; height: 600px" src=' + objectURL + '></iframe>');
+        }
+
+
+        function preventDocumentSelection(checkBox) {
+            if (chkFaxDocuments.checked) {
+                $(".disableUpload").click(function (e) {
+                    e.preventDefault();
+                });
+                $(".disableUpload").prop('disabled', true);
+                $(".disableUpload").val('');
+            }
+            else {
+                $('.disableUpload').unbind('click');
+                $(".disableUpload").prop('disabled', false);
+            }
+        }
+
+        function readCaretakerImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#imgCaretaker')
+                        .attr('src', e.target.result);
+                    $('#ProfilePicByte').val(e.target.result.split(',')[1]);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        var changeDateFormat = function (dateToConvert) {
+            var date = new Date(Number(dateToConvert.match(/\d+/)[0]));
+            var day = date.getDate();
+            day = day = (day < 10) ? ("0" + day) : day;
+            var month = date.getMonth() + 1;
+            month = (month < 10) ? ("0" + month) : month;
+            var dateStr = month + "/" + day + "/" + date.getFullYear();
+            return dateStr;
+        }
+
+        $(document).ready(function () {
+            if ($("form").validate() != undefined) {
+                $("form").validate().settings.ignore = "";
+            }
+            $('#Edit').hide();
+            $('#editPage').click(function () {
+                $('#View').hide();
+                $('#Edit').show();
+            });
+
+            $('#ddlQualification').change(function () {
+                if ($('#ddlQualification').val() === "999") {
+                    $('#otherquali').show();
+                }
+                else {
+                    $('#otherquali').val('');
+                    $('#otherquali').hide();
+                }
+            });
+
+            $('#TermsPopup').on('show.bs.modal', function (e) {
+                    debugger;
+                    var docPath = $('#ConsentDocPath').val();
+                    if (docPath != '') {
+                        $("#policyContent").html('<iframe type="application/pdf" style="width: 100%; height: 600px" src=' + docPath + '></iframe>');
+                    }
+                    else {
+                        $("#policyContent").html('<div>Consent Form is not uploaded.</div>');
+                    }
+                });
+
+
+
+            $("input[name='UpdateCaretaker']").on("click", function () {
+
+                if ($('#FirstName').val() == "") {
+                    alert("First name should not be empty.");
+                    return false;
+                }
+                if ($('#LastName').val() == "") {
+                    alert("Last name should not be empty.");
+                    return false;
+                }
+
+                if ($('#HouseName').val() == "") {
+                    alert("@Resource.StreetName should not be empty.");
+                    return false;
+                }
+
+
+                if ($('#CountryId').val() == 0) {
+                    alert("Country should not be empty.");
+                    return false;
+                }
+                if ($('#StateId').val() == 0) {
+                    alert("@Resource.State should not be empty.");
+                    return false;
+                }
+                if ($('#CityId').val() == 0) {
+                    alert("City should not be empty.");
+                    return false;
+                }
+                if ($('#GenderId').val() == 0) {
+                    alert("Gender should not be empty.");
+                    return false;
+                }
+                if ($('#EmailAddress').val() == "") {
+                    alert("Login name should not be empty.");
+                    return false;
+                }
+
+                if ($('#TotalExperience').val() == "") {
+                    $("#TotalExperience").val('0');
+                }
+
+                if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() != '--Select--') {
+                    $('#ddlQualification').focus();
+                    $('#btnSaveQualification').addClass('required-border');
+                    alert("Please click the '+' button to add the selected Qualification.");
+                    return false;
+                }
+                else {
+                    $('#btnSaveQualification').removeClass('required-border');
+                }
+
+                if ($('#txtOrganisation').val() != '' || $('#txtFromDate').val() != '' || $('#txtToDate').val() != '') {
+
+                    $('#txtOrganisation').focus();
+                    $('#btnSaveOrganisation').addClass('required-border');
+                    alert("Please click the '+' button to add the selected Organisation details.");
+                    return false;
+                }
+                else {
+
+                    $('#btnSaveOrganisation').removeClass('required-border');
+                }
+
+
+
+                if ($('#CategoryId').val() == 0) {
+                    alert("Category should not be empty.");
+                    return false;
+                }
+
+                if ($('#ddlService option:selected').text() != '' && $('#ddlService option:selected').text() != '--Select--') {
+                    $('#ddlService').focus();
+                    $('#btnSaveService').addClass('required-border');
+                    alert("Please click the '+' button to add the selected Service.");
+                    return false;
+                }
+                else {
+                    $('#btnSaveService').removeClass('required-border');
+                }
+
+                if ($("#tblServices td").closest("tr").length <= 0) {
+                    alert("Atleast one service is required.");
+                    return false;
+                }
+
+                var totalsize = 0;
+                $.each(certificateFiles, function (index, value) {
+                    totalsize += value["file"].size;
+                });
+                $.each(SinFiles, function (index, value) {
+                    totalsize += value["file"].size;
+                });
+                $.each(OtherFiles, function (index, value) {
+                    totalsize += value["file"].size;
+                });
+                if ((((totalsize) / 1024) / 1024) >= 8) {
+                    alert('Document file size should not exceed 8 Mb.');
+                    return false;
+                }
+
+
+                var fromDate = $('#txtAvailableFrom').val();
+                var toDate = $('#txtAvailableTo').val();
+                if (fromDate != "") {
+                    if (toDate != "") {
+                        if (Date.parse(fromDate) > Date.parse(toDate)) {
+                            alert("To date should be greater than From date in availability.");
+                            return false;
+                        }
+                    }
+                }
+            });
+
+
+
+            //////////////// Start Dynamic Organisation //////////////////////////////
+
+            $('#btnSaveOrganisation').click(function () {
+                if ($('#txtOrganisation').val() != '') {
+
+                    var fromDate = $('#txtFromDate').val();
+                    var toDate = $('#txtToDate').val();
+                    if (fromDate != "") {
+                        if (toDate != "") {
+                            if (Date.parse(fromDate) > Date.parse(toDate)) {
+                                alert("To date should be greater than From date in experience details.");
+                                //$('#<%= lblErrorMsg.ClientID %>').text('To date should be greater than From date.');
+                                return false;
+                            }
+                        }
+                    }
+                    $('#txtOrganisation').removeClass('required-border');
+                    if ($('#txtFromDate').val() == '') {
+                        $('#txtFromDate').addClass('required-border');
+                        return false;
+                    } else {
+                        $('#txtFromDate').removeClass('required-border');
+                    }
+
+                    if ($('#txtToDate').val() == '') {
+                        $('#txtToDate').addClass('required-border');
+                        return false;
+                    } else {
+                        $('#txtToDate').removeClass('required-border');
+                    }
+                    $.ajax({
+                        url: "../AddExperienceDetails",
+                        type: "POST",
+                        data: { dateFrom: $('#txtFromDate').val(), dateTo: $('#txtToDate').val(), company: $('#txtOrganisation').val() },
+                        success: function (data) {
+                            $('#btnSaveOrganisation').removeClass('required-border');
+                            $('#txtOrganisation').removeClass('required-border');
+                            $('#txtFromDate').removeClass('required-border');
+                            $('#txtToDate').removeClass('required-border');
+                            var strOrg = "";
+                            console.log(data);
+                            $('#organisationContent').html('');
+                            for (var i = 0; i < data.length; i++) {
+                                var fromDate = changeDateFormat(data[i].DateFrom);
+                                var toDate = changeDateFormat(data[i].DateTo);
+                                var company = "'" + data[i].Company + "'";
+                                console.log(company);
+                                strOrg = strOrg + "<tr>" + "<td class='col-md-5'>" + data[i].Company + "</td>" + "<td class='col-md-3'>" + fromDate + "</td>" + "<td class='col-md-3'>" + toDate + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger float-right' onclick = RemoveExperience(" + company + "); title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                            }
+                            $('#organisationContent').html(strOrg);
+
+                            $('#tblOrganisations').show();
+                            $('#txtOrganisation').val('');
+                            $('#txtFromDate').val('');
+                            $('#txtToDate').val('');
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while adding Caregiver Experience details. Function: $("#btnSaveOrganisation").click(function ()). Page: CaretakerProfile.cshtml');
+                            //alert("An error has occurred. Please try again later.");
+                        }
+                    });
+
+                }
+            });
+
+
+            if ($("#tblOrganisations td").closest("tr").length > 0) {
+                $('#tblOrganisations').show();
+            }
+            else {
+                $('#tblOrganisations').hide();
+            }
+
+
+            //////////////// End of Dynamic Organisation //////////////////////////////
+
+
+            //////////////// Start Dynamic Qualification ///////////////////////////////
+
+            $('#btnSaveQualification').click(function () {
+                if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() != '--Select--') {
+                    if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() == 'Others') {
+                        $.ajax({
+                            url: "../AddQualificationDetails",
+                            type: "POST",
+                            data: { qualificationId: $('#ddlQualification').val(), qualification: $('#otherquali').val() },
+                            //, qualificationDate: null, university: null
+                            success: function (data) {
+                                $('#btnSaveQualification').removeClass('required-border');
+                                $('#ddlQualification').removeClass('required-border');
+                                if (data.length > 0) {
+                                    var strQual = "";
+                                    $('#qualificationContent').html('');
+                                    for (var i = 0; i < data.length; i++) {
+                                        strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].QualificationName + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveQualification(" + data[i].QualificationId + "," + data[i].CareTakerQualificationId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                                    }
+                                    $('#otherquali').val('');
+                                    $('#otherquali').hide();
+                                    $('#qualificationContent').html(strQual);
+                                    //$('#qualificationContent').append("<tr>" + "<td class='col-md-11'>" + data[i].Qualification + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = 'removeQualification(" + data[i].QualificationId + ")' title='Delete' ><span class='fa fa-close'></span></label>" + "</td>" + "</tr>");
+                                    $('#tblQualifications').show();
+                                    $("select#ddlQualification").val('0');
+                                }
+                            },
+                            error: function (data) {
+                                logError(data.statusText + ' - Error occurred while adding Caregiver Qualification details. Function: $("#btnSaveQualification").click(function ()). Page: CaretakerProfile.cshtml');
+                                //alert("Some network error has occurred. Please try again after some time.");
+                            }
+                        });
+                    }
+                    else {
+                        $.ajax({
+                            url: "../AddQualificationDetails",
+                            type: "POST",
+                            data: { qualificationId: $('#ddlQualification').val(), qualification: $('#ddlQualification option:selected').text() },
+                            //, qualificationDate: null, university: null
+                            success: function (data) {
+                                $('#btnSaveQualification').removeClass('required-border');
+                                $('#ddlQualification').removeClass('required-border');
+                                if (data.length > 0) {
+                                    var strQual = "";
+                                    $('#qualificationContent').html('');
+                                    for (var i = 0; i < data.length; i++) {
+                                        strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].QualificationName + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveQualification(" + data[i].QualificationId + "," + data[i].CareTakerQualificationId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                                    }
+                                    $('#qualificationContent').html(strQual);
+                                    //$('#qualificationContent').append("<tr>" + "<td class='col-md-11'>" + data[i].Qualification + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = 'removeQualification(" + data[i].QualificationId + ")' title='Delete' ><span class='fa fa-close'></span></label>" + "</td>" + "</tr>");
+                                    $('#tblQualifications').show();
+                                    $("select#ddlQualification").val('0');
+                                }
+                            },
+                            error: function (data) {
+                                logError(data.statusText + ' - Error occurred while adding Caregiver Qualification details. Function: $("#btnSaveQualification").click(function ()). Page: CaretakerProfile.cshtml');
+                                //alert("Some network error has occurred. Please try again after some time.");
+                            }
+                        });
+                    }
+
+
+                }
+
+            });
+
+            if ($("#tblQualifications td").closest("tr").length > 0) {
+                $('#tblQualifications').show();
+            }
+            else {
+                $('#tblQualifications').hide();
+            }
+            //////////////// End of Dynamic Qualification types //////////////////////////////
+
+
+            //////////////// Start Dynamic Service types //////////////////////////////
+
+            $('#btnSaveService').click(function () {
+                if ($('#ddlService option:selected').text() != '' && $('#ddlService option:selected').text() != '--Select--') {
+                    $.ajax({
+                        url: "../AddServiceDetails",
+                        type: "POST",
+                        data: { serviceId: $('#ddlService').val(), serviceName: $('#ddlService option:selected').text(), expectedRate: "0", approvedRate: "0" },
+                        success: function (data) {
+                            $('#btnSaveService').removeClass('required-border');
+                            $('#ddlService').removeClass('required-border');
+                            var strService = "";
+                            $('#serviceContent').html('');
+                            for (var i = 0; i < data.length; i++) {
+                                strService = strService + "<tr>" + "<td class='col-md-11'>" + data[i].ServiceName + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger float-right' onclick = 'RemoveService(" + data[i].ServiceId + ");' title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                            }
+                            $('#serviceContent').html(strService);
+
+                            $('#tblServices').show();
+                            $('#txtServiceRate').val('');
+                            $("select#ddlService").val('0');
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while adding Caregiver Service details. Function: $("#btnSaveService").click(function ()). Page: CaretakerProfile.cshtml');
+                            //alert("Some network error has occurred. Please try again after some time.");
+                        }
+                    });
+                }
+            });
+
+            if ($("#tblServices td").closest("tr").length > 0) {
+                $('#tblServices').show();
+            }
+            else {
+                $('#tblServices').hide();
+            }
+            //////////////// End of Dynamic Service types //////////////////////////////
+        });
+
+        function RemoveExperience(companyName) {
+
+            var comName = companyName;
+            if (confirm(' Are you sure  to remove this Experience ?'))
+            $.ajax({
+                url: "../RemoveExperienceDetails",
+                type: "POST",
+                data: { company: companyName },
+                //, qualificationDate: null, university: null
+                success: function (data) {
+                    $('#organisationContent').html('');
+                    var strOrg = "";
+                    if (data.length > 0) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            var fromDate = changeDateFormat(data[i].DateFrom);
+                            var toDate = changeDateFormat(data[i].DateTo);
+                            var company = "'" + data[i].Company + "'";
+                            console.log(company);
+                            strOrg = strOrg + "<tr>" + "<td class='col-md-5'>" + data[i].Company + "</td>" + "<td class='col-md-3'>" + fromDate + "</td>" + "<td class='col-md-3'>" + toDate + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger float-right' onclick = RemoveExperience(" + company + "); title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                        }
+
+                    }
+                    $('#organisationContent').html(strOrg);
+                    if ($("#tblOrganisations td").closest("tr").length > 0) {
+                        $('#tblOrganisations').show();
+                    }
+                    else {
+                        $('#tblOrganisations').hide();
+                    }
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while removing Caregiver Experience details. Function: RemoveExperience(companyName). Page: CaretakerProfile.cshtml');
+                    //alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+        };
+
+        function RemoveQualification(qualificationId, caretakerQualificationId) {
+            if (confirm(' Are you sure  to remove this Qualification ?'))
+            $.ajax({
+                url: "../RemoveQualificationDetails",
+                type: "POST",
+                data: { qualificationId: qualificationId, caretakerQualificationId: caretakerQualificationId },
+                //, qualificationDate: null, university: null
+                success: function (data) {
+                    $('#qualificationContent').html('');
+                    var strQual = "";
+                    if (data.length > 0) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].QualificationName + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveQualification(" + data[i].QualificationId + "," + data[i].CareTakerQualificationId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                        }
+
+                    }
+                    $('#qualificationContent').html(strQual);
+                    if ($("#tblQualifications td").closest("tr").length > 0) {
+                        $('#tblQualifications').show();
+                    }
+                    else {
+                        $('#tblQualifications').hide();
+                    }
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while removing Caregiver Qualification details. Function: RemoveQualification(qualificationId, caretakerQualificationId). Page: CaretakerProfile.cshtml');
+                    //alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+        };
+
+        function RemoveService(servId) {
+            if (confirm(' Are you sure  to remove this Service ?'))
+            $.ajax({
+                url: "../RemoveServiceDetails",
+                type: "POST",
+                data: { serviceId: servId },
+                //, qualificationDate: null, university: null
+                success: function (data) {
+                    var strService = "";
+                    $('#serviceContent').html('');
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            strService = strService + "<tr>" + "<td class='col-md-11'>" + data[i].ServiceName + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger float-right' onclick = 'RemoveService(" + data[i].ServiceId + ");' title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                        }
+
+                    }
+                    $('#serviceContent').html(strService);
+                    if ($("#tblServices td").closest("tr").length > 0) {
+                        $('#tblServices').show();
+                    }
+                    else {
+                        $('#tblServices').hide();
+                    }
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while removing Caregiver Service details. Function: RemoveService(servId). Page: CaretakerProfile.cshtml');
+                    //alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+        };
+
+
+
+        function DownloadFile(caretakerDocumentId, documentContent) {
+
+
+            $.ajax({
+                url: "../Download_Document_Click",
+                type: "POST",
+                data: { caretakerDocumentId: caretakerDocumentId, documentContent: documentContent },
+                //, qualificationDate: null, university: null
+                success: function (data) {
+
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while downloading Caregiver uploaded documents. Function: DownloadFile(caretakerDocumentId, documentContent). Page: CaretakerProfile.cshtml');
+                    //alert('Some network error has occurres. Please try again after some time.');
+                    //alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+
+
+        }
+
+        function nextTabPersonal() {
+            $('#liCareTakerPersonal').removeClass('active');
+            $('#careTakerPersonal').removeClass('active in');
+            $('#liCareTakerService').removeClass('active');
+            $('#careTakerService').removeClass('active in');
+            $('#liCareTakerProfessional').addClass('active');
+            $('#careTakerProfessional').addClass('active in');
+        }
+        function nextTabProfessional() {
+            $('#liCareTakerPersonal').removeClass('active');
+            $('#careTakerPersonal').removeClass('active in');
+            $('#liCareTakerService').addClass('active');
+            $('#careTakerService').addClass('active in');
+            $('#liCareTakerProfessional').removeClass('active');
+            $('#careTakerProfessional').removeClass('active in');
+        }
+        function previousTabProfessional() {
+            $('#liCareTakerPersonal').addClass('active');
+            $('#careTakerPersonal').addClass('active in');
+            $('#liCareTakerService').removeClass('active');
+            $('#careTakerService').removeClass('active in');
+            $('#liCareTakerProfessional').removeClass('active');
+            $('#careTakerProfessional').removeClass('active in');
+        }
+        function previousTabService() {
+            $('#liCareTakerPersonal').removeClass('active');
+            $('#careTakerPersonal').removeClass('active in');
+            $('#liCareTakerService').removeClass('active');
+            $('#careTakerService').removeClass('active in');
+            $('#liCareTakerProfessional').addClass('active');
+            $('#careTakerProfessional').addClass('active in');
+        }
+
+    </script>
+    if (ViewBag.Error != null)
+    {
+        <div class="padT25"><p class="alert alert-danger col-md-6 col-md-offset-3">@ViewBag.Error</p></div>
+    }
+    else
+    {
+        <div id="View">
+            <div class="container">
+                <div class="main-content">
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+
+                            <div class="row profile-details">
+
+                                <div class="equal-height-panels">
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 ">
+                                        @if (TempData["Success"] != null)
+                                        {
+                                            <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                                        }
+                                        @if (TempData["Failure"] != null)
+                                        {
+                                            <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                                        }
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        using (Html.BeginForm("UpdateCaretaker", "CareTaker", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container">
+                <div class="main-content">
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <h3 class="register" style="margin-top:10px;">
+                                @{
+                                    string careTakername = Model.FirstName + " " + Model.LastName;
+                                }
+                                @careTakername
+
+                            </h3>
+                            <div class="bootstrap-tab animated wow slideInUp animated " data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: slideInUp;">
+                                <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                                    <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
+                                        <li id="liCareTakerPersonal" role="presentation" class="active"><a href="#careTakerPersonal" id="home-tab" role="tab" style="border: 1px solid #28a745;" data-toggle="tab" aria-controls="home" aria-expanded="true">Personal Details</a></li>
+                                        <li id="liCareTakerProfessional" role="presentation"><a href="#careTakerProfessional" role="tab" style="border: 1px solid #28a745;" id="profile-tab" data-toggle="tab" aria-controls="profile">Professional Details</a></li>
+                                        @*<li id="liCareTakerService" role="presentation" class=""><a href="#careTakerService" role="tab" id="profile2-tab" data-toggle="tab" aria-controls="profile">Service Details</a></li>*@
+                                    </ul>
+                                    <div id="myTabContent" class="tab-content panel panel-default">
+                                        <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body active in" id="careTakerPersonal" aria-labelledby="home-tab">
+
+                                            <div class="profile_Style" style="margin-top:20px;">
+                                                <div class="col-md-9 left">
+
+                                                    <form class="form-horizontal">
+                                                        <fieldset>
+                                                            <div class="row">
+
+                                                                <div class="col-lg-12">
+                                                                    <div class="col-md-6">
+                                                                    
+                                                                            @Html.Label("Profile Id", new { @class = "label-style" })
+                                                                            @Html.HiddenFor(model => model.IsPrivate)
+                                                                            @Html.TextBoxFor(model => model.CaretakerProfileId, new { @class = "form-control", @placeholder = "Profile Id", @readonly = "readonly", disabled = "disabled" })
+                                                                            @Html.HiddenFor(model => model.CaretakerProfileId)
+                                                                            @Html.HiddenFor(model => model.UserId)
+                                                                     
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                    
+                                                                            <label class="label-style" for="Email">Email</label><span class="mandatoryField">*</span>
+                                                                            @Html.TextBoxFor(model => model.EmailAddress, "", new { @class = "form-control", @placeholder = "Email Address", disabled = "disabled" })
+                                                                            @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "col-md-12 no-padding required" })
+                                                                            @Html.HiddenFor(model => model.EmailAddress)
+                                                                       
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+
+                                                                <div class="col-lg-12">
+                                                                    <div class="col-md-6">
+                                                                     
+                                                                            <label class="label-style" for="First_Name">First Name</label><span class="mandatoryField">*</span>
+                                                                            @Html.TextBoxFor(model => model.FirstName, "", new { @class = "form-control", @placeholder = "First Name" })
+                                                                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "col-md-12 no-padding required" })
+                                                                        
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                     
+
+                                                                            <label class="label-style" for="Last_Name">Last Name</label><span class="mandatoryField">*</span>
+                                                                            @Html.TextBoxFor(model => model.LastName, "", new { @class = "form-control", @placeholder = "Last Name" })
+                                                                        </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="col-md-6">
+                                                                     
+                                                                            <label class="label-style" for="Social_ID">Social ID</label><span class="mandatoryField">*</span>
+                                                                            @Html.TextBoxFor(model => model.SSID, "", new { @class = "form-control", @placeholder = "Social ID" })
+                                                                      
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                      
+                                                                            <label class="label-style" for="Gender">Gender</label><span class="mandatoryField">*</span>
+                                                                            @Html.DropDownListFor(model => model.GenderId, ViewData["GenderList"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                            @Html.ValidationMessageFor(model => model.GenderId, "", new { @class = "col-md-12 no-padding required" })
+                                                                     
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="col-md-6">
+                                                                      
+                                                                            <label class="label-style" for="HouseName">@Resource.StreetName</label><span class="mandatoryField">*</span>
+                                                                            @Html.TextBoxFor(model => model.HouseName, new { @class = "form-control", @placeholder = Resource.StreetName, @cols = "20", @rows = "2" })
+                                                                            @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "col-md-12 no-padding required" })
+
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                      
+                                                                            <label class="label-style" for="Country">Country</label><span class="mandatoryField">*</span>
+                                                                            @if (ViewData["CountryList"] != null)
+                                                                            {
+                                                                                @Html.DropDownListFor(model => model.CountryId, ViewData["CountryList"] as SelectList, "--Select--", new { @class = "form-control labelStyle", @onchange = "LoadStates()" })
+                                                                            }
+                                                                            @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "col-md-12 no-padding required" })
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="col-md-6">
+                                                                      
+                                                                            <label class="label-style" for="State">@Resource.State</label><span class="mandatoryField">*</span>
+                                                                            @Html.DropDownListFor(model => model.StateId, ViewData["StateList"] as SelectList, new { @class = "form-control labelStyle", @onchange = "LoadCities(this.value)" })
+                                                                            @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "col-md-12 no-padding required" })
+
+                                                                       
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                      
+                                                                            <label class="label-style" for="City">City</label><span class="mandatoryField">*</span>
+                                                                            @Html.DropDownListFor(model => model.CityId, ViewData["ListCity"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                            @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "col-md-12 no-padding required" })
+
+                                                                       
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="col-md-6">
+                                                                      
+                                                                            <label class="label-style" for="Postal_Code">@Resource.ZIPCode</label>
+                                                                            @Html.TextBoxFor(model => model.ZipCode, "", new { @class = "form-control", @placeholder = Resource.ZIPCode })
+
+                                                                       
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                      
+                                                                            <label class="label-style" for="Location">Location</label>
+                                                                            @Html.TextBoxFor(model => model.Location, "", new { @class = "form-control", @placeholder = "Location" })
+
+                                                                       
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="col-md-6">
+                                                                       
+                                                                            <label class="label-style" for="Phone_Number">Phone #1</label>
+                                                                            @Html.TextBoxFor(model => model.PrimaryPhoneNo, "", new { @class = "form-control", @placeholder = "Phone #1" })
+                                                                            @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = "col-md-12 no-padding required" })
+
+                                                                      
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                      
+                                                                            <label class="label-style" for="Phone_Number">Phone #2</label>
+                                                                            @Html.TextBoxFor(model => model.SecondaryPhoneNo, "", new { @class = "form-control", @placeholder = "Phone #2" })
+                                                                            @Html.ValidationMessageFor(model => model.SecondaryPhoneNo, "", new { @class = "col-md-12 no-padding required" })
+
+                                                                       
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+
+
+                                                                    <div class="col-md-6">
+                                                                     
+                                                                                <label class="label-style" for="About">About Me</label>
+                                                                                @Html.TextAreaFor(model => model.AboutMe, new { @class = "form-control labelStyle", @placeholder = "Description about yourself", @cols = "20", @rows = "2" })
+                                                                           
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="clearfix"></div>
+                                                        </fieldset>
+                                                    </form>
+                                                </div>
+
+                                                <div class="col-xs-3 col-sm-3 col-md-3">
+                                                    <div class="newsright profile-pic image_size">
+
+                                                        @Html.HiddenFor(model => model.ProfilePicPath)
+                                                        <div>
+                                                            @if (Model != null)
+                                                            {
+                                                                if (Model.ProfilePicPath != null)
+                                                                {
+                                                                    <img id="imgCaretaker" src="@Model.ProfilePicPath"class="image-style" />
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <img id="imgCaretaker" src="~/images/NOImage.jpg" class="image-style" />
+                                                            }
+
+                                                        </div>
+                                                        @Html.HiddenFor(model => model.ProfilePicByte)
+                                                        <div class="p-b-10 clearfix">
+
+                                                        </div>
+
+                                                    </div>
+                                                    
+                                                            <div class="newsright outer-border" style="width: 200px;">
+                                                                <div style="text-align:center">
+                                                                   
+                                                                        <label class="btn-bs-file btn btn-sm btn-warning btn-profilepic">
+                                                                            Change
+                                                                            <input type="file" accept="image/png,image/jpg,image/jpeg" onchange="readCaretakerImage(this);" />
+                                                                        </label>
+                                                                        <label class="btn btn-sm btn-warning btn-profilepic" onclick="removeImage();">
+                                                                            Remove
+                                                                        </label>
+                                                                 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                 
+                                    
+
+                                                <div class="clearfix"></div>
+                                                <div class="box-footer">
+                                                    <label onclick="nextTabPersonal()" class="btn btn-primary">Next</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="careTakerProfessional" aria-labelledby="profile-tab">
+                                            <div class="bootstrap-tab-text-grids">
+                                                <div class="bootstrap-tab-text-grid">
+                                                    <div class="container">
+                                                        <div class="row centered-form" id="creatememberpanel">
+                                                            <div class="col-xs-12 col-sm-12 col-md-12 registration-div">
+                                                                <div class="profile_Style">
+                                                                    <div class="col-md-12 left">
+                                                                        <div class="form-horizontal">
+                                                                            <fieldset>
+                                                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                                  
+                                                                                        @Html.Label("Qualification", new { @class = "label-style" })
+                                                                                        <div class="input-group m-b-5">
+                                                                                            <div>
+                                                                                                @Html.DropDownList("ddlQualification", ViewData["ListQualification"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                                                <input type="text" id="otherquali" class="form-control" style="display:none;margin-top:10px" maxLength="50" />
+                                                                                            </div>
+                                                                                            <span class="input-group-btn input-group-outer">
+                                                                                                <label class="btn btn-xs btn-primary" id="btnSaveQualification" title="Add"><span class="fa fa-plus"></span></label>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        <div class=" labelStyle"></div>
+                                                                                        <div class="">
+                                                                                            <table class="table table-bordered" id="tblQualifications">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th class="custom-table-header">Qualification</th>
+                                                                                                        <th class="custom-table-header">Action</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody id="qualificationContent">
+                                                                                                    @foreach (var item in Model.CareTakerQualifications)
+                                                                                                    {
+                                                                                                        <tr>
+                                                                                                            <td class='col-md-11'>
+                                                                                                                @item.QualificationName
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <label class='btn btn-danger float-right' onclick='RemoveQualification(@item.QualificationId,@item.CareTakerQualificationId)' title='Delete'><span class='fa fa-minus'></span></label>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    }
+                                                                                                </tbody>
+                                                                                            </table>
+
+                                                                                        
+                                                                                    </div>
+                                                                                  
+                                                                                        <label class="label-style" for="Tot_Exp">Total Experience</label>
+                                                                                        @Html.TextBoxFor(model => model.TotalExperience, "", new { @class = "form-control", @type = "number", @step = ".1", @value = "0", @min = "0", @placeholder = "Total Experience in Years", ondrop = "return false", onpaste = "return false", onkeypress = "return isNumberKey(this, event)" })
+                                                                                        @Html.ValidationMessageFor(model => model.TotalExperience, "", new { @class = "col-md-12 no-padding required" })
+
+                                                                                  
+
+                                                                                  
+                                                                                        <label class="label-style" for="txtFromDate">Experience Range</label>
+
+                                                                                        <div class="input-group m-b-5">
+                                                                                            <div class="col-md-5 no-padding">
+                                                                                                @Html.TextBox("Organisation", "", new { @id = "txtOrganisation", @class = "form-control", @placeholder = "Organisation", @maxLength = "50" })
+                                                                                            </div>
+                                                                                            <div class="col-md-3 no-padding">
+                                                                                                @Html.TextBox("Date From", "", new { @id = "txtFromDate", @class = "datetimepicker form-control", @placeholder = "Date From", @readonly = "readonly" })
+                                                                                            </div>
+                                                                                            <div class="col-md-4 no-padding">
+                                                                                                @Html.TextBox("Date To", "", new { @id = "txtToDate", @class = "datetimepicker form-control", @placeholder = "Date To", @readonly = "readonly" })
+
+                                                                                            </div>
+                                                                                            <span class="input-group-btn input-group-outer">
+                                                                                                <label class="btn btn-primary add-btn" id="btnSaveOrganisation" title="Add"><span class="fa fa-plus"></span></label>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <table class="table table-bordered" id="tblOrganisations">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th class="custom-table-header">Organisation</th>
+                                                                                                        <th class="custom-table-header">From Date</th>
+                                                                                                        <th class="custom-table-header">To Date</th>
+                                                                                                        <th class="custom-table-header">Action</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody id="organisationContent">
+                                                                                                    @foreach (var item in Model.CareTakerExperiences)
+                                                                                                    {
+                                                                                                        <tr>
+                                                                                                            <td class='col-md-5'>
+                                                                                                                @item.Company
+                                                                                                            </td>
+                                                                                                            <td class='col-md-3'>
+                                                                                                                @item.DateFrom.ToString("MM/dd/yyy")
+
+                                                                                                            </td>
+                                                                                                            <td class='col-md-3'>
+                                                                                                                @item.DateTo.ToString("MM/dd/yyy")
+                                                                                                            </td>
+                                                                                                            <td class='col-md-1'>
+                                                                                                                <label class='btn btn-danger float-right' onclick="RemoveExperience('@item.Company')" title='Delete'><span class='fa fa-minus'></span></label>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    }
+                                                                                                </tbody>
+                                                                                            </table>
+
+                                                                                      
+
+
+                                                                                    </div>
+
+                                                                                    <div class="form-group">
+                                                                                        <label class="label-style" for="Type_of_Service">Category</label>
+                                                                                        @Html.DropDownListFor(model => model.CategoryId, ViewData["ListCategory"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                                   
+
+                                                                                        @Html.Label("Service", new { @class = "label-style" })
+                                                                                        <div class="input-group m-b-5">
+                                                                                            <div>
+                                                                                                @Html.DropDownList("ddlService", ViewData["ServiceList"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+
+
+                                                                                            </div>
+                                                                                            <span class="input-group-btn input-group-outer">
+                                                                                                <label class="btn btn-xs btn-primary" id="btnSaveService" title="Add"><span class="fa fa-plus"></span></label>
+                                                                                            </span>
+                                                                                        </div>
+
+
+                                                                                        <div>
+                                                                                            <table class="table table-bordered" id="tblServices">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th class="custom-table-header">Service</th>
+                                                                                                        <th class="custom-table-header">Action</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody id="serviceContent">
+                                                                                                    @foreach (var item in Model.CareTakerServices)
+                                                                                                    {
+                                                                                                        <tr>
+                                                                                                            <td class='col-md-11'>
+                                                                                                                @item.ServiceName
+                                                                                                            </td>
+                                                                                                            <td class='col-md-1'>
+                                                                                                                <label class='btn btn-danger float-right' onclick='RemoveService(@item.ServiceId)' title='Delete'><span class='fa fa-minus'></span></label>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    }
+                                                                                                </tbody>
+                                                                                            </table>
+
+                                                                                     
+
+                                                                                    </div>
+
+
+                                                                                    <div class="form-group">
+                                                                                        <label class="label-style" for="Key_Skills">Key Skills</label>
+                                                                                        @Html.TextBoxFor(model => model.KeySkills, "", new { @class = "form-control", @placeholder = "Key Skills" })
+
+                                                                                    </div>
+
+
+                                                                                    <div class="form-group">
+                                                                                        <label class="label-style" for="Upload_Documents">Upload Certificates</label>
+                                                                                        @Html.HiddenFor(model => model.ConsentForm)
+                                                                                        @Html.HiddenFor(model => model.ConsentDocPath)
+                                                                                        <label class="btn btn-default btn-file-upload">
+                                                                                            Choose Files
+                                                                                            @Html.TextBoxFor(model => model.CertificateFiles, "", new { @type = "file", @multiple = "multiple", @accept = "application/msword, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,  text/plain,application/pdf,image/*", @id = "CertificateFiles", Style = "display:none;" })
+                                                                                        </label>
+                                                                                        <div class="clearfix"></div>
+                                                                                        <div id="selectedCertificateFiles"></div>
+
+
+                                                                                    </div>
+                                                                                    <div class="form-group">
+                                                                                        <label class="label-style" for="Upload_Documents">Upload SIN</label>
+                                                                                        <label class="btn btn-default btn-file-upload" style="margin-left:53px;">
+                                                                                            Choose Files
+                                                                                            @Html.TextBoxFor(model => model.SINFile, "", new { @type = "file", @multiple = "multiple", @accept = "application/msword, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,  text/plain,application/pdf,image/*", @id = "SinFiles", Style = "display:none;" })
+                                                                                        </label>
+                                                                                        <div class="clearfix"></div>
+                                                                                        <div id="selectedSinFiles"></div>
+
+                                                                                    </div>
+
+                                                                                    <div class="form-group">
+                                                                                        <label class="label-style" for="Upload_Documents">Other documents</label>&nbsp;
+                                                                                        <span class="fa fa-info-circle" title="CPR and First Aid, Police Clearance Report, Vaccination details, Void Cheque/Direct Deposit Slip and References"></span>
+                                                                                        <label class="btn btn-default btn-file-upload">
+                                                                                            Choose Files
+                                                                                            @Html.TextBoxFor(model => model.OtherDocuments, "", new { @type = "file", @multiple = "multiple", @accept = "application/msword, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,  text/plain,application/pdf,image/*", @id = "OtherFiles", Style = "display:none;" })
+                                                                                        </label>
+                                                                                        <div class="clearfix"></div>
+                                                                                        <div id="selectedOtherFiles"></div>
+                                                                                    </div>
+                                                                                    @*<div class="form-group">
+                                                                                        @Html.CheckBox("chkFaxDocuments", false, new { @class = "", onclick = "preventDocumentSelection(this)" }) Send documents through FAX
+
+                                                                                    </div>*@
+                                                                                </div>
+
+                                                                            </fieldset>
+                                                                        </div>
+                                                                        <div class="box-footer">
+                                                                            <div class="form-group">
+                                                                                <label onclick="previousTabProfessional()" class="btn btn-primary">Prev</label>&nbsp;&nbsp;
+                                                                                <input type="submit" class="btn btn-primary" value="Update" name="UpdateCaretaker" style="font-weight:bold">&nbsp;&nbsp;
+                                                                                <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>&nbsp;&nbsp;
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"> </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            @*</div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        <!-- Terms and condition -->
+        <div class="modal fade bootstrap-tab-text" id="TermsPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <label type="button" class="close" data-dismiss="modal">&times;</label>
+                        <h4 class="modal-title" style="color:orange;text-align:center">Consent Form</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="policyContent" class="policyContent" type="text" readonly="readonly"></div>
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <label class="btn btn-default newsrightModel" data-dismiss="modal">Ok</label>
+
+                        @*<label class="btn btn-default newsrightModel" data-dismiss="modal">Decline</label>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bootstrap-tab-text" id="documentPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <label type="button" class="close" data-dismiss="modal">&times;</label>
+                        <h4 class="modal-title" style="color:orange;text-align:center">Doucument Viewer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="documentContent" class="policyContent" type="text" readonly="readonly"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <label class="btn btn-default newsrightModel" data-dismiss="modal">Ok</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="spinner">
+         
+        </div>
+    }
+}
+else
+{
+    <p class="alert alert-danger">@ViewBag.Unauthorized</p>
+}
+<script src="~/js/Custom/Caretaker.js"></script>
+<style>
+    .register {
+        color: lightslategrey;
+        margin-bottom: 5px;
+    }
+
+    .table > tbody > tr > td {
+        vertical-align: middle !important;
+        padding: 5px 20px !important;
+    }
+    ..input-group-outer {
+        padding-left: 10px;
+    }
+    .input-group-outer {
+        padding-left: 10px;
+    }
+</style>

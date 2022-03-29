@@ -1,0 +1,2166 @@
+﻿@model Nirast.Pcms.Web.Models.ClientModel
+
+
+@{
+    ViewBag.Title = "ClientDetails";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
+<link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/js/jquery.timepicker.min.js"></script>
+
+@*<link href="~/css/style.css" rel="stylesheet" type="text/css" />*@
+
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+<script src="../js/CustomScript.js"></script>
+
+<div class="container">
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="row profile_Style">
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 " id="ViewProfile">
+
+                        @if (TempData["Success"] != null)
+                        {
+                            <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                        }
+                        @if (TempData["Failure"] != null)
+                        {
+                            <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                        }
+                        @{
+                            if (ViewBag.Error != null)
+                            {
+                                <div class="padT25"><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <button class="btn btn-primary float-right editButton" title="Edit" onclick="EditClick()">Edit</button>
+
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4>Client Profile</h4>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-6">
+
+                                                            @*@Html.HiddenFor(model => model.ClientStatus)
+                                                                @Html.HiddenFor(model => model.ClientId)
+                                                                @Html.HiddenFor(model => model.CountryId1)
+                                                                @Html.HiddenFor(model => model.StateId1)
+                                                                @Html.HiddenFor(model => model.CityId1)
+                                                                @Html.HiddenFor(model => model.Country2)
+                                                                @Html.HiddenFor(model => model.StateId2)
+                                                                @Html.HiddenFor(model => model.CityId2)*@
+                                                            <label class=" label-style">Client Name <span></span></label><span class="mandatoryField">*</span>
+                                                            <label class="col-md-6 form-control labelStyle">@Model.ClientName</label>
+
+                                                        </div>
+                                                        <div class="col-md-6">
+
+                                                            <label class="label-style" for="Last_Name">Website</label>
+                                                            <label class="col-md-6 form-control labelStyle">@Model.WebsiteAddress</label>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <fieldset>
+                                                    <legend class="legend_style">Primary Address:</legend>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Country</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Country1</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">@Resource.State</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.State1</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">City</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.City1</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Address Line #1</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Address1</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Phone #1</label>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">  <label class="lblPhoneCodePrimary1">+1</label></span>
+                                                                    <label class="col-md-6 form-control labelStyle">@Model.PhoneNo1</label>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Phone #2</label>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">  <label class="lblPhoneCodePrimary2">+1</label></span>
+                                                                    <label class="col-md-6 form-control labelStyle">@Model.PhoneNo2</label>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Invoice To</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.InvoiceAddress</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+</fieldset>
+                                                <fieldset>
+                                                    <legend class="legendprofile_style ">Secondary Address:</legend>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Country </label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Country2</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="col-md-5 label-style">@Resource.State </label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.State2</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">City</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.City2</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="col-md-5 label-style">Address Line #2</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Address2</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Phone #1</label>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">  <label class="lblPhoneCodeSecondary1">+1</label></span>
+                                                                    <label class="col-md-6 form-control labelStyle">@Model.SecondaryPhoneNo1</label>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Phone #2</label>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">  <label class="lblPhoneCodeSecondary2">+1</label></span>
+                                                                    <label class="col-md-6 form-control labelStyle">@Model.SecondaryPhoneNo2</label>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-6">
+
+                                                            <label class="col-md-5 label-style">Email / User Name</label>
+                                                            <label class="col-md-6 form-control labelStyle">@Model.EmailId</label>
+
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group label-style">
+                                                                <label class="label-style">Cutoff Settings</label>
+                                                                <div class="form-group">
+                                                                    @Html.CheckBoxFor(model => Model.HasMidnightCut, new { @id = "chkMidnightCutOff", disabled = "disabled" }) Has Midnight Cut Off
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+
+                                                        @if (Model.ClientShiftList.Count() > 0)
+                                                        {
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    @Html.Label("Time Shift", new { @class = "label-style" })
+
+                                                                </div>
+
+                                                                <div class="col-md-12 labelStyle table-responsive">
+                                                                    <table class="table table-borderless table-striped table-earning dynamic-table" id="tblTimeShift1">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="custom-table-header"><strong>Time Shift</strong></th>
+
+                                                                            </tr>
+                                                                        <tbody id="addedTimeShiftList1">
+                                                                            @foreach (var item in Model.ClientShiftList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td class="col-md-11">
+                                                                                        @item.TimeShiftName
+                                                                                    </td>
+
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+
+                                                            </div>
+                                                        }
+                                                        @if (Model.CategoryRates.Count() > 0)
+                                                        {
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    @Html.Label("Category", new { @class = "label-style" })
+                                                                </div>
+
+                                                                @{ Html.EnableClientValidation(true); }
+                                                                <div class="input-group">
+                                                                    <label>Effective From</label>
+                                                                    @Html.TextBox("Date From", "", new { @id = "lkdeffectiveDate", @class = "datetimepicker form-control", @placeholder = "FromDate", @readonly = "readonly" })
+                                                                </div>
+
+                                                                <div class="col-md-12 labelStyle table-responsive">
+                                                                    <table class="table table-borderless table-striped table-earning dynamic-table" id="tblCaretaker1">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="custom-table-header"><strong>Category</strong></th>
+                                                                                <th class="custom-table-header"><strong>Rate/Hr</strong></th>
+                                                                                <th class="custom-table-header"><strong>Tax Applicable</strong></th>
+
+                                                                            </tr>
+                                                                        <tbody id="addedCaretakerList1">
+                                                                            @foreach (var item in Model.CategoryRates)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td class="col-md-3">
+                                                                                        @item.CategoryName
+                                                                                        <input type="text" class="hidden" id="EffDate" value=@item.EffectiveFrom>
+                                                                                    </td>
+                                                                                    <td class="col-md-3">
+                                                                                        @ViewData["CurrencySymbol"] @item.Rate /hr
+                                                                                    </td>
+                                                                                    <td class="col-md-6">
+                                                                                        @Html.Label((item.IsTaxApplicable) ? "Yes" : "No", new { @class = "control-label labelStyle" })
+                                                                                    </td>
+
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                @*<div class="row">
+                                                        <div class="col-lg-6" style="margin-left:10px;">
+                                                            <div class="form-group label-style">
+                                                                @Html.CheckBoxFor(model => Model.HasMidnightCut, new { @id = "chkMidnightCutOff", disabled = "disabled" }) Has Midnight Cut Off
+                                                            </div>
+                                                        </div>
+                                                    </div>*@
+
+                                                <div class="clearfix"></div>
+                                                <div class="text-center">
+                                                    <input type="button" class="btn btn-primary" id="manageClient" style="text-align:center" value="back" onclick="location.href ='@(Url.Action("ClientSearch", "Client"))'">
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="clearfix"></div>
+                        <div class="row" id="mappedDiv">
+                            <div class="col-md-12">
+                                <h4 class="h4-label">Client-Caregiver Mapping</h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+
+                                    <div class="panel-heading">
+                                        <h4>Mapped Caregiver</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="filterable table-responsive">
+                                            <table id="mappedcaretakerList1" class="table table-borderless table-striped table-earning padding-top-10 dynamic-table">
+                                                <thead>
+                                                    <tr>
+                                                        @*<th class="custom-table-header"><input type="checkbox" id="selectAll" class="checkbox" /></th>*@
+                                                        <th class="custom-table-header"><strong>Caregiver Name</strong></th>
+                                                        <th class="custom-table-header"><strong>Category</strong></th>
+                                                        <th class="custom-table-header"><strong>Shift Name</strong></th>
+                                                        <th class="custom-table-header"><strong>Rate</strong></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        List<string> caretakerList = Model.ClientCaretakerMaps.Select(x => x.CareTakerName).Distinct().ToList();
+                                                        foreach (var caretakerName in caretakerList)
+                                                        {
+                                                            var workShiftRates = Model.ClientCaretakerMaps.FindAll(x => x.CareTakerName == caretakerName);
+                                                            string category = Model.ClientCaretakerMaps.Find(x => x.CareTakerName == caretakerName).CategoryName;
+                                                            <tr>
+                                                                <td class=" ">@caretakerName </td>
+                                                                <td class=" ">@category</td>
+                                                                <td>
+                                                                    <table>
+                                                                        @foreach (var care in workShiftRates)
+                                                                        {
+                                                                            @*<td><input type="checkbox" id="@care.CaretakerId" class="checkbox" /></td>*@
+                                                                            @*<input type="hidden" class="detelecaretakerID" value="@care.CaretakerId" />*@
+                                                                            <tr>
+                                                                                <td class=" ">@care.WorkShiftName </td>
+                                                                            </tr>
+                                                                        }
+                                                                    </table>
+                                                                </td>
+                                                                <td>
+                                                                    <table>
+                                                                        @foreach (var care in workShiftRates)
+                                                                        {
+                                                                            <tr>
+                                                                                <td class=" ">@ViewData["CurrencySymbol"] @care.Rate /hr</td>
+                                                                            </tr>
+                                                                        }
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 " id="EditProfile">
+                        @if (TempData["Success"] != null)
+                        {
+                            <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                        }
+                        @if (TempData["Failure"] != null)
+                        {
+                            <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                        }
+                        @{
+                            if (ViewBag.Error != null)
+                            {
+                                <div class="padT25"><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+                            }
+                            else
+                            {
+                                <div>
+                                    @using (Html.BeginForm("SaveClientDetails", "Client", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                    {
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4>Client Profile</h4>
+                                            </div>
+                                            <div class="panel-body">
+
+                                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.HiddenFor(model => model.ClientStatus)
+                                                                @Html.HiddenFor(model => model.ClientId)
+                                                                @Html.HiddenFor(model => model.UserId)
+                                                                @Html.HiddenFor(model => model.CountryId1)
+                                                                @Html.HiddenFor(model => model.StateId1)
+                                                                @Html.HiddenFor(model => model.CityId1)
+                                                                @Html.HiddenFor(model => model.Country2)
+                                                                @Html.HiddenFor(model => model.StateId2)
+                                                                @Html.HiddenFor(model => model.CityId2)
+                                                                <label class=" label-style">Client Name <span></span></label><span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.ClientName, "", new { @class = "form-control labelStyle", @Placeholder = "Client Name" })
+                                                                @Html.ValidationMessageFor(model => model.ClientName, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style" for="Last_Name">Website</label>
+                                                                @Html.TextBoxFor(model => model.WebsiteAddress, "", new { @class = "form-control labelStyle", @Placeholder = "Website" })
+                                                                @Html.ValidationMessageFor(model => model.WebsiteAddress, "", new { @class = " no-padding required" })
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <fieldset>
+                                                        <legend class="legend_style ">Primary Address:</legend>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">Country</label><span class="mandatoryField">*</span>
+                                                                    @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                                                    @Html.ValidationMessageFor(model => model.CountryId1, "", new { @class = "no-padding required" })
+
+                                                                </div>
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">@Resource.State</label><span class="mandatoryField">*</span>
+                                                                    @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                                                    @Html.ValidationMessageFor(model => model.StateId1, "", new { @class = "no-padding required" })
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">City</label><span class="mandatoryField">*</span>
+                                                                    @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                                                    @Html.ValidationMessageFor(model => model.CityId1, "", new { @class = "no-padding required" })
+
+                                                                </div>
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">Address Line #1</label><span class="mandatoryField">*</span>
+                                                                    @Html.TextBoxFor(model => model.Address1, "", new { @class = "form-control labelStyle", @Placeholder = "Address #1 " })
+                                                                    @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "no-padding required" })
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">Phone #1</label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">  <label id="lblPhoneCodePrimary1">+1</label></span>
+                                                                        @Html.TextBoxFor(model => model.PhoneNo1, new { @class = "form-control labelStyle", @Placeholder = "Phone #1" })
+                                                                    </div>
+                                                                    @Html.ValidationMessageFor(model => model.PhoneNo1, "", new { @class = "no-padding required" })
+
+                                                                </div>
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">Phone #2</label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">  <label id="lblPhoneCodePrimary2">+1</label></span>
+                                                                        @Html.TextBoxFor(model => model.PhoneNo2, new { @class = "form-control labelStyle", @Placeholder = "Phone #2" })
+                                                                    </div>
+                                                                    @Html.ValidationMessageFor(model => model.PhoneNo2, "", new { @class = " no-padding required" })
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">Invoice To</label>
+                                                                    @Html.TextBoxFor(model => model.InvoiceAddress, "", new { @class = "form-control labelStyle", @Placeholder = "Invoice To" })
+                                                                    @Html.ValidationMessageFor(model => model.InvoiceAddress, "", new { @class = "no-padding required" })
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </fieldset>
+                                                    <fieldset>
+                                                        <legend class="legendprofile_style ">Secondary Address:</legend>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">Country </label>
+                                                                    @Html.DropDownListFor(model => model.CountryId2, ViewData["ListCountry"] as SelectList, "--Select--", new { @Id = "ddlCountry", @class = "form-control labelStyle", @onchange = "GetStates2()" })
+
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="label-style">@Resource.State </label>
+                                                                    @Html.DropDownListFor(model => model.StateId2, ViewData["StateList"] as SelectList, "--Select--", new { @Id = "ddlStates", @class = "form-control labelStyle", @onchange = "GetCities2()" })
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">City</label>
+                                                                    @Html.DropDownListFor(model => model.CityId2, ViewData["ListCity"] as SelectList, "--Select--", new { @Id = "ddlCity", @class = "form-control labelStyle", onchange = "SetCity2()" })
+
+                                                                </div>
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">Address Line #2</label>
+                                                                    @Html.TextBoxFor(model => model.Address2, new { @class = "form-control labelStyle", @Placeholder = "Address #2" })
+                                                                    @Html.ValidationMessageFor(model => model.Address2, "", new { @class = " no-padding required" })
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-6">
+
+                                                                    <label class="label-style">Phone #1</label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">  <label id="lblPhoneCodeSecondary1">+1</label></span>
+                                                                        @Html.TextBoxFor(model => model.SecondaryPhoneNo1, new { @class = "form-control labelStyle", @Placeholder = "Phone #1" })
+                                                                    </div>
+                                                                    @Html.ValidationMessageFor(model => model.SecondaryPhoneNo1, "", new { @class = "no-padding required" })
+
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="label-style">Phone #2</label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">  <label id="lblPhoneCodeSecondary2">+1</label></span>
+                                                                        @Html.TextBoxFor(model => model.SecondaryPhoneNo2, new { @class = "form-control labelStyle", @Placeholder = "Phone #2" })
+                                                                    </div>
+                                                                    @Html.ValidationMessageFor(model => model.SecondaryPhoneNo2, "", new { @class = " no-padding required" })
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">Email</label>
+                                                                <div class="input-group" style="margin:unset">
+                                                                    @Html.TextBoxFor(model => model.EmailId, "", new { @class = "form-control labelStyle", @Placeholder = "Email" })
+                                                                    @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = " no-padding required" })
+                                                                    <span class="input-group-btn input-group-outer">
+                                                                        <label class="btn btn-xs btn-primary" data-toggle="modal" title="Verify" data-target="#verifyEmail"><span class="fa fa-check"></span></label>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group label-style">
+                                                                    <label class="label-style">Cutoff Settings</label>
+                                                                    <div class="form-group">
+                                                                        @Html.CheckBoxFor(model => Model.HasMidnightCut, new
+                                                                        {
+                                                                            @class = "labelStyle",
+                                                                            @id = "chkMidnightCutOff"
+                                                                        }) Has Midnight Cut Off
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    @Html.Label("Time Shift", new { @class = "label-style" })
+
+                                                                    <div class="input-group" style="margin:unset">
+                                                                        @Html.DropDownList("ddlTimeShift", ViewData["ListTimeShift"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+
+                                                                        <span class="input-group-btn input-group-outer">
+                                                                            <label class="btn btn-xs btn-primary" id="btnSaveTimeShift" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></label>
+                                                                            @*<button class="btn btn-xs btn-primary" id="btnSaveTimeShift" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></button>*@
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12 labelStyle table-responsive">
+                                                                    <table class="table table-borderless table-striped table-earning dynamic-table" id="tblTimeShift">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="custom-table-header"><strong>Time Shift</strong></th>
+                                                                                <th class="custom-table-header"><strong>Action</strong></th>
+                                                                            </tr>
+                                                                        <tbody id="addedTimeShiftList">
+                                                                            @foreach (var item in Model.ClientShiftList)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td class="col-md-11">
+                                                                                        @item.TimeShiftName
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <label class='btn btn-danger float-right' onclick="RemoveTimeShift(@item.TimeShiftId)" title='Delete'><span class='fa fa-minus'></span></label>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="col-md-3 no-padding">
+                                                                    @Html.Label(" Effective From :", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                    @Html.TextBoxFor(model => model.EffectiveFrom, "", new { @id = "categoryFromDate", @class = "datetimepicker form-control", @autocomplete = "off", @placeholder = "From Date" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-md-4 no-padding">
+
+                                                                        <div>
+                                                                            @Html.Label("Category", new { @class = "label-style" })
+                                                                            @Html.DropDownList("ddlCategory", ViewData["ListCategory"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-8 no-padding">
+                                                                        <div>
+                                                                            <div class="col-md-6">
+                                                                                @{
+                                                                                    string ratehr = "Rate (" + ViewData["CurrencySymbol"] + " / hr)";
+                                                                                }
+                                                                                @Html.Label(ratehr, new { @class = "label-style" })
+                                                                                @Html.TextBox("Rate", "", new { @id = "txtRate", @class = "form-control", @placeholder = "Rate", maxlength = 7, ondrop = "return false", onpaste = "return false", onkeypress = "return isNumberKey(this, event)" })
+                                                                            </div>
+                                                                            @*<div class="col-md-3">
+
+                                                                                </div>*@
+                                                                            <div class="col-md-6" style="margin-top:33px;">
+                                                                                <div class="input-group">
+                                                                                    <div id="ChkDiv">
+
+                                                                                        <div class="col-md-12">
+                                                                                            <input id="taxApplicable" name="taxApplicable" type="checkbox" value="false" />
+                                                                                            <input name="taxApplicable" type="hidden" value="true" />
+                                                                                            <label for="taxApplicable" class="label-style">Tax Applicable</label>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <span class="input-group-btn input-group-outer">
+
+                                                                                        <label class="btn btn-xs btn-primary" id="btnAddCareTaker" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></label>
+                                                                                    </span>
+                                                                                    @if (Model.CategoryRates.Count > 0)
+                                                                                    {
+                                                                                    <span class="input-group-btn input-group-outer">
+                                                                                        <label class="btn btn-xs btn-primary" id="btnPayRiseInvoice" title="PayRise" data-toggle="modal" onclick="PayRiseInvoice(@Model.ClientId,'@Model.ClientName')" data-target="#modal-PayRiseInvoice">
+
+                                                                                            <span class="fa fa-dollar"></span>
+                                                                                        </label>
+                                                                                    </span>
+                                                                                    }
+
+
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                @{ Html.EnableClientValidation(true); }
+
+
+                                                                <div class="col-md-12 labelStyle table-responsive">
+                                                                    <table class="table table-borderless table-striped table-earning dynamic-table" id="tblCaretaker">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="custom-table-header" style="width:31%"><strong>Category</strong></th>
+                                                                                <th class="custom-table-header" style="width:38%"><strong>Rate/Hr</strong></th>
+                                                                                <th class="custom-table-header" style="width:31%"><strong>Tax Applicable</strong></th>
+                                                                                <th class="custom-table-header "><strong>Action</strong></th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="addedCaretakerList">
+                                                                            @foreach (var item in Model.CategoryRates)
+                                                                            {
+                                                                                var tax = @item.IsTaxApplicable ? "yes" : "no";
+                                                                                <tr>
+                                                                                    <td class="col-md-3"onclick="EditService('@item.CategoryId','@item.Rate','@tax')">
+                                                                                        @item.CategoryName
+                                                                                    </td>
+                                                                                    <td class="col-md-3"onclick="EditService('@item.CategoryId','@item.Rate','@tax')">
+                                                                                        @ViewData["CurrencySymbol"] @item.Rate /hr
+                                                                                    </td>
+                                                                                    <td class="col-md-6"onclick="EditService('@item.CategoryId','@item.Rate','@tax')">
+                                                                                        @Html.Label((item.IsTaxApplicable) ? "Yes" : "No", new { @class = "control-label labelStyle" })
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <label class='btn btn-danger' onclick="RemoveCaretaker(@item.CategoryId)" title='Delete'><span class='fa fa-minus'></span></label>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+
+                                                <div class="col-lg-1 col-md-1 col-sm-1 "></div>
+                                                <div class="clearfix"></div>
+
+                                                <div class="box-footer" style="margin-top: 20px;">
+                                                    <input type="button" class="btn btn-primary" value="back" id="clientBack">&nbsp;&nbsp;
+                                                    <input type="submit" class="btn btn-primary" value="update" name="RegisterClient">&nbsp;&nbsp;
+                                                    <input type="button" class="btn btn-primary" onclick="cancel()" value="cancel" name="Cancel">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="modal fade" id="verifyEmail" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="border-bottom: 1px solid #e5e5e5;">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <h4 class="modal-title">Email Modification</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>New mail id will be replaced with the existing one. User can login with their new mail id only after verification.</p>
+                                                        <p>Are you sure to continue?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" onclick="UpdateEmail()">OK</button>
+                                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                        <div class="clearfix"></div>
+                        <div class="row" id="mappedDiv">
+
+                            <div class="col-md-12">
+                                <h4 class="h4-label">Client-Caregiver Mapping</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-default" style="min-height:345px">
+
+                                    <div class="panel-heading">
+                                        <h4>Mapped Caregiver</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="filterable table-responsive">
+                                            <table id="mappedcaretakerList" class="table table-borderless table-striped table-earning padding-top-10 dynamic-table">
+                                                <thead>
+                                                    <tr>
+                                                        @*<th class="custom-table-header"><input type="checkbox" id="selectAll" class="checkbox" /></th>*@
+                                                        <th class="custom-table-header"><strong>Caregiver Name</strong></th>
+                                                        <th class="custom-table-header"><strong>Category</strong></th>
+                                                        <th class="custom-table-header text-right"><strong>Action</strong></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var care in Model.ClientCaretakers)
+                                                    {
+                                                        <tr>
+                                                            @*<td><input type="checkbox" id="@care.CaretakerId" class="checkbox" /></td>*@
+                                                            <input type="hidden" class="detelecaretakerID" value="@care.CaretakerId" />
+
+
+                                                            <td class=" " onclick="location.href ='@Url.Action("ApproveNewCaretaker", "Admin", new { caretakerId = care.CaretakerId })'">@care.CareTakerName </td>
+                                                            <td class=" " onclick="location.href ='@Url.Action("ApproveNewCaretaker", "Admin", new { caretakerId = care.CaretakerId })'">@care.CategoryName</td>
+                                                            <td class="text-right">
+                                                                <a class="btn btn-xs btn-primary fa " title="View" href="@Url.Action("ApproveNewCaretaker", "Admin", new { caretakerId = care.CaretakerId })"><span class="glyphicon glyphicon-eye-open"></span></a>
+                                                                @{
+                                                                    if (ViewBag.AllowDelete)
+                                                                    {
+                                                                        <button class="btn btn-xs btn-primary btn-primary fa fa-edit" title="Edit" data-toggle="modal" onclick="EditCaretakerRates(@Model.ClientId,'@care.CareTakerName',@care.CaretakerId)" data-target="#modal-EditCareTakerRates"></button>
+                                                                        <button class="btn btn-xs btn-primary btn-primary fa fa-dollar" title="Pay Rise" data-toggle="modal" onclick="PayRisePayrol(@Model.ClientId,'@care.CareTakerName',@care.CaretakerId)" data-target="#modal-PayRisePayrol"></button>
+                                                                        <button class="btn btn-xs btn-primary btn-warning fa fa-chain-broken" title="Un Map" data-toggle="modal" onclick="UnMapCaretaker(@Model.ClientId,'@care.CareTakerName',@care.CaretakerId)" data-target="#modal-UnMapCaretaker"></button>
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div class="wrapper">
+                                                                            <button class="btn btn-xs btn-primary btn-warning fa fa-chain-broken" title="Un-Map Caregiver" data-toggle="modal" disabled data-target="#modal-EditCareTakerRates"></button>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-default" style="min-height:345px">
+                                    <div class="panel-heading">
+                                        <h4>Available Caregiver</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="filterable  table-responsive">
+                                            <table id="caretakerList" class="table table-borderless table-striped table-earning padding-top-10 dynamic-table">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th class="custom-table-header"><strong>Caregiver Name</strong></th>
+                                                        <th class="custom-table-header"><strong>Category</strong></th>
+                                                        <th class="custom-table-header text-right"><strong>Action</strong></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var RegistredCaretakers in ViewData["ListCaretakers"] as List<Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel>)
+                                                    {
+                                                        <tr>
+                                                            <input type="hidden" class="caretakerID" value="@RegistredCaretakers.UserId" />
+                                                            <input type="hidden" class="categoryID" value="@RegistredCaretakers.CategoryId" />
+
+                                                            <td class="caretakername" onclick="location.href ='@Url.Action("ApproveNewCaretaker", "Admin", new { caretakerId = RegistredCaretakers.UserId,pageName = "Manage Caretaker" })'">@RegistredCaretakers.CareTakerFullName</td>
+                                                            <td class="categoryname" onclick="location.href ='@Url.Action("ApproveNewCaretaker", "Admin", new { caretakerId = RegistredCaretakers.UserId,pageName = "Manage Caretaker"  })'">@RegistredCaretakers.CategoryName</td>
+                                                            <td class="text-right">
+
+                                                                <a class="btn btn-xs btn-primary fa" title="View" href="@Url.Action("ApproveNewCaretaker", "Admin", new { caretakerId = RegistredCaretakers.UserId,pageName = "Manage Caretaker"  })"><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                                                @{
+                                                                    if (ViewBag.AllowEdit)
+                                                                    {
+                                                                        <button class="btn btn-xs btn-primary btn-warning fa fa-link" title="Map caregiver" data-toggle="modal" onclick="mapcaretakers(@Model.ClientId,'@RegistredCaretakers.CareTakerFullName',@RegistredCaretakers.UserId)" data-target="#modal-mapCaretaker"></button>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div class="wrapper">
+                                                                            <button class="btn btn-xs btn-primary btn-warning fa fa-link" title="Map caregiver" data-toggle="modal" disabled data-target="#modal-mapCaretaker"></button>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="modal-EditCareTakerRates">
+                            <div class="modal-dialog">
+                                <div class="panel panel-group panel-success">
+                                    <div class="panel-heading" style="padding:10px 15px">
+                                        <button type="button" class="close" data-dismiss="modal">×</button>
+                                        <h4 id="clientNametitle1" class="modal-title"></h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div class="col-md-12 labelStyle table-responsive" style="margin-bottom:18px">
+                                                <div class="col-md-3 ">
+
+                                                    <label id="lblfrmdate" class="label-style">
+
+                                                        @Html.Label(" Effective From :", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-md-9" style="margin-bottom:10px;">
+                                                    @*@Html.TextBox("FromDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @type = "date", @id = "txtFromDate", @placeholder = "From Date" })*@
+                                                    @Html.TextBox("FromDate", "", new { @id = "editEffectiveDate", @class = "datetimepicker form-control", @autocomplete = "off", @placeholder = "From Date" })
+
+
+                                                </div>
+                                                <table class="table table-bordered table-striped table-earning dynamic-table" >
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Workshift</th>
+                                                            <th class="col-md-2">Rate</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="workmodeList1"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer mapping-style">
+                                        <button id="btnMapUpdate" type="button" class="btn btn-primary" data-dismiss="modal">Update</button>
+                                        @*<button id="btnUnMap" type="button" class="btn btn-primary" data-dismiss="modal">UnMap Caretaker</button>*@
+                                        <button type="button" class="btn btn-primary" onclick="clearFields()">Cancel</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <div class="modal fade" id="modal-PayRisePayrol">
+                            <div class="modal-dialog">
+                                <div class="panel panel-group panel-success">
+                                    <div class="panel-heading" style="padding:10px 15px">
+                                        <button type="button" class="close" data-dismiss="modal">×</button>
+                                        <h4 id="clientNametitle2" class="modal-title"></h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div class="col-md-12 labelStyle table-responsive" style="margin-bottom:18px">
+                                                <div class="col-md-3 ">
+
+                                                    <label id="lblfrmdate" class="label-style">
+
+                                                        @Html.Label(" Effective From :", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-md-9" style="margin-bottom:10px;">
+                                                    @*@Html.TextBox("FromDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @type = "date", @id = "txtFromDate", @placeholder = "From Date" })*@
+                                                    @Html.TextBox("FromDate", "", new { @id = "effectivePayrollDate", @class = "datetimepicker form-control", @autocomplete = "off", @placeholder = "From Date" })
+
+
+                                                </div>
+                                                <table class="table table-bordered table-striped table-earning dynamic-table" >
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Workshift</th>
+                                                            <th class="col-md-2">Rate</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="workmodeList2"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer mapping-style">
+                                        <button id="btnSavePayRise" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                                        @*<button id="btnUnMap" type="button" class="btn btn-primary" data-dismiss="modal">UnMap Caretaker</button>*@
+                                        <button type="button" class="btn btn-primary" onclick="clearFields()">Cancel</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <div class="modal fade" id="modal-UnMapCaretaker">
+                            <div class="modal-dialog">
+                                <div class="panel panel-group panel-success">
+                                    @* <div class="panel-heading" style="padding:10px 15px">*@
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
+
+                                    @*</div>*@
+
+                                    <div class="panel panel-group panel-success">
+                                        <div class="panel-heading" style="padding:10px 15px">
+                                            <h4 id="clientNametitle9" class="modal-title"> </h4>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer mapping-style">
+                                        <button id="btnUnMap" type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+
+                        <div class="modal fade" id="modal-mapCaretaker">
+                            <div class="modal-dialog">
+                                <div class="panel panel-group panel-success">
+                                    <div class="panel-heading" style="padding:10px 15px">
+                                        <button type="button" class="close" data-dismiss="modal">×</button>
+                                        <h4 id="clientNametitle" class="modal-title"><span class="fa fa-close float-right" data-dismiss="modal"></span></h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div class="col-md-12 labelStyle table-responsive" style="margin-bottom:18px">
+                                                @Html.Hidden("clientId")
+                                                @Html.Hidden("caretakerId")
+                                                <div class="col-md-3 ">
+
+                                                    <label id="lblfrmdate" class="label-style">
+
+                                                        @Html.Label(" Effective From :", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-md-9" style="margin-bottom:10px;">
+                                                    @*@Html.TextBox("FromDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @type = "date", @id = "txtFromDate", @placeholder = "From Date" })*@
+                                                    @Html.TextBox("FromDate", "", new { @id = "mapEffectiveDate", @class = "datetimepicker form-control", @autocomplete = "off", @placeholder = "From Date" })
+
+
+                                                </div>
+                                                <table class="table table-bordered table-striped table-earning dynamic-table" >
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Workshift</th>
+                                                            <th class="col-md-2">Rate</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="workmodeList"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer mapping-style">
+                                        <button id="btnMap" type="button" class="btn btn-primary" data-dismiss="modal">Map Caregiver</button>
+                                        <button type="button" class="btn btn-primary" onclick="clearFields()">Cancel</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
+                                <!-- /.modal-content -->
+                            </div>
+
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <div class="modal fade" id="modal-PayRiseInvoice">
+                            <div class="modal-dialog">
+                                <div class="panel panel-group panel-success">
+                                    <div class="panel-heading" style="padding:10px 15px">
+                                        <button type="button" class="close" data-dismiss="modal">×</button>
+                                        <h4 id="clientNametitle3" class="modal-title"><span class="fa fa-close float-right" data-dismiss="modal"></span></h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div class="col-md-12 labelStyle table-responsive" style="margin-bottom:18px">
+                                                @Html.Hidden("clientId")
+                                                @Html.Hidden("caretakerName")
+                                                @Html.HiddenFor(model=>model.CategoryPayRiseRates)
+                                                <div class="col-md-3 ">
+
+                                                    <label id="lblfrmdate" class="label-style">
+
+                                                        @Html.Label(" Effective From :", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-md-9" style="margin-bottom:10px;">
+                                                    @*@Html.TextBox("FromDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @type = "date", @id = "txtFromDate", @placeholder = "From Date" })*@
+                                                    @Html.TextBox("FromDate", "", new { @id = "txtDateFrom", @class = "datetimepicker form-control", @autocomplete = "off", @placeholder = "From Date" })
+
+
+                                                </div>
+                                                <table class="table table-bordered table-striped table-earning dynamic-table" >
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Category</th>
+                                                            <th class="col-md-2">Rate</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="workmodeList3"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer mapping-style">
+                                        <button id="btnMapClientCategoryRate" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                                        <button type="button" class="btn btn-primary" onclick="clearFields()">Cancel</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
+                                <!-- /.modal-content -->
+                            </div>
+
+                            <!-- /.modal-dialog -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Custom/jquery-customselect-1.9.1.js"></script>
+<link href="~/css/jquery-customselect-1.9.1.css" rel="stylesheet" />
+<script type="text/javascript">
+
+    function CancelUpdate() {
+        $("#successMessage").hide();
+        $("#EditProfile").hide();
+        $("#ViewProfile").show();
+
+    }
+    function EditService(CategoryId, Rate, IsTaxApplicable) {
+        debugger;
+        $('#ddlCategory').val(CategoryId);
+        $('#txtRate').val(Rate);
+
+        if (IsTaxApplicable == "yes" || IsTaxApplicable == true) {
+            $("#taxApplicable").prop("checked", true);
+          //  $("#taxApplicable").attr("enabled", true);
+        } else {
+            $("#taxApplicable").prop("checked", false);
+        }
+
+       
+    }
+    function clearFields() {
+
+        $('.qty').val('');
+        $('.dte').val('');
+    }
+
+    $('#btnMap').click(function () {
+        var clientId = $('#clientId').val();
+        var caretakerId = $('#caretakerId').val();
+        var EffDate = $('#mapEffectiveDate').val();
+        var mapRates = [];
+        var mapRateCount = 0;
+        $('#workmodeList tr').each(function () {
+            var mapRate = $('.rate-table-txt', this).val();
+            var shiftId = $('.rate-table-txt',this).attr('id');
+            if (mapRate != "" && mapRate != undefined) {
+                mapRates.push({
+                    WorkShiftId: shiftId,
+                    Rate: mapRate,
+                    ClientId: clientId,
+                    CaretakerId: caretakerId,
+                    EffectiveFrom: EffDate
+                });
+                mapRateCount = mapRateCount + 1;
+            }
+        });
+
+        if (mapRateCount <= 0) {
+            alert("Please provide atleast one rate.");
+            return false;
+        }
+        if ($('#mapEffectiveDate').val() != '') {
+            MapCaretaker(mapRates);
+        }
+        else {
+            alert("Please enter effective from date!");
+            return false;
+        }
+
+    });
+
+    $('#btnSavePayRise').click(function () {
+        debugger;
+        var clientId = $('#clientId').val();
+        var caretakerId = $('#caretakerId').val();
+        var effdate = $('#effectivePayrollDate').val();
+        var mapRates = [];
+        var mapRateCount = 0;
+        $('#workmodeList2 tr').each(function () {
+            var mapRate = $('.rate-table-txt', this).val();
+            var shiftId = $('.rate-table-txt', this).attr('id');
+
+           // var effdate = $('txtFromDate', this).val();
+            if (mapRate != "" && mapRate != undefined) {
+                mapRates.push({
+                    WorkShiftId: shiftId,
+                    Rate: mapRate,
+                    ClientId: clientId,
+                    CaretakerId: caretakerId,
+                    EffectiveFrom: effdate
+                });
+                mapRateCount = mapRateCount + 1;
+            }
+        });
+
+        if (mapRateCount <= 0) {
+            alert("Please provide atleast one rate.");
+            return false;
+        }
+        if ($('#effectivePayrollDate').val() != '') {
+            SavePayRise(mapRates);
+        }
+        else {
+            alert("Please enter effective from date!");
+            return false;
+        }
+    });
+
+    $('#btnMapClientCategoryRate').click(function () {
+        debugger;
+        var clientId = $('#clientId').val();
+        var effdate = $('#txtDateFrom').val();
+
+        var mapRates = [];
+        var mapRateCount = 0;
+        $('#workmodeList3 tr').each(function () {
+            var mapRate = $('.rte-table-txt', this).val();
+            var typeId = $('.rte-table-txt', this).attr('id');
+            if (mapRate != "" && mapRate != undefined) {
+                mapRates.push({
+                    CategoryId: typeId,
+                    Rate: mapRate,
+                    ClientId: clientId,
+                    EffectiveFrom: effdate
+                });
+                mapRateCount = mapRateCount + 1;
+            }
+        });
+
+
+        if (mapRateCount <= 0) {
+            alert("Please provide atleast one rate.");
+            return false;
+        }
+        if ($('#txtDateFrom').val() != '') {
+            SavePayRiseInvoice(mapRates);
+        }
+        else {
+            alert("Please enter effective from date!");
+            return false;
+        }
+       
+    });
+
+    $('#btnMapUpdate').click(function () {
+        var clientId = $('#clientId').val();
+        var caretakerId = $('#caretakerId').val();
+        var EffDate = $('#editEffectiveDate').val();
+        var mapRates = [];
+        var mapRateCount = 0;
+        $('#workmodeList1 tr').each(function () {
+            var mapRate = $('.rate-table-txt', this).val();
+            var shiftId = $('.rate-table-txt', this).attr('id');
+            if (mapRate != "" && mapRate != undefined) {
+                mapRates.push({
+                    WorkShiftId: shiftId,
+                    Rate: mapRate,
+                    ClientId: clientId,
+                    CaretakerId: caretakerId,
+                    EffectiveFrom: EffDate
+                });
+                mapRateCount = mapRateCount + 1;
+            }
+        });
+
+        if (mapRateCount <= 0) {
+            alert("Please provide atleast one rate.");
+            return false;
+        }
+        if ($('#editEffectiveDate').val() != '') {
+            MapCaretaker(mapRates);
+        }
+        else {
+            alert("Please enter effective from date!");
+            return false;
+        }
+    });
+
+    $(function () {
+
+
+        $("#demo").customselect({
+
+            "csclass": "custom-select",  // Class to match
+
+
+            "search": true, // Is searchable?
+
+            //"numitems":     4,    // Number of results per page
+
+            "searchblank": false,// Search blank value options?
+
+            "showblank": true, // Show blank value options?
+
+            "searchvalue": false,// Search option values?
+
+            "hoveropen": false,// Open the select on hover?
+
+            "emptytext": "",   // Change empty option text to a set value
+
+            "showdisabled": false,// Show disabled options
+
+        });
+
+    });
+
+
+
+
+    $(function () {
+
+        $("#ddlCareTaker").customselect();
+    });
+    function EditClick() {
+        localStorage.setItem('EditMode', 'Edit');
+        $('#ViewProfile').hide();
+        $('#EditProfile').show();
+    }
+    function EditUser() {
+        $("#EditProfile").show();
+        $("#ViewProfile").hide();
+    }
+
+    function GetCaretakers() {
+        if ($('#ddlCategory option:selected').text() != '' && $('#ddlCategory option:selected').text() != '--Select--') {
+            $("#ChkDiv").show();
+            var categoryId = $('#ddlCategory').val();
+            $.ajax({
+                url: '/Client/LoadCaretakersByCategory',
+                type: "GET",
+                dataType: "JSON",
+                data: { categoryId: categoryId },
+                success: function (data) {
+                    $("#ddlCareTaker").html(""); // clear before appending new list
+                    $("#ddlCareTaker").append(
+                        $('<option></option>').val(0).html("--Select--"));
+                    $.each($.parseJSON(data), function (i, care) {
+                        $("#ddlCareTaker").append(
+                            $('<option></option>').val(care.CaretakerId).html(care.CareTakerName));
+                        $("#demo").append(
+                            $('<option></option>').val(care.CaretakerId).html(care.CareTakerName));
+                    });
+                },
+            });
+        }
+    }
+
+
+    $('#clientBack').click(function () {
+        $("#ViewProfile").show();
+        $("#EditProfile").hide();
+    })
+    $(document).ready(function () {
+        debugger;
+        var effdate = $('#EffDate').val();
+        $('#categoryFromDate').val(effdate);
+        $('#lkdeffectiveDate').val(effdate);
+        if (localStorage.getItem('EditMode') == 'Edit') {
+            $("#EditProfile").show();
+            $("#ViewProfile").hide();
+        }
+        else {
+            $('#EditProfile').hide();
+        }
+        localStorage.removeItem('EditMode')
+        $(".tax").change(function () {
+            if (this.checked) // if changed state is "CHECKED"
+            {
+                $('.tax').prop('checked', true);
+            }
+            else {
+                $('.tax').prop('checked', false);
+            }
+
+
+        });
+
+        GetStates1($('#StateId1').val(), $('#CityId1').val());
+        GetStates2($('#StateId2').val(), $('#CityId2').val());
+
+        // $("#ChkDiv").hide();
+
+        $('#mappedcaretakerList').DataTable({
+            "pagingType": "full_numbers"
+        });
+
+        $('#caretakerList').DataTable({
+            "pagingType": "full_numbers"
+        });
+        $('.filters').hide();
+        //$('#horizontalTab').easyResponsiveTabs({
+        //    type: 'default', //Types: default, vertical, accordion
+        //    width: 'auto', //auto or any width like 600px
+        //    fit: true   // 100% fit in a container
+        //});
+
+        $('.filterable .btn-filter').click(function () {
+            var $panel = $(this).parents('.filterable'),
+                $filters = $panel.find('.filters input'),
+                $tbody = $panel.find('.table tbody');
+            if ($filters.prop('disabled') == true) {
+                $filters.prop('disabled', false);
+                $('.filters').show();
+                $('.non-filter-header').hide();
+                $filters.first().focus();
+            } else {
+                $filters.val('').prop('disabled', true);
+                $tbody.find('.no-result').remove();
+                $tbody.find('tr').show();
+                $('.non-filter-header').show();
+                $('.filters').hide();
+            }
+        });
+
+        $("input[name='RegisterClient']").on("click", function () {
+            debugger;
+            if ($('#ddlTimeShift option:selected').text() != '' && $('#ddlTimeShift option:selected').text() != '--Select--') {
+                $('#ddlTimeShift').focus();
+                $('#btnSaveTimeShift').addClass('required-border');
+                alert("Please click the '+' button to add the selected Time Shift.");
+                return false;
+            }
+            else {
+                $('#btnSaveTimeShift').removeClass('required-border');
+            }
+
+            if ($('#ddlCategory option:selected').text() != '' && $('#ddlCategory option:selected').text() != '--Select--' || $('#txtRate').val() != '') {
+
+                $('#ddlCategory').focus();
+                $('#btnAddCareTaker').addClass('required-border');
+                alert("Please click the '+' button to add the selected category rate.");
+                return false;
+            }
+            else {
+                $('#btnAddCareTaker').removeClass('required-border');
+            }
+            if ($("#tblCaretaker td").closest("tr").length <= 0) {
+                alert("Atleast one service is required.");
+                return false;
+            }
+        });
+
+        $('.filterable .filters input').keyup(function (e) {
+            /* Ignore tab key */
+            var code = e.keyCode || e.which;
+            if (code == '9') return;
+            /* Useful DOM data and selectors */
+            var $input = $(this),
+                inputContent = $input.val().toLowerCase(),
+                $panel = $input.parents('.filterable'),
+                column = $panel.find('.filters th').index($input.parents('th')),
+                $table = $panel.find('.table'),
+                $rows = $table.find('tbody tr');
+            /* Dirtiest filter function ever ;) */
+            var $filteredRows = $rows.filter(function () {
+                var value = $(this).find('td').eq(column).text().toLowerCase();
+                return value.indexOf(inputContent) === -1;
+            });
+            /* Clean previous no-result if exist */
+            $table.find('tbody .no-result').remove();
+            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+            $rows.show();
+            $filteredRows.hide();
+            /* Prepend no-result row if all rows are filtered */
+            if ($filteredRows.length === $rows.length) {
+                $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="' + $table.find('.filters th').length + '">No result found</td></tr>'));
+            }
+        });
+    })
+
+
+
+    function RemoveTimeShift(timeShiftId) {
+        if (confirm('This may affect the scheduling created with this shift. Are you sure to remove this Time shift?'))
+        $.ajax({
+            url: "../Client/RemoveClientTimeShift",
+            type: "POST",
+            data: { timeShiftId: timeShiftId },
+            success: function (data) {
+
+                var strQual = "";
+                if (data.length > 0) {
+
+                    $('#addedTimeShiftList').html('');
+                    for (var i = 0; i < data.length; i++) {
+
+                        strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].TimeShiftName + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveTimeShift(" + data[i].TimeShiftId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                    }
+
+                }
+                $('#addedTimeShiftList').html(strQual);
+
+                if ($("#tblTimeShift td").closest("tr").length > 0) {
+                    $('#tblTimeShift').show();
+                }
+                else {
+                    $('#tblTimeShift').hide();
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while removing Time Shifts. Function: RemoveTimeShift(timeShiftId). Page: ClientDetails.cshtml');
+                //alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    };
+
+    function RemoveCaretaker(caretakerId) {
+        if (confirm('This may affect the scheduling created with this category. Are you sure to remove this Category?'))
+        $.ajax({
+            url: "../Client/RemoveCategoryandRateList",
+            type: "POST",
+            data: { categoryTypeId: caretakerId },
+            success: function (data) {
+                console.log(data)
+                var strQual = "";
+                if (data.length > 0) {
+
+                    $('#addedCaretakerList').html('');
+                    for (var i = 0; i < data.length; i++) {
+                        var taxapplicable = data[i].IsTaxApplicable == true ? "Yes" : "No";
+                        strQual = strQual + "<tr>" +
+                            "<td class='col-md-3' onclick = 'EditService(" + data[i].CategoryId + "," + data[i].Rate + "," + data[i].IsTaxApplicable + ");'>" + data[i].CategoryName + "</td>" +
+                            "<td class='col-md-3' onclick = 'EditService(" + data[i].CategoryId + "," + data[i].Rate + "," + data[i].IsTaxApplicable + ");'>@ViewData["CurrencySymbol"] " + data[i].Rate + "/hr.</td>" +
+                            "<td class='col-md-3' onclick = 'EditService(" + data[i].CategoryId + "," + data[i].Rate + "," + data[i].IsTaxApplicable + ");'>" + taxapplicable + "</td>" +
+                            "<td class='col-md-3' onclick = 'EditService(" + data[i].CategoryId + "," + data[i].Rate + "," + data[i].IsTaxApplicable + ");'> <label class='btn btn-danger' onclick = " + "RemoveCaretaker(" + data[i].CategoryId + ")" +
+                            " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                    }
+
+                }
+                $('#addedCaretakerList').html(strQual);
+                $("select#ddlCategory").val("");
+                if ($("#tblCaretaker td").closest("tr").length > 0) {
+                    $('#tblCaretaker').show();
+                }
+                else {
+                    $('#tblCaretaker').hide();
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while removing Category and Rates for a Client. Function: RemoveCaretaker(caretakerId). Page: ClientDetails.cshtml');
+                //alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    };
+
+    $('#btnUnMap').click(function () {
+        debugger;
+        var clientId = $('#clientId').val();
+        var caretakerId = $('#caretakerId').val();
+        $.ajax({
+            type: "POST",
+            url: '/Client/UnMapCaretakers',
+            data: { ClientId: clientId, CaretakerId: caretakerId },
+            dataType: "json",
+            success: function (data) {
+                if (data.status == true) {
+                    location.reload();
+                    localStorage.setItem('EditMode', 'Edit')
+                    $('.checkbox').prop("checked", false)
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while UnMapping a Caregiver to a Client. Page: ClientDetails.cshtml');
+                alert('Failed UnMapping!');
+            }
+        })
+
+    });
+
+    $('#mappedcaretakerList').on('click', '#deleteCaretaker', function () {
+
+        var clientID = 0;
+        clientID = GetParameterValuesNew('clientId');
+        if (clientID === undefined) {
+            alert('unable to map')
+            return;
+        }
+
+        var data = [];
+        var caretakerId = $(this).closest("tr").find(".detelecaretakerID").val().trim();
+        data.push({
+            ClientId: clientID,
+            CaretakerId: caretakerId,
+        });
+        if (data != "") {
+            UnMapCaretaker(data);
+        }
+    });
+
+    function mapcaretakers(clientId, caretakerName, caretakerId) {
+        $('#clientNametitle').text(' Map Caregiver :  ' + caretakerName);
+        $('#clientId').val(clientId);
+        $('#caretakerId').val(caretakerId);
+        $.ajax({
+             url: "/Client/LoadWorkShift",
+             type: "GET",
+             contentType: "application/json; charset=utf-8",
+             datatype: JSON,
+                success: function (data) {
+                    $('#workmodeList').html('');
+                    if (data == "[]") {
+                        $('#workmodeList').html("<tr>" + "<td>No Work Shifts found.</td>"+"</tr>");
+                    }
+                    else if (data.length > 0) {
+                        var strQual = "";
+                        $.each($.parseJSON(data), function (i, care) {
+						    strQual = strQual + "<tr>" + "<td>" + care.ShiftName + "</td>" +
+                                "<td>@ViewData["CurrencySymbol"] "+"<input class='qty rate-table-txt' type = 'text' value='0' id ='" + care.ShiftId +"' maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" + "</tr>";
+                        });
+
+                        $('#workmodeList').html(strQual);
+                    }
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while Map Caregiver. Function: mapCaretaker(clientId). Page: ClientDetails.cshtml');
+                    alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+    }
+    function PayRiseInvoice(clientId, clientName) {
+        $('#clientNametitle3').text(' Pay Rise: ' + clientName);
+        $('#clientId').val(clientId);
+        $.ajax({
+            url: "/Client/GetCategoryClientPayRiseRates",
+            type: "POST",
+            data: { ClientId: clientId },
+            success: function (data) {
+                debugger;
+                $('#workmodeList3').html('');
+                if (data == "[]") {
+                    $('#workmodeList3').html("<tr>" + "<td>No Categories found.</td>" + "</tr>");
+                }
+                else if (data.length > 0) {
+                    var strQual = "";
+                    $.each($.parseJSON(data), function (i, care) {
+                        $('#txtDateFrom').val(moment(care.EffectiveFrom).format("MM/DD/YYYY"));
+                        strQual = strQual + "<tr>" + "<td>" + care.CategoryName + "</td>" +
+                            "<td>@ViewData["CurrencySymbol"] " + "<input class='qty rte-table-txt' type = 'text' id ='" + care.CategoryId + "' value='" + care.Rate + "'  maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" +
+                          "</tr>";
+                         });
+
+                    $('#workmodeList3').html(strQual);
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Map Caregiver. Function: mapCaretaker(clientId). Page: ClientDetails.cshtml');
+                alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    }
+
+    function UnMapCaretaker(clientId, caretakerName, caretakerId) {
+        $('#clientNametitle9').text(' Are you sure you want to unmap : ' + caretakerName + '?');
+        $('#caretakerId').val(caretakerId);
+        $('#clientId').val(clientId);
+    }
+
+    function EditCaretakerRates(clientId, caretakerName, caretakerId) {
+        $('#clientNametitle1').text(' Edit Rates : ' + caretakerName);
+        $('#clientId').val(clientId);
+        $('#caretakerId').val(caretakerId);
+        $.ajax({
+            url: "/Client/GetMappedCaretakerRates/",
+            type: "POST",
+            data: { ClientId: clientId, CaretakerId: caretakerId },
+                success: function (data) {
+                    $('#workmodeList').html('');
+                    if (data == "[]") {
+                        $('#workmodeList').html("<tr>" + "<td>No Work Shifts found.</td>"+"</tr>");
+                    }
+                    else if (data.length > 0) {
+                        var strQual = "";
+                        $.each($.parseJSON(data), function (i, care) {
+                            $('#editEffectiveDate').val(moment(care.EffectiveFrom).format('MM/DD/YYYY'));
+						    strQual = strQual + "<tr>" + "<td>" + care.WorkShiftName + "</td>" +
+                                "<td>@ViewData["CurrencySymbol"] "+"<input class='qty rate-table-txt' type = 'text' id ='" + care.WorkShiftId +"' value='"+ care.Rate +"' maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" + "</tr>";
+                        });
+
+                        $('#workmodeList1').html(strQual);
+                    }
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while Map Caregiver. Function: mapCaretaker(clientId). Page: ClientDetails.cshtml');
+                    alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+    }
+
+    var careTakerId;
+    var clientId;
+    function PayRisePayrol(clientId, caretakerName, caretakerId) {
+        debugger;
+        $('#clientNametitle2').text(' Pay Rise : ' + caretakerName);
+        $('#clientId').val(clientId);
+        $('#caretakerId').val(caretakerId);
+        clientId = clientId;
+        careTakerId = caretakerId;
+       // $('#txtFromDate').val(txtFromDate);
+        $.ajax({
+            url: "/Client/GetMappedCaretakersLatestPayRiseRates/",
+            type: "POST",
+            data: { ClientId: clientId, CaretakerId: caretakerId },
+                success: function (data) {
+                    $('#workmodeList2').html('');
+                    if (data == "[]") {
+                        $('#workmodeList2').html("<tr>" + "<td>No Work Shifts found.</td>"+"</tr>");
+                    }
+                    else if (data.length > 0) {
+                         var strQual = "";
+                        $.each($.parseJSON(data), function (i, care) {
+                            $('#effectivePayrollDate').val(moment(care.EffectiveFrom).format('MM/DD/YYYY'));
+						    strQual = strQual + "<tr>" + "<td>" + care.WorkShiftName + "</td>" +
+                                "<td>@ViewData["CurrencySymbol"] "+"<input class='qty rate-table-txt' type = 'text' id ='" + care.WorkShiftId +"' value='"+ care.Rate +"' maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" + "</tr>";
+                        });
+
+                        $('#workmodeList2').html(strQual);
+                    }
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while Map Caregiver. Function: mapCaretaker(clientId). Page: ClientDetails.cshtml');
+                    alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+    }
+
+    $('#effectivePayrollDate').datepicker({
+        onSelect: function (dateText) {
+            var clientId = $('#clientId').val();
+            var caretakerId = $('#caretakerId').val();
+        $.ajax({
+            url: "/Client/GetMappedCaretakersPayRiseRatesByDate/",
+            type: "POST",
+            data: {
+                payriseData: {
+                    ClientId: clientId,
+                    Date: dateText,
+                    CaretakerId: caretakerId} },
+                success: function (data) {
+                    $('#workmodeList2').html('');
+                    if (data == "[]") {
+                               $.ajax({
+                                    url: "/Client/LoadWorkShift",
+                                    type: "GET",
+                                    contentType: "application/json; charset=utf-8",
+                                    datatype: JSON,
+                                        success: function (data) {
+                                                $('#workmodeList2').html('');
+                                                if (data == "[]") {
+                                                    $('#workmodeList').html("<tr>" + "<td>No Work Shifts found.</td>"+"</tr>");
+                                                }
+                                                else if (data.length > 0) {
+                                        var strQual = "";
+                                        $.each($.parseJSON(data), function (i, care) {
+						                    strQual = strQual + "<tr>" + "<td>" + care.ShiftName + "</td>" +
+                                                "<td>@ViewData["CurrencySymbol"] "+"<input class='qty rate-table-txt' type = 'text' value='0' id ='" + care.ShiftId +"' maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" + "</tr>";
+                                        });
+
+                                    $('#workmodeList2').html(strQual);
+                               }
+                               },
+                               error: function (data) {
+                                   logError(data.statusText + ' - Error occurred while LoadWorkShift. Function: LoadWorkShift. Page: ClientDetails.cshtml');
+                               }
+                               });
+                    }
+                    else if (data.length > 0) {
+                        var strQual = "";
+                        $.each($.parseJSON(data), function (i, care) {
+                            $('#effectivePayrollDate').val(moment(care.EffectiveFrom).format('MM/DD/YYYY'));
+						    strQual = strQual + "<tr>" + "<td>" + care.WorkShiftName + "</td>" +
+                                "<td>@ViewData["CurrencySymbol"] "+"<input class='qty rate-table-txt' type = 'text' id ='" + care.WorkShiftId +"' value='"+ care.Rate +"' maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" + "</tr>";
+                        });
+
+                        $('#workmodeList2').html(strQual);
+                    }
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while Date change. Function: datepicker:onSelect. Page: ClientDetails.cshtml');
+                }
+            });
+        }
+    });
+
+
+    $('#caretakerList').on('click', '#btnMapCareTaker', function () {
+
+        var data = [];
+        var caretakerrate = $(this).closest("tr").find("#Quantity").val().trim();
+        if (caretakerrate == "") {
+            $(this).closest("tr")[0].cells[0].style.color = 'red';
+
+            alert("Please Enter Rate for " + $(this).closest("tr")[0].cells[0].innerHTML);
+        }
+        else {
+            var clientID = 0;
+            clientID = GetParameterValuesNew('clientId');
+            if (clientID === undefined) {
+                alert('Unable to Map Caregiver')
+                return;
+            }
+
+            var ClientId = clientID
+            var CaretakerId = $(this).closest("tr").find(".caretakerID").val().trim();
+            var CategoryTypeId = $(this).closest("tr").find(".categoryID").val().trim();
+            var Rate = $(this).closest("tr").find(".qty").val().trim();
+            if (Rate == "") {
+                Rate = 0;
+            }
+            var IsTaxApplicable = false;
+            data.push({
+                ClientId: ClientId,
+                CaretakerId: CaretakerId,
+                CategoryTypeId: CategoryTypeId,
+                Rate: Rate,
+                IsTaxApplicable: IsTaxApplicable
+            });
+
+            console.log(data);
+            if (data != "") {
+                MapCaretaker(data);
+
+            }
+        }
+    });
+
+    function MapCaretaker(data) {
+
+        $.ajax({
+            type: "POST",
+            url: '/Client/MapCaretakers',
+            data: { workshiftRates: data },
+            dataType: "json",
+            success: function (data) {
+
+                if (data.status == true) {
+                    location.reload();
+                    localStorage.setItem('EditMode','Edit')
+                    $('.qty').val("");
+                    $('.chcktax').prop("checked", false)
+                }
+
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Mapping a Caregiver to a Client. Function: MapCaretaker(data). Page: ClientDetails.cshtml');
+                alert('Failed Mapping!');
+            }
+        })
+
+    }
+    function SavePayRise(data) {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '/Client/SavePayRisePayrol',
+            data: { workShiftRates: data },
+            dataType: "json",
+            success: function (data) {
+
+                if (data.status == true) {
+                    location.reload();
+                    localStorage.setItem('EditMode', 'Edit')
+                    $('.qty').val("");
+                    $('.chcktax').prop("checked", false)
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Mapping a Caregiver to a Client. Function: MapCaretaker(data). Page: ClientDetails.cshtml');
+                alert('Failed Mapping!');
+            }
+        })
+
+    }
+
+    function SavePayRiseInvoice(data) {
+
+        $.ajax({
+            type: "POST",
+            url: '/Client/SavePayRiseInvoice',
+            data: { categoryRate: data },
+            dataType: "json",
+            success: function (data) {
+
+                if (data.status == true) {
+                    location.reload();
+                    localStorage.setItem('EditMode', 'Edit')
+                    $('.qty').val("");
+                    $('.chcktax').prop("checked", false)
+                }
+
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Mapping a Caregiver to a Client. Function: MapCaretaker(data). Page: ClientDetails.cshtml');
+                alert('Failed Mapping!');
+            }
+        })
+
+    }
+    function cancel() {
+        window.location.reload();
+    }
+
+
+    function GetParameterValuesNew(param) {
+
+        var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < url.length; i++) {
+            var urlparam = url[i].split('=');
+            if (urlparam[0] == param) {
+                return urlparam[1].split('#')[0];
+            }
+        }
+    }
+
+    $('#btnAddCareTaker').click(function () {
+        if ($('#ddlCategory option:selected').text() != '--Select--' && $('#txtRate').val() != '' && $('#txtRate').val() != '0' && $('#categoryFromDate').val() != "") {
+            var date = $('#categoryFromDate').val();
+            var taxStatus = "N";
+            var isChecked = document.getElementById("taxApplicable").checked;
+            if (isChecked == true) {
+                taxStatus = "Y";
+            }
+            $.ajax({
+                url: "../Client/AddCategoryandRateList",
+                type: "POST",
+                data: { categoryTypeId: $('#ddlCategory').val(), ServiceRate: $('#txtRate').val(), taxApplicable: taxStatus, categoryName: $('#ddlCategory option:selected').text(), EffectiveFrom: date, ClientId: $('#ClientId').val() },
+                success: function (data) {
+                    if (data != "") {
+                        var strQual = "";
+                        $('#addedCaretakerList').html('');
+                        //$('#categoryFromDate').val(moment(date).format("MM/DD/YYYY"));
+                        $.each(data, function (i, care) {
+                            var taxapplicable = care.IsTaxApplicable == true ? "Yes" : "No";
+                            strQual = strQual + "<tr >" +
+                                "<td class='col-md-3' onclick = 'EditService(" + care.CategoryId + "," + care.Rate + ","+care.IsTaxApplicable +");'>" + care.CategoryName + "</td>" +
+                                "<td class='col-md-3' onclick = 'EditService(" + care.CategoryId + "," + care.Rate + "," +care.IsTaxApplicable + ");'> @ViewData["CurrencySymbol"]" + care.Rate + "/hr.</td>" +
+                                "<td class='col-md-3' onclick = 'EditService(" + care.CategoryId + "," + care.Rate + ","+care.IsTaxApplicable +");'>" + taxapplicable + "</td>" +
+                                "<td class='col-md-3' onclick = 'EditService(" + care.CategoryId + "," + care.Rate + "," +care.IsTaxApplicable + ");'> <label class='btn btn-danger' onclick = " + "RemoveCaretaker(" + care.CategoryId + ")" +
+                                " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                        });
+                        $('#addedCaretakerList').html(strQual);
+                        $('#tblCaretaker').show();
+                        $("select#ddlCareTaker").val('0');
+                        $("#txtRate").val('');
+                        document.getElementById("taxApplicable").checked = false;
+                        // $("#ChkDiv").hide();
+                        $("select#ddlCategory").val("");
+                    }
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while adding a Category and Rate  for a Client. Function: $("#btnAddCareTaker").click(function ()). Page: ClientDetails.cshtml');
+                    //alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+
+        }
+        else if ($('#categoryFromDate').val() == ""){
+            alert("Please choose effective from date!")
+        }
+        else {
+            alert("Please add category and rate!")
+        }
+    });
+
+    if ($("#tblCaretaker td").closest("tr").length > 0) {
+        $('#tblCaretaker').show();
+    }
+    else {
+        $('#tblCaretaker').hide();
+    }
+
+    function UpdateEmail() {
+
+        $('#verifyEmail').modal('hide')
+        showProgress();
+        $.ajax({
+            type: "POST",
+            url: "../Admin/UpdateClientEmail",
+            data: { id: $('#UserId').val(), emailId: $('#EmailId').val(), name: $('#ClientName').val() },
+            success: function (data) {
+                spinnerVisible = true;
+                hideProgress();
+                //location.reload();
+                $('#EmailVerification').show();
+                setTimeout(function () {
+
+                    $('#EmailVerification').hide();
+
+                }, 10000);
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Updating  Client EmailID. Function: UpdateEmail(). Page: ClientDetails.cshtml');
+            }
+
+        });
+    }
+
+
+    $('#btnSaveTimeShift').click(function () {
+
+        if ($('#ddlTimeShift option:selected').text() != '' && $('#ddlTimeShift option:selected').text() != '--Select--') {
+            $.ajax({
+                url: "../Client/AddClientTimeShift",
+                type: "POST",
+                data: { timeShiftId: $('#ddlTimeShift').val(), timeShiftName: $('#ddlTimeShift option:selected').text() },
+                success: function (data) {
+
+                    if (data.length > 0) {
+                        var strQual = "";
+                        $('#addedTimeShiftList').html('');
+                        for (var i = 0; i < data.length; i++) {
+
+                            strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].TimeShiftName + "</td>" +
+                                "<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveTimeShift(" + data[i].TimeShiftId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                        }
+                        $('#addedTimeShiftList').html(strQual);
+                        $('#tblTimeShift').show();
+                        $('#ddlTimeShift').val("");
+
+                    }
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while adding Time Shift for a Client. Function: $("#btnSaveTimeShift").click(function ()). Page: ClientDetails.cshtml');
+                    //alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+
+        }
+
+    });
+
+    if ($("#tblTimeShift td").closest("tr").length > 0) {
+        $('#tblTimeShift').show();
+    }
+    else {
+        $('#tblTimeShift').hide();
+    }
+    //window.onbeforeunload = function () {
+    //    this.localStorage.removeItem("EditMode");
+    //};
+    //$('#manageClient').click(function () {
+    //    localStorage.removeItem("EditMode");
+    //});
+</script>
+<style>
+    .editButton {
+        margin: 5px 10px;
+    }
+
+    .box-footer {
+        text-align: center;
+    }
+
+    /*.table-striped >tbody >tr >td >table>tbody >tr:nth-of-type(odd) {
+        background-color: white
+    }
+    .table-striped > tbody > tr > td > table > tbody > tr:nth-of-type(even) {
+        background-color: white
+    }*/
+    .table-striped > tbody > tr:nth-of-type(even) > td > table > tbody > tr:nth-of-type(odd) {
+        background-color: #f5f5f5;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) > td > table > tbody > tr:nth-of-type(even) {
+        background-color: white
+    }
+
+    .mapping-style {
+        border-top: none
+    }
+</style>
+<script>
+    $(function () {
+        $('#effectivePayrollDate').datepicker({
+            //minDate: 0,
+            changeMonth: true,
+            changeYear: true,
+        });
+        $('#txtDateFrom').datepicker({
+            onSelect: function (dateText) {
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: '/Client/GetClientInvoicePayRiseRatesonDateChange',
+                    data: { Date: dateText, ClientId: $('#ClientId').val() },
+                    dataType: "json",
+                    success: function (data) {
+                        debugger;
+                        var data1 = $.parseJSON(data.Result);
+                        if (data == "[]") {
+                            $('#workmodeList').html("<tr>" + "<td>No Services found.</td>" + "</tr>");
+                        }
+                        else if (data1.length > 0) {
+                            var strQual = "";
+
+                            $.each((data1), function (i, care) {
+                                 strQual = strQual + "<tr>" + "<td>" + care.CategoryName + "</td>" +
+                            "<td>@ViewData["CurrencySymbol"] " + "<input class='qty rte-table-txt' type = 'text' id ='" + care.CategoryId + "' value='" + care.Rate + "'  maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" +
+                          "</tr>";
+
+                            });
+
+                            $('#workmodeList3').html(strQual);
+                        }
+
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while Mapping a Caregiver to a Client. Function: MapCaretaker(data). Page: ClientDetails.cshtml');
+                        alert('Failed Mapping!');
+                    }
+                })
+
+            },
+            minDate: 0,
+            changeMonth: true,
+            changeYear: true,
+        });
+        $('#txtToDate').datepicker({
+            maxDate: 0,
+            changeMonth: true,
+            changeYear: true,
+        });
+        $('#categoryFromDate').datepicker({
+            //minDate: 0,
+            changeMonth: true,
+            changeYear: true,
+        });
+        $('#mapEffectiveDate').datepicker({
+            //minDate: 0,
+            changeMonth: true,
+            changeYear: true,
+        });
+        $('#editEffectiveDate').datepicker({
+            //minDate: 0,
+            changeMonth: true,
+            changeYear: true,
+        });
+
+
+    });
+</script>

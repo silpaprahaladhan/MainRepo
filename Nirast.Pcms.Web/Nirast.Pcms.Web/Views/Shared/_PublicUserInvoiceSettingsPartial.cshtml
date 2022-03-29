@@ -1,0 +1,47 @@
+﻿
+@model IEnumerable<Nirast.Pcms.Web.Models.UsersDetails>
+<div class="table-responsive">
+    @*@using (Html.BeginForm("DeleteCity", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {*@
+    <table id="UserInvoiceSettings" class="table table-borderless table-striped table-earning padding-top-10">
+        <thead>
+            <tr>
+                <th style="width:45%">Invoice Prefix</th>
+                <th style="width:45%">Next Invoice Number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr onclick="editUserInvoiceDetails('@item.InvoicePrefix','@item.InvoiceNumber')">
+
+                        <td style="width:45%">@item.InvoicePrefix</td>
+                        <td style="width:45%">@item.InvoiceNumber</td>
+                        <td>
+                            @if (ViewBag.AllowEdit)
+                            {
+                                <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" onclick="editUserInvoiceDetails('@item.InvoicePrefix','@item.InvoiceNumber')" data-target="#modal-default"><span class="fa fa-edit"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" disabled>
+                                        <span class="fa fa-edit"></span>
+                                    </button>
+                                </div>
+                            }
+
+
+                        </td>
+
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+
+</div>

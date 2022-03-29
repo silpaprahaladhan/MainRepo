@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.ClientModel>
+
+    @*@using (Html.BeginForm("DeleteCity", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {*@
+    <div class="filterable table-responsive">
+        <table id="ClientInvoice" class="table table-borderless table-striped table-earning padding-top-10">
+            <thead>
+                <tr>
+                    <th style="width:33%">Client</th>
+                    <th style="width:30%">Invoice Prefix</th>
+                    <th style="width:30%">Next Invoice Number</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr onclick="editInvoiceDetails('@item.ClientId','@item.ClientName','@item.InvoicePrefix','@item.InvoiceNumber')">
+
+                            <td style="width:33%">@item.ClientName</td>
+                            <td style="width:30%">@item.InvoicePrefix</td>
+                            <td style="width:30%">@item.InvoiceNumber</td>
+                            <td>
+                                @if (ViewBag.AllowEdit)
+                                {
+                                    <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" onclick="editInvoiceDetails('@item.ClientId','@item.ClientName','@item.InvoicePrefix','@item.InvoiceNumber')" data-target="#modal-default"><span class="fa fa-edit"></span></button>
+                                }
+                                else
+                                {
+                                    <div class="wrapper">
+                                        <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" disabled>
+                                            <span class="fa fa-edit"></span>
+                                        </button>
+                                    </div>
+                                }
+
+
+                            </td>
+
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+        <div id="ResultList"></div>
+    </div>

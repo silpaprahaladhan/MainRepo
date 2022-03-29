@@ -1,0 +1,339 @@
+﻿@model Nirast.Pcms.Web.Models.UpcomingAppointment
+<head>
+    @*<script type="text/javascript" src="~/js/jquery-2.1.4.min.js"></script>*@
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link href="~/build/css/Dashboard.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+    $(document).ready(function ($) {
+        //for scrolling from other page
+        if ($(window.location.hash).length) {
+            $('html,body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            });
+            window.location.hash = '';
+        }
+        $('li').removeClass('menu__item--current');
+        $('#liDashboard').addClass('menu__item--current');
+    });
+
+</script>
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            <div class="col-lg-12 col-md-12 col-sm-12 ">
+                <!-- PAGE CONTAINER-->
+                <div class="main-content">
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <h3 class="register h4-label">Caregiver Dashboard</h3>
+                            @if (Model != null)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-heading activenotification">
+                                        <h4>Active Scheduling / Booking</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        @using (Html.BeginForm("ConfirmAppointments", "CareTaker", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                        {
+                                            if (Model != null)
+                                            {
+                                                @Html.HiddenFor(model => model.AppointmentId)
+                                                @Html.HiddenFor(model => model.Type)
+                                                @Html.HiddenFor(model => model.AppointmentDate)
+                                                @Html.HiddenFor(model => model.AppointmentTime)
+                                                @Html.HiddenFor(model => model.User)
+                                                <article class="media event">
+                                                    <a class="pull-left date">
+                                                        <p class="month">@Model.AppointmentDate.ToString("MMM")</p>
+                                                        <p class="day">@Model.AppointmentDate.ToString("dd")</p>
+                                                        <p class="time">@Model.AppointmentDate.ToString("hh:mm tt")</p>
+                                                    </a>
+                                                    <div class="media-body">
+                                                        <p class="title"><b>Booked User</b> - @Model.User  on  @Model.AppointmentTime
+                                                        <p class="sub-title"><b>Location</b> - @Model.Location</p>
+                                                        @*<p>@item.Purpose</p>*@
+                                                        <div class="text-right">
+                                                            <input type="submit" style="padding:5px;width:10%" class=" btn btn-primary float-right btn-dashboard" value="Confirm" name="ConfirmAppointments">
+                                                        </div>
+                                                    </div>
+                                                </article>
+                                            }
+                                        }
+
+                                    </div>
+                                </div>
+                            }
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4></h4>
+                                </div>
+                                <div class="panel-body">
+                                    @{Html.RenderAction("CalendarView");}
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4>Notifications</h4>
+                                </div>
+                                <div class="panel-body">
+                                    @{Html.RenderAction("Notification");}
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="display:inline-flex;margin-top: 40px;margin-bottom: 40px;" id="legends">
+                                <div><input type="button" class="legend-style" style="background-color:green" /> <label class="label-style" style="padding-right: 10px;">Scheduling</label> </div>
+                                <div><input type="button" class="legend-style" style="background-color:blue" /> <label class="label-style" style="padding-right: 10px;">Booking</label> </div>
+                            </div>
+                            
+
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    @*<script src="~/js/fullcalendar.min.js"></script>*@
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        var eventList = [];
+        $(function () {
+            //$('#tblTimeShift').hide();
+            var holidays = [];
+            $(document).ready(function () {
+                debugger
+                var id = @Session["loggedInUserId"];
+                GenerateCalender(id);
+            });
+
+            var scheduleEvents = [];
+
+            $.ajax({
+                url: "/Client/GetHolidays",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (result) {
+                    $.each($.parseJSON(result), function (i, care) {
+                        var holidaydate = new Date(care.HolidayDate);
+                        holidaydate = new Date(holidaydate.getTime() + (holidaydate.getTimezoneOffset() * 60000));
+                        holidays.push({
+                            'dates': holidaydate
+                        });
+
+                    })
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while loading Admin dashboard - Holidays. Function: "/Client/GetHolidays". Page: AdminDashboard.cshtml');
+                    
+                }
+            });
+
+            var saveDate = new Date();
+
+            function GenerateCalender(id) {
+                debugger;
+                $('#calender').fullCalendar('destroy');
+                $('#calender').fullCalendar({
+                    contentheight: 'auto',
+                    //height: 650,
+                    height: 'auto',
+                    defaultDate: saveDate,
+                    //timeFormat: 'hh(:mm)a',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay'
+                    },
+                    eventDrop: false,
+                    dayClick: function (date, jsEvent, view) {
+                        $('#hdStartDate').val(date.format());
+                    },
+
+                    slotminutes: 15,
+                    eventLimit: true,
+                    views: {
+                        month: {
+                            eventLimit: 11
+                        },
+                        day: {
+                            eventLimit: 11
+                        },
+                        week: {
+                            eventLimit: 11
+                        }
+                    },
+                    displayEventTime: false,
+                    timezone: 'utc',
+                    dayRender: function (date, cell, $el) {
+                        var check = $.fullCalendar.formatDate(date, 'DD/MM/YYYY');
+                        var fullDate = new Date()
+                        var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
+                        var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+                        $.each(holidays, function (index, value) {
+
+                            var Month;
+                            var daterec;
+                            var montStr = value.dates.getMonth().toString();
+
+                            if (value.dates.getMonth() + 1 < 9) {
+                                Month = '0' + (value.dates.getMonth() + 1);
+                            }
+                            else {
+                                Month = (value.dates.getMonth() + 1);
+                            }
+
+                            if (value.dates.getDate() < 9) {
+                                daterec = '0' + (value.dates.getDate());
+                            }
+                            else {
+                                daterec = (value.dates.getDate());
+                            }
+
+                            var HolidayDate = daterec + "/" + Month + "/" + value.dates.getFullYear();
+                            if (HolidayDate == check) {
+                                cell.css("background-color", "yellow");
+                            }
+                        });
+                    },
+                    eventRender: function (calEvent, $el) {
+                    },
+                    eventMouseover: function (data, events, jsEvent, view) {
+                        $.each(events, function (index, value) {
+                            if (data.Type == "Scheduling") {
+                                tooltip = '<div class="tooltiptopicevent" style="border-radius: 25px;border: 2px solid ;-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);box-shadow:7px 7px 5px 0px rgba(50, 50, 50, 0.75);width:auto;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + '<b>Client : </b>' + data.clientname + '</br>' + '<b>Caregiver : </b>' + data.caretakername + '</br>' + '<b>Category : </b>' + data.careTakerTypeName + '</br>' + '<b>Work Mode : </b>' + data.workmodename + '</br>' + '<b>Time Shift : </b>' + data.fromtime + ' ' + '<b> - </b>' + data.endtime + '</br>' + '<b>Location : </b > ' + data.clientlocation + '</br > ' +  '<b>Description : </b>' + data.description + '</div>';
+                            }
+                            else {
+                                tooltip = '<div class="tooltiptopicevent" style="border-radius: 25px;border: 2px solid ;-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);box-shadow:7px 7px 5px 0px rgba(50, 50, 50, 0.75);width:auto;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + '<b>Service : </b>' + data.service + '</br>' + '<b>User : </b>' + data.bookedUser + '</br>' + '<b>Booking Date : </b>' + data.bookingdate + '</br>' + '<b>Booking From : </b>' + data.startdate + '</br>' + '<b>Booking To : </b>' + data.enddate + '</br>'+'<b>Description : </b>' + data.description +  '</div>';
+                            }
+                        });
+                        $("body").append(tooltip);
+                        $(this).mouseover(function (e) {
+                            $(this).css('z-index', 10000);
+                            $('.tooltiptopicevent').fadeIn('500');
+                            $('.tooltiptopicevent').fadeTo('10', 1.9);
+                        }).mousemove(function (e) {
+                            $('.tooltiptopicevent').css('top', e.pageY + 10);
+                            $('.tooltiptopicevent').css('left', e.pageX + 20);
+                        });
+
+                    },
+                    eventMouseout: function (data, jsEvent, view) {
+                        $(this).css('z-index', 8);
+
+                        $('.tooltiptopicevent').remove();
+                    },
+                    events: function (start, end, timezone, callback) {
+                        debugger;
+                        var date = new Date($('#calender').fullCalendar('getDate'));
+                        var month = date.getUTCMonth() + 1;
+                        var year = date.getUTCFullYear();
+                        GetCalenderEvents(id, month, year, callback);
+                    },
+                    selectable: true
+                })
+            }
+
+        })
+
+        function GetCalenderEvents(id, month, year, callback) {
+            debugger;
+            if (eventList != null && eventList.filter(x => x.year == year && x.month == month).length <= 0) {
+                var data = { caretakerId: id, month: month, year: year }
+                showProgress();
+                $.ajax({
+                    type: "POST",
+                    url: '/CareTaker/GetEventsByCareTaker',
+                    data: data,
+                    success: function (data) {
+
+                        debugger;
+                        events = [];
+                        $.each(data, function (i, v) {
+                            events.push({
+                                eventID: v.Id,
+                                title: (v.Type == "Scheduling") ? v.CareTakerName + '  ' + v.CareTakerTypeName + '  ' + v.FromTime + ' - ' + v.EndTime : v.BookedUser,
+                                description: v.Description,
+                                start: (v.Start),
+                                end: (v.Start),
+                                endshow: v.End != null ? moment(v.End).subtract(1, "days") : null,
+                                color: (v.Type == "Scheduling")?'Green':'Blue',
+                                allDay: v.IsFullDay,
+                                caretaker: v.CareTaker,
+                                bookedUser: v.BookedUser,
+                                bookingdate: moment(v.BookingDate).local().format('DD/MMM/YYYY hh:mm A'),
+                                startdate: moment(v.StartDateTime).format('DD/MMM/YYYY hh:mm A'),
+                                enddate: moment(v.EndDateTime).format('DD/MMM/YYYY hh:mm A'),
+                                service:v.Service,
+                                careTakerType: v.CareTakerType,
+                                careTakerTypeName: v.CareTakerTypeName,
+                                workmode: v.WorkMode,
+                                Type: v.Type,
+                                workshifdetails: v.WorkShifDetails,
+                                worktime: v.WorkTime,
+                                customtiming: v.CustomTiming,
+                                caretakername: v.CareTakerName,
+                                workitimename: v.WorkTimeName,
+                                clientlocation: v.ClientLocation,
+                                workmodename: v.WorkModeName,
+                                contactperson: v.ContactPerson,
+                                workitimedetails: v.WorkTimeDetails,
+                                clientname: v.ClientName,
+                                fromtime: v.FromTime,
+                                endtime: v.EndTime,
+                                allDay: false
+                            });
+                        })
+                        eventList.push({ month, year, events });
+                        callback(events);
+                        spinnerVisible = true;
+                        hideProgress();
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Client Events. Function: GenerateCalender- events. Page: ScheduledCalenderView.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+                    }
+                })
+            }
+            else {
+                callback(eventList.filter(x => x.year == year && x.month == month)[0].events);
+            }
+        }
+
+    </script>
+    <style>
+        #calendar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+
+<style>
+    .heading-style {
+        margin-bottom: 10px;
+    }
+
+    .register {
+        color: lightslategrey;
+        margin-bottom: 5px;
+    }
+</style>
+    }
+
+
+

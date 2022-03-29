@@ -1,0 +1,51 @@
+﻿body {
+}
+.newsright input[type="text"] {
+    outline: none;
+    width: 100%;
+    padding: 14px 10px;
+    color: #848484;
+    font-size: 16px;
+    border: 1px solid #dadada;
+    width: 71%;
+}
+
+.newsright input[type="submit"] {
+    color: #fff;
+    background: #28a745;
+    /*padding: 13px 20px 14px;
+    font-size: 18px;*/
+    outline: none;
+    text-transform: uppercase;
+    margin: 0 0 0 -4px;
+}
+
+    .newsright input[type="submit"]:hover {
+        color: #333;
+        text-decoration: none;
+    }
+
+.newsright input[type="button"] {
+    color: #fff;
+    background: #28a745;
+    border: none;
+    /*padding: 13px 20px 14px;
+    font-size: 18px;*/
+    outline: none;
+    text-transform: uppercase;
+    margin: 0 0 0 -4px;
+}
+
+    .newsright input[type="button"]:hover {
+        background: #2359a7;
+    }
+
+.newsleft h3 {
+    font-size: 24px;
+    margin-top: 15px;
+    color: #000;
+}
+
+.panel-heading {
+    padding: 1px 15px;
+}

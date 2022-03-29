@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.SearchedCareTakers>
+@if (Model != null)
+{
+    if (Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            <div class="col-md-3 product-men">
+                <div class="men-pro-item simpleCart_shelfItem">
+                    <div class="imageStyle">
+                        <img src="data:image;base64,@System.Convert.ToBase64String(item.ProfilePicture)" alt="" class="pro-image-front imageSizeSearch">
+                        @*<img src="data:image;base64,@System.Convert.ToBase64String(item.ProfilePicture)" alt="" class="pro-image-back imageSizeSearch">*@
+                        <div class="men-cart-pro">
+                            <div class="inner-men-cart-pro">
+                                <h4> @Html.ActionLink("View Profile", "CareTakerDetailPage", "CareTaker", null, htmlAttributes: new { @class = "link-product-add-cart" })</h4>
+                            </div>
+                        </div>
+                        @if (@item.TotalExperience > 1)
+                        {
+                            <span class="product-new-top">
+                                @item.TotalExperience yrs
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="product-new-top">
+                                @item.TotalExperience yr
+                            </span>
+                        }
+
+                    </div>
+                    <div class="item-info-product ">
+                        <h4 class="word_Style"> @Html.Label(item.CareTakerFirstName + " " + item.CareTakerLastName)</h4>
+                        <p class="serviceSearch word_Style">@item.ServiceName</p>
+                        <div class="info-service-price">
+                            @if (@item.Location != null)
+                            {
+                                <span class="item_price word_Style">
+                                    @item.Location, @item.State
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="item_price word_Style">
+                                    @item.State
+                                </span>
+                            }
+                        </div>
+                        @Html.ActionLink("Book Now", "CareTakerBooking", "PublicUser", null, htmlAttributes: new { @class = "item_add single-item hvr-outline-out button2" })
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-md-12 no-records-message">
+            No Records Found !!!
+        </div>
+    }
+}
+else
+{
+    <div class="col-md-12 no-records-message">
+        No Records Found !!!
+    </div>
+}
+

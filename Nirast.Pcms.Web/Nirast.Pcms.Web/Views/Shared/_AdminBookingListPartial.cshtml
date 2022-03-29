@@ -1,0 +1,193 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.AdminBookingList>
+@using Nirast.Pcms.Web.Models;
+
+<div class="x_panel">
+    <div class="x_title">
+        <input type="hidden" id="hdnCTId" />
+        <input type="hidden" id="hdnSTId" />
+        <h2>Upcoming Bookings<small></small></h2>
+        <ul class="nav navbar-right panel_toolbox">
+            <li>
+                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <div class="table-responsive">
+            <table class="table table-striped jambo_table bulk_action" id="BookingList">
+                <thead>
+                    <tr class="headings">
+
+                        <th class="column-title" style="display: table-cell;width:25%">Booking On</th>
+                        <th class="column-title" style="display: table-cell;width:20%">Booked By</th>
+                        <th class="column-title" style="display: table-cell;width:20%">Location</th>
+                        <th class="column-title" style="display: table-cell;width:25%">Caregiver</th>
+                        <th >Action</th>
+                        <th class="bulk-actions" colspan="7" style="display: none;">
+                            <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt">1 Records Selected</span> ) <i class="fa fa-chevron-down"></i></a>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr class="even pointer" style="cursor:pointer">
+                                @{
+                                    <td style="display: table-cell;width:25%" class="column-title"  onclick="showBookingDetails('@item.BookingId')">@item.BookingDate.ToString("MM/dd/yyyy h:mm:ss tt")</td>
+                                    <td style="display: table-cell;width:20%" class="column-title"  onclick="showBookingDetails('@item.BookingId')">@item.BookedUser </td>
+                                    <td style="display: table-cell;width:15%" class="column-title"  onclick="showBookingDetails('@item.BookingId')">@item.UserLocation</td>
+                                    <td style="display: table-cell;width:22%" class="column-title"  onclick="showBookingDetails('@item.BookingId')">@item.Caretaker</td>
+                                }
+                                <td  style="display:table-cell;width:18%">
+                                    <button class="btn btn-xs btn-primary" title="View Details" data-toggle="modal" onclick="showBookingDetails('@item.BookingId')" data-target="#modal-viewDetails"><span class="fa fa-eye"></span></button>
+                                    <button href="#" class="btn btn-xs btn-danger" title="Cancel Booking" data-toggle="modal" data-target="#modal-cancel" onclick="setOfficeStaffId('@item.BookingId','@Convert.ToInt32(Enums.BookingStatus.Cancelled)')">
+                                        <span class="fa fa-remove"></span>
+                                    </button>
+                                </td>
+                                <td class="">@item.BookingDate.ToString("yyyyMMddHHmm")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+<div id="spinner">
+
+</div>
+<div class="modal fade" id="bookingDetailDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content panel">
+            <div class="modal-header panel-heading padding-10">
+                @*<button type="button" class=" btn btn-xs btn-danger fa fa-close" data-dismiss="modal" aria-label="Close">  <span class="fa fa-close" aria-hidden="true"></span> </button>*@
+                <h4 class="modal-title">Booking Details</h4>
+                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" data-target="#modal-delete" onclick="setCaretakerId('15')" ">
+                    <span class="fa fa-minus"></span>
+                </button>
+            </div>
+            <div id="bookingDetail" class="modal-body no-padding">
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-xs btn btn-primary " data-dismiss="modal">Close</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-cancel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Cancel Booking Details</h4>
+            </div>
+            <div class="modal-body">
+                Booking will be cancelled. Are you sure to cancel?
+            </div><label class="modal-body">Reason For Cancelling</label><span class="mandatoryField">*</span>
+            <div style="padding-left: 3%;">
+                <input class="form-control" style="width:60%;" id="ReasonCancel" name="ReasonCancel" type="text" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="CancelUser()" class="btn btn-primary">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script type="text/javascript">
+
+    function setOfficeStaffId(userId, status) {
+        $('#hdnCTId').val(userId);
+        $('#hdnSTId').val(status);
+
+    }
+    function CancelUser() {
+        if ($('#ReasonCancel').val() == "") {
+            alert("Reason should not be empty.");
+            return false;
+        }
+        else {
+            var reason = $('#ReasonCancel').val();
+            var status =@Convert.ToInt32(Enums.BookingStatus.Cancelled);
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/CancelBookingStatus",
+            data: { userId: $('#hdnCTId').val(), status: $('#hdnSTId').val(), reason: reason },
+            success: function () {
+                window.location.reload();
+            }
+        });
+
+        }
+
+    }
+
+    function showBookingDetails(bookingId) {
+        showProgress();
+        $.ajax({
+            url: "../Admin/ViewBookingDetails/",
+            data: {
+                bookingId: bookingId
+            },
+            success: function (feed) {
+                $('#bookingDetail').html(feed);
+                $('#bookingDetailDialog').modal('show');
+                spinnerVisible = true;
+                hideProgress();
+            },
+            error: function (feed) {
+                spinnerVisible = true;
+                hideProgress();
+                console.log(feed.responseText);
+                logError(feed.statusText + ' - Error occurred while showing booking details for BookingId: ' + bookingId + '. Function: showBookingDetails(bookingId). Page: _AdminBookingListPartial.cshtml');
+                                    //alert('Some network error has occurred. Please try again after some time.');
+                //alert(feed.responseText);
+            }
+        });
+    }
+    function convertUtcDateToLocalDate() {
+
+        $('#BookingList > tbody  > tr').each(function () {
+            var text = $(this)[0].cells[0].innerText;
+            var clientDate = moment.utc(text, 'MM/DD/YYYY h:mm:ss A').local().format('DD-MMM-YYYY hh:mm A');
+            $(this)[0].cells[0].innerText = clientDate;
+        });
+    }
+
+    $(document).ready(function () {
+        convertUtcDateToLocalDate();
+        $('#BookingList').DataTable({
+            "destroy": true,
+            "searching": false,
+            "pagingType": "full_numbers",
+            "aoColumns": [
+                { "iDataSort": 5 },
+
+                null,
+                null,
+                null,
+                null,
+                { "bVisible": false }
+            ],
+            "columnDefs": [
+                { "width": "25%", "targets": 0 }
+            ],
+            "order": [[0, 'desc']]
+        });
+    });
+</script>

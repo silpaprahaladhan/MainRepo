@@ -1,0 +1,498 @@
+﻿@model List<Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel>
+@{
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+    var country = Session["CountryId"].ToString();
+    var state = Session["StateID"].ToString();
+    var city = Session["CityIdk"].ToString();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+
+</head>
+<body>
+    <div class="product-easy">
+        @if (ViewBag.Error != null)
+        {
+            if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+        }
+        else
+        {
+    <div class="container">
+        <div class="row profile_Style">
+            <div class="panel panel-default report-style " id="main">
+                <div class="panel-heading">
+                    <h4>Select Location</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-2" id="countrydiv">
+                                <label class="label-style">Country</label>
+                                @Html.DropDownListFor(model => model[0].CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                @Html.ValidationMessageFor(model => model[0].CountryId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="statediv">
+                                <label class="label-style">State</label>
+                                @Html.DropDownListFor(model => model[0].StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                @Html.ValidationMessageFor(model => model[0].StateId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="citydiv">
+                                <label class="label-style">City</label>
+                                @Html.DropDownListFor(model => model[0].CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                @Html.ValidationMessageFor(model => model[0].CityId1, "", new { @class = "no-padding required" })
+                            </div>
+
+                            <div class="col-md-2" id="citydiv">
+                                <label class="label-style">Franchise/Branch</label>
+                                @Html.DropDownListFor(model => model[0].branchId1, ViewData["ListBranch"] as SelectList, "--Select--", new { @Id = "Branch1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                @Html.ValidationMessageFor(model => model[0].branchId1, "", new { @class = "no-padding required" })
+                            </div>
+
+                            <div class="col-md-3" style="margin-top:39px;">
+                                <button class="btn btn-primary float-left editButton" title="Edit" onclick="searchClientByLocation()">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="~/js/easyResponsiveTabs.js" type="text/javascript"></script>
+        <h3 class="h4-label">Manage Caregiver</h3>
+
+
+        @if (TempData["Success"] != null)
+        {
+            <p class="alert alert-success">@TempData["Success"].ToString()</p>
+        }
+        <div class="row padding-top-10">
+
+            <div class="filterable table-responsive">
+                <input type="hidden" id="hdnCTId" />
+
+                <table class="table table-striped padding-top-10 table-earning" id="caretakerList">
+                    <thead>
+
+                        <tr class="non-filter-header">
+                            <th>Profile ID</th>
+                            <th>Name</th>
+                            <th>Email ID</th>
+                            <th>Phone #1</th>
+                            <th>Category</th>
+                            <th>Login Status</th>
+                            <th>Email Verification</th>
+
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                var verified = @item.UserVerified == true ? "Verified" : "Pending";
+                                var status = @item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.Active ? "Active" : "Disabled";
+                                <tr>
+                                    <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.CaretakerProfileId</td>
+                                    <td style="width:20%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.CareTakerFullName</td>
+                                    <td style="width:20%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.EmailAddress</td>
+                                    <td style="width:15%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.PrimaryPhoneNo</td>
+                                    <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.CategoryName</td>
+
+                                    <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@status</td>
+                                    <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@verified</td>
+                                    <td class="text-right">
+                                        @if (ViewBag.AllowEdit)
+                                        {
+                                            <a class="btn btn-xs btn-primary" title="View" href="@Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId })"><span class="fa fa-eye"></span></a>
+                                            <button href="#" class="btn btn-xs theme-button fa fa-key" title="Reset password" onclick="showBookingDetails('@item.UserId')"></button>
+                                            if (item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.Active)
+                                            {
+                                                <button class="btn btn-xs btn-warning" title="Active" onclick="changeStatus('@item.UserId','2')"><span class="fa fa-toggle-on"></span></button>
+                                            }
+                                            else if (item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.InActive)
+                                            {
+                                                <button class="btn btn-xs btn-warning" title="InActive" onclick="changeStatus('@item.UserId','1')"><span class="fa fa-toggle-off"></span></button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="wrapper">
+                                                <a class="btn btn-xs btn-primary" title="Modify" disabled><span class="fa fa-edit"></span></a>
+                                                @if (item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.Active)
+                                                {
+                                                    <button class="btn btn-xs btn-warning" title="Active" disabled><span class="fa fa-toggle-on"></span></button>
+                                                }
+                                                else if (item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.InActive)
+                                                {
+                                                    <button class="btn btn-xs btn-warning" title="InActive" disabled"><span class="fa fa-toggle-off"></span></button>
+                                                }
+                                            </div>
+                                        }
+
+                                        @if (ViewBag.AllowDelete)
+                                        {
+                                            <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" onclick="setCaretakerId('@item.UserId')" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                                        }
+                                        else
+                                        {
+                                            <div class="wrapper">
+                                                <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                                            </div>
+                                        }@if (item.UserVerified == true)
+                                        {
+
+                                            <button class="btn btn-xs btn btn-success" title="VerifyEmail" onclick="verifyEmail('@item.UserId')" disabled="disabled"><span class="fa fa-check"></span></button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-xs btn btn-success" title="VerifyEmail" onclick="verifyEmail('@item.UserId')"><span class="fa fa-check"></span></button>
+
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div id="ResultList"></div>
+            </div>
+
+        </div>
+    </div>
+
+            <div class="modal fade" id="modal-delete">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                            <h4 class="modal-title">Delete Caregiver</h4>
+                        </div>
+                        <div class="modal-body">
+                            Record will be deleted from the system.Are you sure to delete?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" onclick="deleteUser()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        }
+
+    </div>
+    <div class="modal fade" id="bookingDetailDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <!-- Modal content-->
+            <div class="modal-content panel">
+                <div class="modal-header panel-heading padding-10">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                    <h4 class="modal-title">Reset Password</h4>
+                </div>
+                <div id="bookingDetail" class="modal-body no-padding">
+
+                </div>
+
+                <div class="modal-footer">
+
+
+
+                    <button type="button" class="btn btn-primary " onclick="SavePassword()">Save</button>
+                    <button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="spinner">
+
+    </div>
+    <style type="text/css">
+        table#caretakerList th {
+            font-size: 14px;
+        }
+
+        table#caretakerList td {
+            font-size: 12px;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function setCaretakerId(caretakerId) {
+            $('#hdnCTId').val(caretakerId);
+        }
+        function changeStatus(userRegnId, accountStatus) {
+            $.ajax({
+                type: 'POST',
+                url: "../Admin/ChangeStatus",
+                data: { userId: userRegnId, status: accountStatus },
+                success: function () {
+                    window.location.reload();
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while changing the Caregiver Status. Function: setCaretakerId(caretakerId). Page: ManageCaretaker.cshtml');
+                    //alert('Some network error has occurred. Please try again after some time.');
+                }
+            });
+        }
+        function verifyEmail(userId) {
+            $.ajax({
+                type: 'POST',
+                url: "../Admin/VerifyEmail",
+                data: { userId: userId },
+                success: function () {
+                    window.location.reload();
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while changing the Caregiver Status. Function: setCaretakerId(caretakerId). Page: ManageCaretaker.cshtml');
+                    //alert('Some network error has occurred. Please try again after some time.');
+                }
+            });
+        }
+
+        function deleteUser() {
+            $.ajax({
+                type: 'POST',
+                url: "../Admin/ChangeStatus",
+                data: { userId: $('#hdnCTId').val(), status: '3' },
+                success: function () {
+                    window.location.reload();
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while deleting a Caregiver. Function: deleteUser(). Page: ManageCaretaker.cshtml');
+                    //alert('Some network error has occurred. Please try again after some time.');
+                }
+            });
+        }
+        $(document).ready(function () {
+            $('#caretakerList').DataTable({
+                "pagingType": "full_numbers"
+            });
+            $('.filters').hide();
+            $('#horizontalTab').easyResponsiveTabs({
+                type: 'default', //Types: default, vertical, accordion
+                width: 'auto', //auto or any width like 600px
+                fit: true   // 100% fit in a container
+            });
+
+            $(".photo#website2").click(function () {
+                var location = 'Wasington DC';
+                document.getElementById("txtMapLocation").value = location;
+
+            });
+
+            $('.filterable .btn-filter').click(function () {
+                var $panel = $(this).parents('.filterable'),
+                    $filters = $panel.find('.filters input'),
+                    $tbody = $panel.find('.table tbody');
+                if ($filters.prop('disabled') == true) {
+                    $filters.prop('disabled', false);
+                    $('.filters').show();
+                    $('.non-filter-header').hide();
+                    $filters.first().focus();
+                } else {
+                    $filters.val('').prop('disabled', true);
+                    $tbody.find('.no-result').remove();
+                    $tbody.find('tr').show();
+                    $('.non-filter-header').show();
+                    $('.filters').hide();
+                }
+            });
+
+            $('.filterable .filters input').keyup(function (e) {
+                /* Ignore tab key */
+                var code = e.keyCode || e.which;
+                if (code == '9') return;
+                /* Useful DOM data and selectors */
+                var $input = $(this),
+                    inputContent = $input.val().toLowerCase(),
+                    $panel = $input.parents('.filterable'),
+                    column = $panel.find('.filters th').index($input.parents('th')),
+                    $table = $panel.find('.table'),
+                    $rows = $table.find('tbody tr');
+                /* Dirtiest filter function ever ;) */
+                var $filteredRows = $rows.filter(function () {
+                    var value = $(this).find('td').eq(column).text().toLowerCase();
+                    return value.indexOf(inputContent) === -1;
+                });
+                /* Clean previous no-result if exist */
+                $table.find('tbody .no-result').remove();
+                /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+                $rows.show();
+                $filteredRows.hide();
+                /* Prepend no-result row if all rows are filtered */
+                if ($filteredRows.length === $rows.length) {
+                    $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="' + $table.find('.filters th').length + '">No result found</td></tr>'));
+                }
+            });
+        //dropdown disable as per Role
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+        if (role == 1) {
+            document.getElementById('countrydiv').style.display = "none";
+        }
+        if (role == 2) {
+            document.getElementById('countrydiv').style.display = "none";
+            document.getElementById('statediv').style.display = "none";
+        }
+        if (role == 3) {
+            document.getElementById('countrydiv').style.display = "none";
+            document.getElementById('statediv').style.display = "none";
+            document.getElementById('citydiv').style.display = "none";
+            }
+            if (role == 4) {
+                document.getElementById('main').style.display = "none";
+            }
+        })
+
+        function showBookingDetails(bookingId) {
+            // debugger;
+            showProgress();
+            $.ajax({
+                url: "../Admin/UserLoginDetails/",
+                data: {
+                    bookingId: bookingId
+                },
+                success: function (feed) {
+                    $('#bookingDetail').html(feed);
+                    $('#bookingDetailDialog').modal('show');
+                    spinnerVisible = true;
+                    hideProgress();
+                },
+                error: function (feed) {
+                    spinnerVisible = true;
+                    hideProgress();
+                    console.log(feed.responseText);
+                    logError(data.statusText + ' - Error occurred while showing a Caregiver login details . Function: showBookingDetails(bookingId). Page: ManageCaretaker.cshtml');
+                    //alert('Some network error has occurred. Please try again after some time.');
+                }
+            });
+        }
+
+        function SavePassword() {
+            var newPswd = $("#newpswd").val();
+            var cnfrmPswd = $("#cnfrmpswd").val();
+            var emailID = $("#lblemail").text();
+            var password = $("#lblpassword").text();
+
+            //if (newPswd.length < 8 || cnfrmPswd.length < 8) {
+            //    alert("Password must be minimum 8 characters long");
+            //    return;
+            //}
+            var reg = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~`!@@#\$%\^&\*,.])(?=.{8,})');
+            // var reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$!%*#@@?&])[A-Za-z\d$@@!%*#?&]{8,}$/;
+            if (reg.test(newPswd) == false) {
+                alert('Password must be minimum 8 characters including 1 uppercase , one special character and alphanumeric characters.');
+                return;
+            }
+            else if (newPswd != cnfrmPswd) {
+                alert("'New Password' and 'Confirm Password' doesn't match.");
+            }
+            if (newPswd == cnfrmPswd) {
+                $.ajax({
+                    url: "../Admin/ChangePswd/",
+                    data: {
+                        newPswd: newPswd,
+                        emailID: emailID
+                    },
+                    success: function (feed) {
+                        $('#bookingDetailDialog').modal('hide');
+                        alert("Password has been changed");
+                    },
+                    error: function (feed) {
+                        console.log(feed.responseText);
+                        logError(data.statusText + ' - Error occurred while changing a Caregiver login password. Function: SavePassword(). Page: ManageCaretaker.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+                    }
+                });
+            }
+        }
+
+        function searchClientByLocation() {
+            showProgress();
+            SetDropdownValuesByRole();
+           
+            $.ajax({
+                type: 'POST',
+                url: "/Admin/ManageCaretakerByLocation",
+                data: {
+                    countryId: $('#ddlCountry1').val(),
+                    stateId: $('#ddlStates1').val(),
+                    cityId: $('#ddlCity1').val()
+                },
+                success: function (feed) {
+                    spinnerVisible = true;
+                    hideProgress();
+                    $('#caretakerList').hide();
+                    $('#ResultList').html(feed);
+
+
+                },
+                error: function (data) {
+                    spinnerVisible = true;
+                    hideProgress();
+                    logError(data.statusText + ' - Error occurred while fetching data. Function: searchClientByLocation(). Page: ManageClient.cshtml');
+                    //alert('Some network error has occurred. Please try again after some time.');
+                }
+            });
+        }
+
+         function SetDropdownValuesByRole() {
+
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+            if (role == 1) {
+                $('#ddlCountry1').val(@country);
+                return;
+            }
+            if (role == 2) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                return;
+            }
+            if (role == 3) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                $('#ddlCity1').val(@city);
+                return;
+        }
+        return;
+        }
+
+        $("#ddlCity1").change(function () {
+            var cityId = $('#ddlCity1').val();
+            //alert(stateId);
+
+            $.ajax({
+                url: '/Admin/GetBranch?city=' + cityId,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                    var ddlState = $("#Branch1");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                    });
+
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.Cities>
+<div class="table-responsive">
+    @*@using (Html.BeginForm("DeleteCity", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {*@
+    <input type="hidden" id="hiddenCityID" />
+    <table id="CityList" class="table table-borderless table-striped table-earning padding-top-10">
+        <thead>
+            <tr>
+                <th style="width:33%">Country</th>
+                <th style="width:50%">State</th>
+                <th style="width:50%">City</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="width:33%" onclick='editCity(@item.CityId,@item.CountryId,@item.StateId,"@item.CityName")'>@item.CountryName</td>
+                        <td style="width:40%" onclick='editCity(@item.CityId,@item.CountryId,@item.StateId,"@item.CityName")'>@item.StateName</td>
+                        <td style="width:40%" onclick='editCity(@item.CityId,@item.CountryId,@item.StateId,"@item.CityName")'>@item.CityName</td>
+                        <td>
+                            @if (ViewBag.AllowEdit)
+                            {
+                                <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" onclick='editCity(@item.CityId,@item.CountryId,@item.StateId,"@item.CityName")' data-target="#modal-default"><span class="fa fa-edit"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" disabled>
+                                        <span class="fa fa-edit"></span>
+                                    </button>
+                                </div>
+                            }
+
+                            @if (ViewBag.AllowDelete)
+                            {
+                                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" onclick="getID(@item.CityId)" name="deleteCity" value="deleteCity" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                                </div>
+                            }
+                            @*<input type="submit" class="fa fa-minus-circle"  name="deleteCity" value="deleteCity">*@
+                        </td>
+
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+
+</div>
+<div class="modal fade" id="modal-delete" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Delete City</h4>
+            </div>
+            <div class="modal-body">
+                Record will be deleted from the system. Are you sure you want to delete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteCity()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function getID(cityId) {
+
+        $('#hiddenCityID').val(cityId)
+    }
+    function deleteCity() {
+
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/DeleteCity",
+            data: { cityId: $('#hiddenCityID').val() },
+            success: function (data) {
+                alert(data)
+                window.location.reload();
+
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Deletingcountry. Function: deleteUser(). Page: Country.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+</script>
+
+

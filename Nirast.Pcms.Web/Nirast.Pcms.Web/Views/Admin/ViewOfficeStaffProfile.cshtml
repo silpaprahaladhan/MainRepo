@@ -1,0 +1,1178 @@
+﻿@model Nirast.Pcms.Web.Models.OfficeStaffRegistration
+
+@{
+    ViewBag.Title = "ViewOfficeStaffProfile";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+@Styles.Render("~/css/CustomStyles.css")
+
+
+<script type="text/javascript">
+
+
+    $(function () {
+
+        $("#TestRole").change(function () {
+            //country staff
+            if ($(this).val() == "1") {
+                $("#CountryDiv2").show();
+                $("#StateDiv2").hide();
+                $("#CityDiv2").hide();
+                $("#BranchDiv2").hide();
+            }
+            //State satff
+            if ($(this).val() == "2") {
+                $("#CountryDiv2").show();
+                $("#StateDiv2").show();
+                $("#CityDiv2").hide();
+                $("#BranchDiv2").hide();
+            }
+            //City staff
+            if ($(this).val() == "3") {
+                $("#CountryDiv2").show();
+                $("#StateDiv2").show();
+                $("#CityDiv2").show();
+                $("#BranchDiv2").hide();
+            }
+            //Branch staff
+            if ($(this).val() == "4") {
+                $("#CountryDiv2").show();
+                $("#StateDiv2").show();
+                $("#CityDiv2").show();
+                $("#BranchDiv2").show();
+            }
+        })
+
+        $("#ddlCity1").change(function () {
+            var cityId = $('#ddlCity1').val();
+            //alert(stateId);
+
+            $.ajax({
+                url: '/Admin/GetBranch?city=' + cityId,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                    var ddlState = $("#ddlBranch1");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                    });
+
+                }
+            });
+        });
+    });
+    function UpdateEmail() {
+        $('#verifyEmail').modal('hide')
+        showProgress();
+
+        $.ajax({
+            type: "POST",
+            url: "../UpdateUserEmail",
+            data: { id: $('#UserRegnId').val(), emailId: $('#EmailId').val(), userType: $('#UserTypeId').val(), name: $('#FirstName').val() },
+            success: function (data) {
+                spinnerVisible = true;
+                hideProgress();
+
+                $('#EmailVerification').show();
+                setTimeout(function () {
+
+                    $('#EmailVerification').hide();
+
+                }, 20000);
+            }
+
+        });
+    }
+    $(document).ready(function () {
+        $('#EditProfile').hide();
+        hideStateCity();
+        $('#TestRole-error').hide();
+        $('#CountryId1-error').hide();
+        $('#StateId1-error').hide();
+        $('#CityId1-error').hide();
+        $('#Branch1-error').hide();
+        $("#updateButton").click(function () {
+            return checkValidation();
+        });
+    });
+
+    function EditClick() {
+
+        $('#EmailVerification').hide();
+        $('#ViewProfile').hide();
+        $('#EditProfile').show();
+        hideStateCityOnEdit();
+    }
+    function cancel() {
+        window.location.reload();
+    }
+
+    function EditUser() {
+        $("#EditProfile").show();
+        $("#View").hide();
+
+    }
+    function Update() {
+        $("#EditProfile").hide();
+        $("#View").show();
+
+    }
+    function CancelUpdate() {
+        $("#successMessage").hide();
+        $("#EditProfile").hide();
+        $("#View").show();
+
+    }
+    function hideStateCity() {
+        var test = $("#TestRole").val();
+        if (test == 1) {
+            $("#CountryDiv").show();
+            $("#StateDiv").hide();
+            $("#CityDiv").hide();
+            $("#BranchDiv").hide();
+        }
+        if (test == 2) {
+            $("#CountryDiv").show();
+            $("#StateDiv").show();
+            $("#CityDiv").hide();
+            $("#BranchDiv").hide();
+        }
+        if (test == 3) {
+            $("#CountryDiv").show();
+            $("#StateDiv").show();
+            $("#CityDiv").show();
+            $("#BranchDiv").hide();
+        }
+        if (test == 4) {
+            $("#CountryDiv").show();
+            $("#StateDiv").show();
+            $("#CityDiv").show();
+            $("#BranchDiv").show();
+        }
+    }
+
+    function hideStateCityOnEdit() {
+        var test = $("#TestRole").val();
+        if (test == 1) {
+            $("#CountryDiv2").show();
+            $("#StateDiv2").hide();
+            $("#CityDiv2").hide();
+            $("#BranchDiv2").hide();
+        }
+        if (test == 2) {
+            $("#CountryDiv2").show();
+            $("#StateDiv2").show();
+            $("#CityDiv2").hide();
+            $("#BranchDiv2").hide();
+        }
+        if (test == 3) {
+            $("#CountryDiv2").show();
+            $("#StateDiv2").show();
+            $("#CityDiv2").show();
+            $("#BranchDiv2").hide();
+        }
+        if (test == 4) {
+            $("#CountryDiv2").show();
+            $("#StateDiv2").show();
+            $("#CityDiv2").show();
+            $("#BranchDiv2").show();
+        }
+    }
+
+    //data contains the details of the user
+    // now showing those details in the textbox
+
+    function readUserImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgUser')
+                    .attr('src', e.target.result);
+                //.width(150)
+                //.height(200);
+                $('#ProfilePic').val(e.target.result.split(',')[1]);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function LoadCountryStates() {
+        var country = ($('#CountryId').val() === "" || $('#CountryId').val() === undefined) ? 0 : $('#CountryId').val();
+
+
+        $.ajax({
+            url: '/Admin/LoadStatesByCountryId',
+            type: "GET",
+            dataType: "JSON",
+            data: { countryId: country },
+            success: function (data) {
+
+                $("#StateId").html(""); // clear before appending new list
+                $("#StateId").append(
+                    $('<option></option>').val("").html("--Select--"));
+                $("#Cities").html(''); // clear before appending new list
+                $("#Cities").append(
+                    $('<option></option>').val("").html("--Select--"));
+                if (country != 0) {
+                    $.each($.parseJSON(data), function (i, state) {
+
+                        $("#StateId").append(
+                            $('<option></option>').val(state.StateId).html(state.Name));
+                    });
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while loading states for CountryId: ' + selectedCountry + '. Function: LoadCountryStates(selectedCountry). Page: ViewOfficeStaffProfile.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+
+    function LoadStateCities(selectedState) {
+        $("#Cities").html(''); // clear before appending new list
+        $("#Cities").append(
+            $('<option></option>').val("").html("--Select--"));
+        $.ajax({
+            url: '/Admin/LoadCitiesbyStateId',
+            type: "GET",
+            dataType: "JSON",
+            data: { StateId: selectedState },
+            success: function (data) {
+
+                $.each($.parseJSON(data), function (i, city) {
+                    $("#Cities").append(
+                        $('<option></option>').val(city.CityId).html(city.CityName));
+                });
+            },
+            error: function (data) {
+
+                logError(data.statusText + ' - Error occurred while loading Cities for StateId: ' + selectedState + '. Function: LoadStateCities(selectedState). Page: ViewOfficeStaffProfile.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+
+    function checkValidation() {
+        debugger
+        var testRole = $("#TestRole").val();
+        if (testRole == 0) {
+            $('#TestRole-error').show();
+            return false;
+        }
+        if (testRole == 1) {
+            var q = $("#ddlCountry1").val();
+            if (($("#ddlCountry1").val() == null) || ($("#ddlCountry1").val() == "")) {
+                $('#CountryId1-error').show();
+                return false;
+            }
+            else {
+                $("#ddlStates1").val() = null;
+                $("#ddlCity1").val() = null;
+                return true;
+            }
+        }
+        if (testRole == 2) {
+            if (($("#ddlCountry1").val() == null) || ($("#ddlCountry1").val() == "")) {
+                $('#CountryId1-error').show();
+                return false;
+            }
+            if (($("#ddlStates1").val() == null) || ($("#ddlStates1").val() == "")) {
+                $('#StateId1-error').show();
+                return false;
+            }
+            else {
+                $("#ddlCity1").val() = null;
+                return true;
+            }
+        }
+        if (testRole == 3) {
+            if (($("#ddlCountry1").val() == null) || ($("#ddlCountry1").val() == "")) {
+                $('#CountryId1-error').show();
+                return false;
+            }
+            if (($("#ddlStates1").val() == null) || ($("#ddlStates1").val() == "")) {
+                $('#StateId1-error').show();
+                return false;
+            }
+            if (($("#ddlCity1").val() == null) || ($("#ddlCity1").val() == "")) {
+                $('#CityId1-error').show();
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        if (testRole == 4) {
+
+            if (($("#ddlCountry1").val() == null) || ($("#ddlCountry1").val() == "")) {
+                $('#CountryId1-error').show();
+                return false;
+            }
+            if (($("#ddlStates1").val() == null) || ($("#ddlStates1").val() == "")) {
+                $('#StateId1-error').show();
+                return false;
+            }
+
+            if (($("#ddlCity1").val() == null) || ($("#ddlCity1").val() == "")) {
+                $('#CityId1-error').show();
+                return false;
+            }
+            if (($("#ddlBranch1").val() == null) || ($("#ddlBranch1").val() == "") || ($("#ddlBranch1").val() == 0)) {
+                $('#Branch1-error').show();
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    }
+
+
+</script>
+<div id="spinner"></div>
+<div class="container">
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="row profile-details">
+                <div class="equal-height-panels" id="ViewProfile">
+
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        @if (ViewBag.Error != null)
+                        {
+                            <div><p class="alert alert-danger col-md-6 col-md-offset-3 statusmessage" style="padding:7px;">@ViewBag.Error</p></div>
+                        }
+                        else
+                        {
+
+                            if (TempData["Userupdate"] != null)
+                            {
+                                <p class="alert alert-success" id="successMessage statusmessage" style="padding:7px;">@TempData["Userupdate"]</p>
+                            }
+                            @*if (TempData["Email"] != null)
+                                {
+                                    <p class="alert alert-success" id="successMessage statusmessage" style="padding:7px;">@TempData["Email"]</p>
+                                }*@
+                            if (TempData["OfficeStaffFailure"] != null)
+                            {
+                                <p class="alert alert-danger statusmessage" style="padding:7px;">@TempData["OfficeStaffFailure"]</p>
+                            }
+                            <button class="btn btn-primary float-right editButton" title="Edit" onclick="EditClick()">Edit</button>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4>
+                                        Office Staff Profile
+
+                                    </h4>
+                                </div>
+                                <div class="panel-body">
+
+                                    <div>
+                                        @using (Html.BeginForm("EditOfficeStaffProfile", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                        {
+                                            if (Convert.ToString(Session["UserType"]) == "ADMINISTRATOR")
+                                            {
+                                                <div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.HiddenFor(modelItem => modelItem.UserId)
+                                                                @Html.Label("First Name", new { @class = " label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.FirstName</label>
+
+                                                            </div>
+
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Last Name", new { @class = " label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.LastName</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Qualification", new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.QualificationName</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Designation", new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Designation</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Role", new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.RoleName</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Country", new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Country</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label(Resource.State, new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.State</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("City", new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.City</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Location", new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Location</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label(Resource.StreetName, new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.HouseName</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label(Resource.ZIPCode, new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.ZipCode</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Phone #1", new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.PrimaryPhoneNo</label>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Phone #2", new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.SecondaryPhoneNo</label>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Email Address", new { @class = "label-style" })
+                                                                <label class="col-md-6 form-control labelStyle">@Model.EmailAddress</label>
+                                                                @Html.HiddenFor(model => model.EmailAddress)
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                <label class=" label-style" for="TestRole">Test Role</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Stafftype</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-lg-4" id="CountryDiv">
+                                                                <label class="label-style" id="lblCountry1">Country</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.CountryId1Name</label>
+                                                            </div>
+                                                            <div class="col-lg-4" id="StateDiv">
+                                                                <label class="label-style" id="lblState1">State</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.StateId1Name</label>
+                                                            </div>
+                                                            <div class="col-lg-4" id="CityDiv">
+                                                                <label class="label-style" id="lblCity1">City</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.CityId1Name</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-lg-4" id="BranchDiv">
+                                                                <label class="label-style" id="lblBranch1">Branch</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.BranchId1Name</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @Html.HiddenFor(modelItem => modelItem.UserRegnId)
+                                                    @Html.HiddenFor(modelItem => modelItem.Password)
+                                                    @Html.HiddenFor(modelItem => modelItem.CityId)
+                                                    @Html.HiddenFor(modelItem => modelItem.DesignationId)
+                                                    @Html.HiddenFor(modelItem => modelItem.RoleId)
+                                                    @Html.HiddenFor(modelItem => modelItem.QualificationId)
+
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+
+                                                            @Html.HiddenFor(modelItem => modelItem.UserId)
+                                                            @Html.Label("First Name", new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.FirstName</label>
+
+                                                        </div>
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("Last Name", new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.LastName</label>
+                                                            @Html.HiddenFor(model => model.LastName)
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("Qualification", new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.QualificationName</label>
+
+                                                        </div>
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("Designation", new { @class = " control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.Designation</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("Role", new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.RoleName</label>
+
+                                                        </div>
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("Country", new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.Country</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label(Resource.State, new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.State</label>
+
+                                                        </div>
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("City", new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.City</label>
+                                                            @Html.HiddenFor(modelItem => modelItem.CityId)
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("Location", new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.Location</label>
+
+                                                        </div>
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label(Resource.StreetName, new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.HouseName</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label(Resource.ZIPCode, new { @class = " control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.ZipCode</label>
+
+                                                        </div>
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("Phone #1", new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.PrimaryPhoneNo</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("Phone #2", new { @class = "control-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.SecondaryPhoneNo</label>
+
+                                                        </div>
+                                                        <div class="col-md-6">
+
+                                                            @Html.Label("EmailAddress", new { @class = "ccontrol-label label-style" })
+                                                            <label class="col-md-6 form-control labelStyle">@Model.EmailAddress</label>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                <label class=" label-style" for="TestRole">Test Role</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Stafftype</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-lg-4" id="CountryDiv">
+                                                                <label class="label-style" id="lblCountry1">Country</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.CountryId1Name</label>
+                                                            </div>
+                                                            <div class="col-lg-4" id="StateDiv">
+                                                                <label class="label-style" id="lblState1">State</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.StateId1Name</label>
+                                                            </div>
+                                                            <div class="col-lg-4" id="CityDiv">
+                                                                <label class="label-style" id="lblCity1">City</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.CityId1Name</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-lg-4" id="BranchDiv">
+                                                                <label class="label-style" id="lblBranch1">Country</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.BranchId1Name</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @Html.HiddenFor(modelItem => modelItem.UserRegnId)
+                                                    @Html.HiddenFor(modelItem => modelItem.Password)
+                                                    @Html.HiddenFor(modelItem => modelItem.DesignationId)
+                                                    @Html.HiddenFor(modelItem => modelItem.RoleId)
+                                                    @Html.HiddenFor(modelItem => modelItem.QualificationId)
+
+                                                </div>
+                                            }
+
+                                        }
+                                    </div>
+                                    <div class="text-center" style="margin-top:10px;">
+                                        <input type="button" class="btn btn-primary " value="Back" onclick="location.href ='@(Url.Action("ManageOfficeStaff", "Admin"))'">
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="equal-height-panels" id="EditProfile">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        @if (ViewBag.Error != null)
+                        {
+                            <div><p class="alert alert-danger col-md-6 col-md-offset-3 statusmessage" style="padding:7px;">@ViewBag.Error</p></div>
+                        }
+                        else
+                        {
+
+                            <p class="alert alert-success statusmessage" id="EmailVerification" style="padding:7px;">Email verification link has been sent to your registered email:@Model.EmailAddress </p>
+
+                            if (TempData["Userupdate"] != null)
+                            {
+                                <p class="alert alert-success statusmessage" id="successMessage" style="padding:7px;">@TempData["Userupdate"]</p>
+                            }
+                            if (TempData["OfficeStaffFailure"] != null)
+                            {
+                                <p class="alert alert-danger statusmessage" style="padding:7px;">@TempData["OfficeStaffFailure"]</p>
+                            }
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4>
+                                        Office Staff Profile
+
+                                    </h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div>
+                                        @using (Html.BeginForm("EditOfficeStaffProfile", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                        {
+                                            if (Convert.ToString(Session["UserType"]) == "ADMINISTRATOR")
+                                            {
+                                                <div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                @Html.HiddenFor(modelItem => modelItem.UserTypeId)
+                                                                @Html.HiddenFor(modelItem => modelItem.UserId)
+                                                                @Html.Label("First Name", new { @class = " label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.FirstName, "", new { @class = "form-control labelStyle", @Placeholder = "FirstName " })
+                                                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "no-padding required" })
+
+                                                            </div>
+
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Last Name", new { @class = " label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.LastName, "", new { @class = "form-control labelStyle", @Placeholder = "LastName " })
+                                                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Qualification", new { @class = "label-style" })
+                                                                @Html.DropDownListFor(model => model.QualificationId, ViewData["ListQualification"] as SelectList, new { @class = "form-control labelStyle" })
+                                                                @*@Html.DropDownListFor(model => model.QualificationId, new SelectList(ViewBag.Qualification, "Value", "Text"), new { @class = "form-control labelStyle", @Placeholder = "Qualification " })*@
+                                                                @*@Html.ValidationMessageFor(model => model.QualificationId, "", new { @class = "no-padding required" })*@
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Designation", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.DesignationId, ViewData["listDesignation"] as SelectList, new { @class = "form-control labelStyle" })
+                                                                @*@Html.DropDownListFor(model => model.DesignationId, new SelectList(ViewBag.Designation, "Value", "Text"), new { @class = "form-control labelStyle", @Placeholder = "Designation " })*@
+                                                                @Html.ValidationMessageFor(model => model.DesignationId, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Role", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.RoleId, new SelectList(ViewBag.Role, "Value", "Text"), new { @class = "form-control labelStyle" })
+                                                                @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Country", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.Country, "Value", "Text"), "--Select", new { @class = "form-control labelStyle", @onchange = "LoadCountryStates(this.value)" })
+                                                                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label(Resource.State, new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.StateId, new SelectList(ViewBag.StateName, "Value", "Text"), "--Select", new { @class = "form-control labelStyle", @onchange = "LoadStateCities(this.value)" })
+                                                                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "no-padding required" })
+
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("City", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.CityId, new SelectList(ViewBag.City, "Value", "Text"), "--Select", new { @id = "Cities", @class = "form-control labelStyle", @Placeholder = "City " })
+                                                                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Location", new { @class = "label-style" })
+                                                                @Html.TextBoxFor(model => model.Location, new { @class = "form-control labelStyle", @Placeholder = "Location" })
+                                                                @Html.ValidationMessageFor(model => model.Location, "", new { @class = " no-padding required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label(Resource.StreetName, new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.HouseName, new { @class = "form-control labelStyle", @Placeholder = Resource.StreetName })
+                                                                @Html.ValidationMessageFor(model => model.HouseName, "", new { @class = "col-md-8 no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label(Resource.ZIPCode, new { @class = "label-style" })
+                                                                @Html.TextBoxFor(model => model.ZipCode, new { @class = "form-control labelStyle", @Placeholder = Resource.ZIPCode })
+                                                                @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "col-md-7 no-padding required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Phone #1", new { @class = "label-style" })
+                                                                @Html.TextBoxFor(model => model.PrimaryPhoneNo, new { @class = "form-control labelStyle", @Placeholder = "Phone #1" })
+                                                                @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = "col-md-8 no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Phone #2", new { @class = "label-style" })
+                                                                @Html.TextBoxFor(model => model.SecondaryPhoneNo, new { @class = "form-control labelStyle", @Placeholder = "Phone #2" })
+                                                                @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = "col-md-8 no-padding required" })
+                                                            </div>
+                                                            <div class="col-md-5">
+
+                                                                @Html.Label("Email Address", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control labelStyle", @id = "EmailId", @Placeholder = "Email Address " })
+                                                                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "col-md-7 no-padding required" })
+                                                                @Html.HiddenFor(model => model.EmailAddress)
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <label class="btn btn-primary margin" data-toggle="modal" title="Verify" data-target="#verifyEmail" style="float:right"><i class="fa fa-check"></i></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                <label class=" label-style" for="TestRole">Test Role</label><span class="mandatoryField">*</span>
+                                                                @Html.HiddenFor(modelItem => modelItem.WorkRoleTableId)
+                                                                @Html.EnumDropDownListFor(model => model.Stafftype, "--Select--", new { @Id = "TestRole", @class = "form-control" })
+                                                                <span class="error required" id="TestRole-error">Select TestRole</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-lg-4" id="CountryDiv2">
+                                                                <label class="label-style" id="lblCountry1">Country</label>
+                                                                @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                                                <span class="error required" id="CountryId1-error">Select Country</span>
+                                                            </div>
+                                                            <div class="col-lg-4" id="StateDiv2">
+                                                                <label class="label-style" id="lblState1">State</label>
+                                                                @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                                                <span class="error required" id="StateId1-error">Select State</span>
+                                                            </div>
+                                                            <div class="col-lg-4" id="CityDiv2">
+                                                                <label class="label-style" id="lblCity1">City </label>
+                                                                @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle" })
+                                                                <span class="error required" id="CityId1-error">Select City</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-lg-4" id="BranchDiv2">
+                                                                <label class="label-style" id="lblBranch1">Branch </label>
+                                                                @Html.DropDownListFor(model => model.BranchId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlBranch1", @class = "form-control labelStyle" })
+                                                                <span class="error required" id="Branch1-error">Select Branch</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    @Html.HiddenFor(modelItem => modelItem.UserRegnId)
+                                                    @Html.HiddenFor(modelItem => modelItem.Password)
+                                                    @Html.HiddenFor(modelItem => modelItem.CityId)
+                                                    @Html.HiddenFor(modelItem => modelItem.DesignationId)
+                                                    @Html.HiddenFor(modelItem => modelItem.RoleId)
+                                                    @Html.HiddenFor(modelItem => modelItem.QualificationId)
+
+                                                    <div class="col-lg-12 buttonAlignment">
+                                                        <input type="button" class="btn btn-primary " value="Back" onclick="reload()">
+                                                        <input type="submit" class="btn btn-primary " value="Update" id="updateButton" style="margin-left:5px;">
+                                                        <input type="button" class="btn btn-primary" onclick="cancel()" value="cancel" name="Cancel" style="margin-left:5px;">
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                @Html.HiddenFor(modelItem => modelItem.UserTypeId)
+                                                                @Html.HiddenFor(modelItem => modelItem.UserId)
+                                                                @Html.Label("First Name", new { @class = " label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.FirstName, "", new { @class = "form-control labelStyle", @Placeholder = "FirstName " })
+                                                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "no-padding required" })
+
+                                                            </div>
+
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Last Name", new { @class = " label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.LastName, "", new { @class = "form-control labelStyle", @Placeholder = "LastName " })
+                                                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Qualification", new { @class = "label-style" })
+                                                                @Html.DropDownListFor(model => model.QualificationId, ViewData["ListQualification"] as SelectList, new { @class = "form-control labelStyle" })
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Designation", new { @class = "label-style" })
+                                                                @Html.DropDownListFor(model => model.DesignationId, ViewData["listDesignation"] as SelectList, new { @class = "form-control labelStyle" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Role", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.RoleId, new SelectList(ViewBag.Role, "Value", "Text"), new { @class = "form-control labelStyle" })
+                                                                @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Country", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.Country, "Value", "Text"), "--Select", new { @class = "form-control labelStyle", @onchange = "LoadCountryStates(this.value)" })
+                                                                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label(Resource.State, new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.StateId, new SelectList(ViewBag.StateName, "Value", "Text"), "--Select", new { @class = "form-control labelStyle", @onchange = "LoadStateCities(this.value)" })
+                                                                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "no-padding required" })
+
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("City", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.CityId, new SelectList(ViewBag.City, "Value", "Text"), "--Select", new { @id = "Cities", @class = "form-control labelStyle", @Placeholder = "City " })
+                                                                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Location", new { @class = "label-style" })
+                                                                @Html.TextBoxFor(model => model.Location, new { @class = "form-control labelStyle", @Placeholder = "Location" })
+                                                                @Html.ValidationMessageFor(model => model.Location, "", new { @class = " no-padding required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label(Resource.StreetName, new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.HouseName, new { @class = "form-control labelStyle", @Placeholder = Resource.StreetName })
+                                                                @Html.ValidationMessageFor(model => model.HouseName, "", new { @class = "col-md-8 no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label(Resource.ZIPCode, new { @class = "label-style" })
+                                                                @Html.TextBoxFor(model => model.ZipCode, new { @class = "form-control labelStyle", @Placeholder = Resource.ZIPCode })
+                                                                @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "col-md-7 no-padding required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Phone #1", new { @class = "label-style" })
+                                                                @Html.TextBoxFor(model => model.PrimaryPhoneNo, new { @class = "form-control labelStyle", @Placeholder = "Phone #1" })
+                                                                @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = "col-md-8 no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+
+                                                                @Html.Label("Phone #2", new { @class = "label-style" })
+                                                                @Html.TextBoxFor(model => model.SecondaryPhoneNo, new { @class = "form-control labelStyle", @Placeholder = "Phone #2" })
+                                                                @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = "col-md-8 no-padding required" })
+                                                            </div>
+                                                            <div class="col-md-5">
+
+                                                                @Html.Label("Email Address", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control labelStyle", @id = "EmailId", @Placeholder = "Email Address " })
+                                                                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "col-md-7 no-padding required" })
+                                                                @Html.HiddenFor(model => model.EmailAddress)
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <label class="btn btn-primary margin" data-toggle="modal" title="Verify" data-target="#verifyEmail" style="float:right"><i class="fa fa-check"></i></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-md-6">
+                                                                <label class=" label-style" for="TestRole">Test Role</label><span class="mandatoryField">*</span>
+                                                                @Html.HiddenFor(modelItem => modelItem.WorkRoleTableId)
+                                                                @Html.EnumDropDownListFor(model => model.Stafftype, "--Select--", new { @Id = "TestRole", @class = "form-control" })
+                                                                <span class="error required" id="TestRole-error">Select TestRole</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-lg-4" id="CountryDiv2">
+                                                                <label class="label-style" id="lblCountry1">Country</label>
+                                                                @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                                                <span class="error required" id="CountryId1-error">Select Country</span>
+                                                            </div>
+                                                            <div class="col-lg-4" id="StateDiv2">
+                                                                <label class="label-style" id="lblState1">State</label>
+                                                                @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                                                <span class="error required" id="StateId1-error">Select State</span>
+                                                            </div>
+                                                            <div class="col-lg-4" id="CityDiv2">
+                                                                <label class="label-style" id="lblCity1">City </label>
+                                                                @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle" })
+                                                                <span class="error required" id="CityId1-error">Select City</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="col-lg-4" id="BranchDiv2">
+                                                                <label class="label-style" id="lblBranch1">Branch </label>
+                                                                @Html.DropDownListFor(model => model.BranchId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlBranch1", @class = "form-control labelStyle" })
+                                                                <span class="error required" id="Branch1-error">Select Branch</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @Html.HiddenFor(modelItem => modelItem.UserRegnId)
+                                                    @Html.HiddenFor(modelItem => modelItem.Password)
+                                                    @Html.HiddenFor(modelItem => modelItem.CityId)
+                                                    @Html.HiddenFor(modelItem => modelItem.DesignationId)
+                                                    @Html.HiddenFor(modelItem => modelItem.RoleId)
+                                                    @Html.HiddenFor(modelItem => modelItem.QualificationId)
+
+                                                    <div class="col-lg-12 buttonAlignment">
+                                                        <input type="button" class="btn btn-primary " value="Back" onclick="reload()">
+                                                        <input type="submit" class="btn btn-primary " value="Update" style="margin-left:5px;">
+                                                        <input type="button" class="btn btn-primary" onclick="cancel()" value="cancel" name="Cancel" style="margin-left:5px;">
+                                                    </div>
+                                                </div>
+
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="verifyEmail" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="border-bottom: 1px solid #e5e5e5;">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Email Modification</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>New mail id will be replaced with the existing one.User can login with their new mail id only after verification.</p>
+                            </p> Are you sure to continue?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="UpdateEmail()">OK</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <style>
+
+                .editButton {
+                    margin: 5px 10px;
+                }
+
+                .btn-bs-file {
+                    position: relative;
+                }
+
+                .buttonAlignment {
+                    margin-top: 15px;
+                    text-align: center;
+                }
+
+                .btn-bs-file input[type="file"] {
+                    position: absolute;
+                    top: -9999999;
+                    filter: alpha(opacity=0);
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                    outline: none;
+                    cursor: inherit;
+                }
+
+                @@media(max-width:991px) {
+                    .officestaff-heading {
+                        width: 50%;
+                    }
+
+                    .officestaff-content {
+                        font-size: 10px;
+                    }
+                }
+
+                .margin {
+                    margin-top: 36px;
+                }
+            </style>
+
+        </div>
+    </div>
+</div>
+

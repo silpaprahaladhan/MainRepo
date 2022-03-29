@@ -1,0 +1,30 @@
+﻿@model Nirast.Pcms.Web.Models.UsersDetails
+
+<div class="form-group col-md-12 padding-top-15">
+    <div class="row">
+        <div class=" form-group col-md-6">
+            @Html.Label("Email ID", new { @class = "control-label labelStyle bold-heading h4-label" })
+            @*@Html.DisplayFor(modelIte => modelIte.BookingDate, "{dd/MM/yyyy}", new { @class = "col -md-6 control-label labelStyle" })*@
+            <label id="lblemail" name="lblemail" class="col-md-6 form-control labelStyle">@Model.EmailAddress</label>
+        </div>
+        <div class=" form-group col-md-6">
+            @Html.Label("Password", new { @class = "control-label labelStyle bold-heading h4-label" })
+            <label id="lblpassword" name="lblemail" class="col-md-6 form-control labelStyle">@Model.Password</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+
+            @Html.Label("New Password", new { @class = "control-label labelStyle bold-heading h4-label" })
+            <input type="password" id="newpswd" name="newpswd" class="col-md-6 form-control" />
+        </div>
+        <div class=" form-group col-md-6">
+            @Html.Label("Confirm Password", new { @class = "control-label labelStyle bold-heading h4-label" })
+            <input type="password" id="cnfrmpswd" name="cnfrmpswd" class="col-md-6 form-control" />
+        </div>
+        </div>
+    </div>
+
+
+
+

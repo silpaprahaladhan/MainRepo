@@ -1,0 +1,168 @@
+﻿@model Nirast.Pcms.Web.Models.RolePrivileges
+@{
+    ViewBag.Title = "RoleManagement";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<head>
+    <script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>
+    @Styles.Render("~/css/CustomStyles.css")
+
+</head>
+@using (Html.BeginForm())
+{
+    <div class="container animsition">
+        <h3 class="h4-label padding-top-15">Manage Role Privileges</h3>
+        <div>
+            <div class="equal-height-panels">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    @if (TempData["Success"] != null)
+                    {
+                        <p class="alert alert-success statusmessage" id="successMessage">@TempData["Success"]</p>
+                    }
+                
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.DropDownList("ddlRoles", ViewBag.RoleList as SelectList, "--Select--", new { @class = "form-control labelStyle", @onchange = "LoadSelectedPrivileges(this.value)" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="divCheckBox" class="col-md-8 float-right">
+                            <div class="col-md-3 col-md-offset-6">
+                                <input type="checkbox" name="chk" id="selectAll" value="Enable All" onclick="checkAll()" />
+                                <label for="selectAll">Enable All</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="checkbox" name="chk" id="selectNone" value="Enable All" onclick="uncheckAll()" />
+                                <label for="selectNone">Disable All</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="rolePrivilegeList" class="padding-top-10 table-responsive ">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    TempData["Success"] = null;
+}
+<div id="spinner">
+   
+</div>
+<style type="text/css">
+    
+</style>
+<script type="text/javascript">
+    showProgress();
+    
+    $(document).ready(function () {
+        $('#divCheckBox').addClass("hidden")
+    });
+    function LoadSelectedPrivileges(roleId) {
+        showProgress();
+        if (roleId == '' || roleId == undefined){
+            roleId = 0;
+            $('#divCheckBox').addClass("hidden")
+        } else {
+            $('#divCheckBox').removeClass("hidden")
+        }
+        $('#RoleId').val(roleId);
+        $.ajax({
+            url: "/Admin/LoadSelectedPrivileges?RoleId=" + roleId,
+            method: "post",
+            success: function (data) {
+                $('#rolePrivilegeList').html(data);
+                var select_all = document.getElementById("selectAll"); //select all checkbox
+                var uncheck_all = document.getElementById("selectNone"); //select all checkbox
+                var checkboxes = document.getElementsByClassName("checkbox"); //checkbox items
+                if (document.querySelectorAll('.checkbox:not(:checked)').length == checkboxes.length) {
+                    uncheck_all.checked = true;
+                    
+                } else {
+                    uncheck_all.checked = false;
+                }
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].addEventListener('change', function (e) { //".checkbox" change 
+                        //uncheck "select all", if one of the listed checkbox item is unchecked
+                        if (this.checked == false) {
+                            select_all.checked = false;
+                        }
+                        //check "select all" if all checkbox items are checked
+                        if (document.querySelectorAll('.checkbox:checked').length == checkboxes.length) {
+                            select_all.checked = true;
+                        } else {
+                            select_all.checked = false;
+                        }
+
+                        if (document.querySelectorAll('.checkbox:not(:checked)').length == checkboxes.length) {
+                            uncheck_all.checked = true;
+                        } else {
+                            uncheck_all.checked = false;
+                        }
+                    });
+                }
+                if (document.querySelectorAll('.checkbox:checked').length == checkboxes.length) {
+                    select_all.checked = true;
+                } else {
+                    select_all.checked = false;
+                }
+                spinnerVisible = true;
+                hideProgress();
+            },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Role Privileges. Function: LoadSelectedPrivileges(roleId). Page: RolePrivileges.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+                    }
+        });
+    }
+
+    $(function () {
+        LoadSelectedPrivileges(0);
+        $(document).ready(function () {
+            $("#ddlYearly").hide();
+            $("#ddlMonthly").hide();
+            $("#txtFromDate").hide();
+            $("#txtToDate").hide();
+            $("#ddlSearchRange").change(function () {
+                if ($(this).val() == "1") { // It doesn't work over here.
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+
+                } else if ($(this).val() == "2") {
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").show();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                }
+                else if ($(this).val() == "3") {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").show();
+                    $("#txtToDate").show();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+                else {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,97 @@
+﻿@model Nirast.Pcms.Web.Models.WorkShiftViewModel
+@{
+    ViewBag.Title = "Work Shift";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<head>
+    @*<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>*@
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+</head>
+@if (ViewBag.Error != null)
+{
+    <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+}
+else
+{
+    <div class="container animsition">
+
+        <div class="row profile_Style">
+            <div class="equal-height-panels">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["Success"] != null)
+                    {
+                        <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                    }
+                    @if (TempData["Failure"] != null)
+                    {
+                        <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Manage Work Shifts</h4>
+                        </div>
+
+                        <div class="panel-body">
+                            @using (Html.BeginForm("CreateWorkShift", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                            <div class="col-md-12 no-padding">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-4">
+                                        @Html.TextBoxFor(Model => Model.ShiftId, "", new { @class = "hidden" })
+                                        @Html.Label("Shift Name", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                        @Html.TextBoxFor(Model => Model.ShiftName, "", new { @class = "form-control labelStyle" })
+                                        @Html.ValidationMessageFor(model => model.ShiftName, "", new { @class = "no-padding required" })
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 innerDiv label-style" style="margin-top:20px">
+                                        @Html.CheckBoxFor(model => Model.ShowResidentName, new { @id = "ShowResidentName" }) Show Resident's Name
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 innerDiv label-style" style="margin-top:20px">
+                                        @Html.CheckBoxFor(model => Model.IsSeparateInvoice, new { @id = "IsSeparateInvoice" }) Invoice Separately
+                                    </div>
+                                </div>
+
+                            </div>
+
+                                <div class="workshift form-group text-center innerDiv">
+                                    @if (ViewBag.AllowEdit)
+                                    {
+                                        <input type="submit" class="btn btn-primary" value="Save">
+                                        <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                    }
+                                    else
+                                    {
+                                        <div class="wrapper">
+                                            <input type="submit" class=" btn btn-primary" value="Save" disabled>
+                                            <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                @{Html.RenderAction("WorkShiftList");}
+            </div>
+
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+
+        $(document).ready(function () {
+            $('#WorkShiftList').DataTable({
+                "pagingType": "full_numbers"
+            });
+        });
+    });
+</script>

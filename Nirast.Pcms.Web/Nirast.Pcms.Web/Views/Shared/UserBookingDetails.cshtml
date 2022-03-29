@@ -1,0 +1,168 @@
+﻿@model Nirast.Pcms.Web.Models.UserBookingInvoiceReport
+
+<script type="text/javascript">
+   
+
+    $(document).ready(function () {
+        $('#EditBooking').hide();
+       
+    });
+
+    function EditClick() {
+        $('#ViewBooking').hide();
+        $('#EditBooking').show();
+    }
+    function SaveClick() {
+    
+        var ServiceId = $('#ddlService').val();
+        var caretakerId = $('#ddlCaretaker').val();
+        var fromDate = $('#BookingFromDate').val();
+        var toDate = $('#BookingEndDate').val();
+        var toTime = $('#BookingEndTime').val();
+        var fromTime = $('#BookingFromTime').val();
+        var bookingId = $('#BookingId').val();        
+        $.ajax({
+            url: "../PublicUser/UpdateBooking",
+            method: "post",
+            data: { ServiceId: ServiceId, caretakerId: caretakerId, fromDate: fromDate, toDate: toDate, toTime: toTime, fromTime: fromTime, bookingId: bookingId },
+            success: function (data) {               
+            },
+            error: function (data) {
+                logError(feed.statusText + ' - Error occurred while update bookig. Page: booking history');
+            }
+        });
+    }
+ 
+
+</script>
+
+    <div id="ViewBooking">
+
+       
+    <div class=" col-md-12 padding-top-15">
+
+        <div class="col-md-6">
+            @Html.Label("User Name", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.UserName</label>
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Caregiver Name", new { @class = " control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.CareTakerName</label>
+
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="col-md-6">
+            @Html.Label("Booking Date", new { @class = "control-label label-style bold-heading" })
+            @*@Html.DisplayFor(modelIte => modelIte.BookingDate, "{dd/MM/yyyy}", new { @class = "col -md-6 control-label labelStyle" })*@
+            <label class="col-md-6 form-control labelStyle">@Model.BookingDateTime.ToString("dd-MMM-yyyy")</label>
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Booking Service", new { @class = " control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.Service</label>
+
+        </div>
+    </div>
+
+    <div class=" col-md-12">
+        <div class="col-md-6">
+            @Html.Label("Booking From Date", new { @class = " control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.StartDateTime.ToString("dd-MMM-yyyy")</label>
+            @*@Html.DisplayFor(modelIte => modelIte.BookingStartTime, new { @class = "col-md-6 control-label labelStyle" })*@
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Booking From Time", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.FromTime</label>
+            @*@Html.DisplayFor(modelIte => modelIte.BookingStartTime, new { @class = "col-md-6 control-label labelStyle" })*@
+        </div>
+    </div>
+
+    <div class=" col-md-12">
+        <div class="col-md-6">
+            @Html.Label("Booking To Date", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.EndDateTime.ToString("dd-MMM-yyyy")</label>
+            @*@Html.DisplayFor(modelIte => modelIte.BookingEndTime, new { @class = "col-md-6 control-label labelStyle" })*@
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Booking To Time", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.EndTime</label>
+            @*@Html.DisplayFor(modelIte => modelIte.BookingEndTime, new { @class = "col-md-6 control-label labelStyle" })*@
+        </div>
+    </div>
+    <div class=" col-md-12">
+        <div class="col-md-6">
+            @Html.Label("Rate/Hour", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.Symbol @Model.DisplayRate</label>
+        </div>
+        <div class="col-md-6">
+            @Html.Label("User Location", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.UserLocation</label>
+        </div>
+    </div>
+
+    <div class=" col-md-12">
+        <div class="col-md-6">
+            @Html.Label("Caregiver Location", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.CaretakerLocation</label>
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Purpose", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.BookingPurpose</label>
+        </div>
+    </div>
+       
+</div>
+
+<div id="EditBooking" style="display:none">
+
+    <div class=" col-md-12">
+        <div class="col-md-6">
+            @Html.Label("Booking From Date", new { @class = " control-label label-style bold-heading" })
+            <input type="text" id="BookingFromDate" class="col-md-6 form-control labelStyle"/>
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Booking From Time", new { @class = "control-label label-style bold-heading" })
+            <input type="text" id="BookingFromTime" class="col-md-6 form-control labelStyle"/>
+        </div>
+
+    </div>
+
+    <div class=" col-md-12">
+        <div class="col-md-6">
+            @Html.Label("Booking To Date", new { @class = "control-label label-style bold-heading" })
+            <input type="text" id="BookingEndDate" class="col-md-6 form-control labelStyle"/>
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Booking To Time", new { @class = "control-label label-style bold-heading" })          
+            <input type="text" id="BookingEndTime" class="col-md-6 form-control labelStyle"/>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-6">
+            @Html.Label("Booking Service", new { @class = " control-label label-style bold-heading" })
+            @Html.DropDownListFor(model => model.ServiceId, ViewData["Service"] as SelectList, "--Select--", new { @Id = "ddlService", @class = "form-control labelStyle" })
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Caregiver Name", new { @class = " control-label label-style bold-heading" })
+            @Html.DropDownListFor(model => model.CareTakerName, ViewData["Caretaker"] as SelectList, "--Select--", new { @Id = "ddlCaretaker", @class = "form-control labelStyle" })
+        </div>
+
+    </div>
+    <div class=" col-md-12">
+        <div class="col-md-6">
+            @Html.Label("Rate/Hour", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.Symbol @Model.DisplayRate</label>
+        </div>
+        <div class="col-md-6">
+            @Html.Label("Caregiver Location", new { @class = "control-label label-style bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.CaretakerLocation</label>
+            @Html.HiddenFor(model => model.BookingId)
+        </div>
+    </div>
+</div>
+@*<button class="btn btn-primary float-right editButton" title="Edit" onclick="EditClick()" style='visibility:hidden'>Edit</button>
+<button class="btn btn-primary float-right editButton" title="Save" onclick="SaveClick()" style='visibility:hidden'>Save</button>*@
+
+
+    

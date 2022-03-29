@@ -1,0 +1,218 @@
+﻿@*<div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <h4 class="heading-style">Scheduling Details</h4>
+            @{Html.RenderAction("ClientScheduling");}
+        </div>
+
+    </div>*@
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+@*<script type="text/javascript" src="~/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="~/js/app.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.10/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/CustomScript.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/js/jquery.timepicker.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
+
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />*@
+<script type="text/javascript">
+    $(document).ready(function ($) {
+        //for scrolling from other page
+        if ($(window.location.hash).length) {
+            $('html,body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            });
+            window.location.hash = '';
+        }
+        $('li').removeClass('menu__item--current');
+        $('#liScheduleHistory').addClass('menu__item--current');
+
+        $('ul.nav').find('a').click(function () {
+            var $href = $(this).attr('href');
+            var li = $(this).parent('li');
+            $('li').removeClass('menu__item--current');
+            $(li).addClass('menu__item--current');
+            $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+            var $anchor = $($href).offset();
+            $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+            return false;
+        });
+    });
+
+
+</script>
+
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage alert_messages">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Scheduling History</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-12 innerDiv">
+                                <div class="col-md-4 col-lg-4" style="display:none">
+                                    <label class="label-style">Client Name:</label>
+                                
+                                    <select id="ddlClient" class="form-control  col-md-12  labelStyle"></select>
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label id="lblfrmdate" class="label-style">From Date :</label>
+
+                                    @Html.TextBox("FromDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtFromDate", @placeholder = "From Date" })
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label id="lblfrmdate" class="label-style">To Date :</label>
+
+                                    @Html.TextBox("ToDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtToDate", @placeholder = "To Date" })
+                                </div>
+                                <div class="col-md-12 text-center form-group padT25">
+                                    <button type="button" onclick="submitSearch()" id="btnSearch" class="btn btn-primary ">Search</button>
+                                    <button type="submit" onclick="window.location.reload();" id="btnCancel" class="btn btn-primary ">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 no-padding table-margin">
+                        <div id="Result"></div>
+                    </div>
+                    <div id="spinner">
+                    
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+    $.ajax({
+        url: "/Client/LoadClient",
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        datatype: JSON,
+        success: function (result) {
+
+            $("#ddlClient").html(""); // clear before appending new list
+            $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+            $.each($.parseJSON(result), function (i, care) {
+                $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+            })
+        },
+        error: function (data) {
+            logError(data.statusText + ' - Error occurred while Loading Clients. Function: "/Client/LoadClient". Page: CaretakerScheduleHistory.cshtml');
+            //alert('Some network error has occurres. Please try again after some time.');
+        }
+    });
+
+    $(function () {
+
+        $('#txtFromDate').datepicker({
+            dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+            showStatus: true,
+            showWeeks: true,
+            currentText: 'Now',
+            autoSize: true,
+            gotoCurrent: true,
+            showAnim: 'blind',
+            changeMonth: true,
+            changeYear: true, 
+            highlightWeek: true
+        });
+
+        $('#txtToDate').datepicker({
+            dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+            showStatus: true,
+            showWeeks: true,
+            currentText: 'Now',
+            autoSize: true,
+            gotoCurrent: true,
+            showAnim: 'blind',
+            changeMonth: true,
+            changeYear: true, 
+            highlightWeek: true
+        });
+
+
+    });
+    function submitSearch() {
+        showProgress();
+        if ($('#ddlClient').val() != null && $('#ddlClient').val() != 'null' && $('#ddlClient').val() != '' && $('#ddlClient').val() != NaN) {
+            var ID = $('#ddlClient').val();
+        }
+        else {
+            var ID = null;
+        }
+        //var data = $('#myForm').serialize();
+        $.ajax({
+            url: "../CareTaker/ClientScheduling",
+            method: 'POST',
+            data: { clientId: ID, fromDate: ($('#txtFromDate').val() != '') ? $('#txtFromDate').val() : null, toDate: ($('#txtToDate').val() != '') ? $('#txtToDate').val() : null },
+            success: function (feed) {
+                debugger;
+                spinnerVisible = true;
+                hideProgress();
+                $('#Result').html(feed);
+                $('#Scheduling').DataTable({
+
+                    "pagingType": "full_numbers",
+
+                    'order': [[0, 'desc']],
+                    'paging': true,
+                   
+                });
+                
+            },
+            error: function (feed) {
+                spinnerVisible = true;
+                hideProgress();
+                logError(feed.statusText + ' - Error occurred while Client Schedule. Function: submitSearch(). Page: CaretakerScheduleHistory.cshtml');
+                //alert("An error has occurred. " + feed);
+            }
+        });
+    }
+
+</script>
+<style>
+    .table-font {
+        font-size: 16px;
+    }
+
+    .table-margin {
+        margin-bottom: 50px;
+        margin-top: 20px;
+    }
+
+    .panel .panel-heading {
+        padding: 10px 15px;
+    }
+    .table > thead > tr > th {
+        padding: 8px;
+    }
+</style>

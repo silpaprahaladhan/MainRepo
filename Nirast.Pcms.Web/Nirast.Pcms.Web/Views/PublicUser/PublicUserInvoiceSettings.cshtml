@@ -1,0 +1,157 @@
+﻿@model Nirast.Pcms.Web.Models.UsersDetails
+@{
+    ViewBag.Title = "PublicUser Invoice Settings";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<head>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+    @*<script type="text/javascript">
+
+        </script>*@
+
+</head>
+<div class="container animsition">
+    <div class="row profile_Style">
+        <div class="panel panel-default report-style ">
+            <div class="panel-heading">
+                <h4>Select Location</h4>
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="label-style">Country</label>
+                            @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                            @Html.ValidationMessageFor(model => model.CountryId1, "", new { @class = "no-padding required" })
+                        </div>
+                        <div class="col-md-2">
+                            <label class="label-style">State</label>
+                            @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                            @Html.ValidationMessageFor(model => model.StateId1, "", new { @class = "no-padding required" })
+                        </div>
+                        <div class="col-md-2">
+                            <label class="label-style">City</label>
+                            @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                            @Html.ValidationMessageFor(model => model.CityId1, "", new { @class = "no-padding required" })
+                        </div>
+
+
+                        <div class="col-md-2">
+                            <label class="label-style">Branch/Franchise</label>
+                            @Html.DropDownListFor(model => model.BranchId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "Branch1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                            @Html.ValidationMessageFor(model => model.BranchId1, "", new { @class = "no-padding required" })
+                        </div>
+
+                        <div class="col-md-3" style="margin-top:39px;">
+                            <button class="btn btn-primary float-left editButton" title="Edit" @*onclick="EditClick()*@>Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["Success"] != null && TempData["Success"] != "")
+                    {
+                        <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                    }
+                    @if (TempData["Failure"] != null && TempData["Failure"] != "")
+                    {
+                        <p class="alert custom-alert-danger statusmessage">@TempData["Failure"]</p>
+                    }
+                    @using (Html.BeginForm("AddInvoiceDetails", "PublicUser", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Public User Invoice Settings</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-12 col-lg-12 form-group">
+                                    <div class="row">
+
+                                        <div class="col-md-4 col-lg-4">
+                                            @Html.Label("Invoice Prefix", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(model => model.InvoicePrefix, new { @class = "form-control labelStyle" })
+                                            @Html.ValidationMessageFor(model => model.InvoicePrefix, "", new { @class = "text-danger required" })
+                                        </div>
+                                        <div class="col-md-4 col-lg-4">
+                                            @Html.Label("Next Invoice Number", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(Model => Model.InvoiceNumber, "", new { @class = "form-control labelStyle" })
+                                            @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger required" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center form-group city">
+                                    @if (ViewBag.AllowEdit)
+                                    {
+                                        <input type="submit" class="btn btn-primary m-t-10" value="Save" onclick="clientValidation()">
+                                        <label class="btn btn-primary  m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                    }
+                                    else
+                                    {
+                                        <div class="wrapper">
+                                            <input type="submit" class="btn btn-primary m-t-10" value="Save" disabled>
+                                            <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-lg-12 col-md-12 col-sm-12 no-padding">
+                        @{Html.RenderAction("PublicInvoiceSettingsList");}
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            $('#UserInvoiceSettings').DataTable({
+                "pagingType": "full_numbers"
+            });
+        });
+    });
+
+    $("#ddlCity1").change(function () {
+        var cityId = $('#ddlCity1').val();        
+        $.ajax({
+            url: '/Admin/GetBranch?city=' + cityId,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            success: function (data) {
+                console.log(data);
+                var ddlState = $("#Branch1");
+                ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                $.each(data, function (data, value) {
+
+                    ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                });
+
+            }
+        });
+    });
+
+</script>
+
+
+

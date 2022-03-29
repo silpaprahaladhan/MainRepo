@@ -1,0 +1,207 @@
+﻿@model Nirast.Pcms.Web.Models.EmailTypeConfiguration
+
+@{
+    ViewBag.Title = "EmailAddressConfiguration";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+    var country = Session["CountryId"].ToString();
+    var state = Session["StateID"].ToString();
+    var city = Session["CityIdk"].ToString();
+}
+
+<head>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+    @*<script type="text/javascript">
+
+        </script>*@
+
+</head>
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["Success"] != null && TempData["Success"] != "")
+                    {
+                        <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                    }
+                    @if (TempData["Failure"] != null && TempData["Failure"] != "")
+                    {
+                        <p class="alert custom-alert-danger statusmessage">@TempData["Failure"]</p>
+                    }
+                    <div class="row profile_Style">
+                        <div class="panel panel-default report-style " id="main">
+                            <div class="panel-heading">
+                                <h4>Select Location</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="row">
+                                        <div class="col-md-2" id="countrydiv">
+                                            <label class="label-style">Country</label>
+                                            @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                            @Html.ValidationMessageFor(model => model.CountryId1, "", new { @class = "no-padding required" })
+                                        </div>
+                                        <div class="col-md-2" id="statediv">
+                                            <label class="label-style">State</label>
+                                            @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                            @Html.ValidationMessageFor(model => model.StateId1, "", new { @class = "no-padding required" })
+                                        </div>
+                                        <div class="col-md-2" id="citydiv">
+                                            <label class="label-style">City</label>
+                                            @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                            @Html.ValidationMessageFor(model => model.CityId1, "", new { @class = "no-padding required" })
+                                        </div>
+                                        <div class="col-md-3" style="margin-top:39px;">
+                                            <button class="btn btn-primary float-left editButton" title="Edit" onclick="GetBranchByLocation()">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("AddEmailTypeConfiguration", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Email ID Configuration</h4>
+                            </div>
+                            <div class="panel-body">
+
+                                <div class="col-md-12 col-lg-12 form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 col-lg-4" id="ddBranchDiv">
+                                            <label class="label-style" for="Email Type">
+                                                Branch
+                                            </label><span class="mandatoryField">*</span>
+                                            @Html.DropDownListFor(model => model.BranchId, ViewData["BranchList"] as SelectList, "--Select--", new { @id = "ddBranch", @class = "form-control labelStyle", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.BranchId, "", new { @class = "text-danger required" })
+                                        </div>
+                                        <div class="col-md-4 col-lg-4">
+                                            <label class="label-style" for="Email Type">
+                                                Email Type
+                                            </label><span class="mandatoryField">*</span>
+                                            @Html.HiddenFor(model => model.ConfigId)
+                                            @Html.DropDownListFor(model => model.EmailtypeId, ViewData["GenderList"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                            @Html.ValidationMessageFor(model => model.EmailtypeId, "", new { @class = "text-danger required" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+
+                                        <div class="col-md-4 col-lg-4">
+
+                                            @Html.Label("From Email ID", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(model => model.FromEmail, "", new { @class = "form-control labelStyle", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.FromEmail, "", new { @class = "text-danger required" })
+                                        </div>
+                                        <div class="col-md-4 col-lg-4">
+                                            @Html.Label("Password", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(model => model.Password, new { @class = "form-control labelStyle", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger required" })
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center form-group city">
+                                    <input type="submit" class="btn btn-primary m-t-10" value="Save">
+                                    <label class="btn btn-primary  m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-lg-12 col-md-12 col-sm-12 no-padding" id="CityResult">
+                        @{Html.RenderAction("GetEmailTypeConfigList");}
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div id="spinner"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            $('#ConfigurationList').DataTable({
+                "pagingType": "full_numbers"
+            });
+
+            //dropdown disable as per Role
+            var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+            if (role == 1) {
+                document.getElementById('countrydiv').style.display = "none";
+            }
+            if (role == 2) {
+                document.getElementById('countrydiv').style.display = "none";
+                document.getElementById('statediv').style.display = "none";
+            }
+            if (role == 3) {
+                document.getElementById('main').style.display = "none";
+            }
+            if (role == 4) {
+                document.getElementById('main').style.display = "none";
+                document.getElementById('ddBranchDiv').style.display = "none";
+            }
+
+        });
+    });
+
+    function GetBranchByLocation() {
+        showProgress();
+        SetDropdownValuesByRole();
+        $.ajax({
+            url: "/Admin/GetBranchByLocation",
+            type: "POST",
+            data: {
+                countryId: $('#ddlCountry1').val(),
+                stateId: $('#ddlStates1').val(),
+                cityId: $('#ddlCity1').val()
+            },
+            success: function (result) {
+                $("#ddBranch").html(""); // clear before appending new list
+                $("#ddBranch").append($('<option></option>').val("").html("--Select--"));
+                $.each(result, function (i, care) {
+                    $("#ddBranch").append($('<option></option>').val(care.BranchId).html(care.BranchName));
+                });
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while loading Clients. Function: "/Client/LoadClient". Page: AvailableCaretakerReport.cshtml');
+                //alert('Some network error has occurres. Please try again after some time.');
+            }
+        });
+    }
+     function SetDropdownValuesByRole() {
+
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+            if (role == 1) {
+                $('#ddlCountry1').val(@country);
+                return;
+            }
+            if (role == 2) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                return;
+            }
+            if (role == 3) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                $('#ddlCity1').val(@city);
+                return;
+        }
+        return;
+        }
+</script>
+
+

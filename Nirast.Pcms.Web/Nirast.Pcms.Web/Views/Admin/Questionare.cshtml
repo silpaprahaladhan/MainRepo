@@ -1,0 +1,145 @@
+﻿@model Nirast.Pcms.Web.Models.Questionare
+
+@{
+    ViewBag.Title = "Questionare";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<head>
+    @*<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>*@
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+</head>
+
+<div class="container animsition">
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                if (ViewBag.Error != null)
+                {
+                    <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+                }
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["Success"] != null && TempData["Success"] != "")
+                    {
+                        <p id="ddd" class="alert alert-success statusmessage">@TempData["Success"]</p>
+                    }
+                    @if (TempData["Failure"] != null)
+                    {
+                        <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Manage Questionnaire</h4>
+                        </div>
+                        <div class="panel-body">
+
+                            @using (Html.BeginForm("AddQuestions", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.TextBoxFor(Model => Model.QuestionId, "", new { @class = "col-md-2 labelStyle hidden" })
+                                <div class="col-md-12">
+                                    <div class="col-md-12 col-lg-12 form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                @Html.Label("Question", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+
+                                                @Html.TextBoxFor(model => model.Questions, "", new { @class = "form-control labelStyle" })
+
+                                                @Html.ValidationMessageFor(model => model.Questions, "", new { @class = "labelStyle required" })
+                                            </div>
+                                            <div class="col-md-6">
+                                                @Html.Label("Display Order", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                                @Html.TextBoxFor(Model => Model.SortOrder, "", new { @class = "form-control labelStyle" })
+
+                                                @Html.ValidationMessageFor(model => model.SortOrder, "", new { @class = "labelStyle required" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="text-center">
+                                    @if (ViewBag.AllowEdit)
+                                    {
+                                        <input type="submit" id="savequestions" class="btn btn-primary" value="Save">
+                                        <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                    }
+                                    else
+                                    {
+                                        <div class="wrapper">
+                                            <input type="submit" class="btn btn-primary" value="Save" disabled>
+                                            <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    @{Html.RenderAction("QuestionareList");}
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            //$('#Questionare').DataTable({
+            //    "pagingType": "full_numbers"
+            //});
+            $("#ddlYearly").hide();
+            $("#ddlMonthly").hide();
+            $("#txtFromDate").hide();
+            $("#txtToDate").hide();
+            $("#ddlSearchRange").change(function () {
+                if ($(this).val() == "1") { // It doesn't work over here.
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+
+                } else if ($(this).val() == "2") {
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").show();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                }
+                else if ($(this).val() == "3") {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").show();
+                    $("#txtToDate").show();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+                else {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+            });
+        });
+    });
+</script>
+

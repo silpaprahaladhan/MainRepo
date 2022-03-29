@@ -1,0 +1,403 @@
+﻿@model Nirast.Pcms.Web.Models.UserInvoiceParams
+@{
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script type="text/javascript">
+       function hideLoading() {
+            document.getElementById('divLoading').style.display = "none";
+            document.getElementById('divFrameHolder').style.display = "block";
+        }
+    </script>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <hr />
+    @{
+        if (ViewBag.Error != null)
+        {
+            <div class="padT25"><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+        }
+        else
+        {
+            <div class="row profile_Style">
+                <div class="panel panel-default report-style ">
+                    <div class="panel-heading">
+                        <h4>Regenerate Invoice</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="col-md-12 innerDiv">
+                                <div class="row">
+                                    <div class="col-lg-4 col-lg-4">
+                                        <label class="label-style">PublicUser Name:</label><span class="mandatoryField">*</span>
+
+                                        @*<select id="ddlUser" class="form-control  col-md-12  labelStyle"></select>*@
+                                        @Html.HiddenFor(model => model.InvoiceNumber)
+                                        @Html.HiddenFor(model => model.InvoicePrefix)
+                                        @Html.HiddenFor(model => model.InvoiceSearchInputId)
+                                        @Html.HiddenFor(model => model.InvoiceDate)
+
+                                        <input type="hidden" value="@Model.ServiceId" id="SelectedService" />
+                                        @Html.DropDownListFor(model => model.UserId, ViewData["User"] as SelectList, "--Select--", new { @Id = "ddlUser", @class = "form-control labelStyle", @disabled = "disabled" })
+                                    </div>
+                                    <div class="col-md-4  col-lg-4">
+
+                                        <label class="label-style">Invoice Date:</label><span class="mandatoryField"></span>@Html.TextBox("InvoiceDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtInvoiceDate", @placeholder = "Invoice Date", @onchange = "dateRangeValidation(this.value)" })
+                                    </div>
+                                    <div class="col-md-4  col-lg-4">
+                                        <label class="label-style">Invoice Number:</label>
+                                        @Html.TextBoxFor(model => model.InvoiceNumber, new { @Id = "txtInvoiceNumber", @class = "form-control labelStyle", @disabled = "disabled" })
+                                        @*<label class="label-style">Invoice Number:</label>@Html.TextBox("InvoiceNumber", "", new { @autocomplete = "off", @id = "txtInvoiceNumber",@disabled = "disabled"})*@
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4  col-lg-4">
+                                        <label class="label-style">Date Range :</label>
+                                        @Html.DropDownListFor(model => model.Mode, ViewData["listPaySearch"] as SelectList, new { @Id = "ddlSearchRange", @class = "form-control labelStyle" })
+                                    </div>
+                                    <div class="col-md-4 col-lg-4">
+                                        <label id="lblfrmdate" class="label-style">From Date :</label>
+                                        @Html.TextBoxFor(model => model.StartDate, "{0:dd-MMM-yyyy}", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtFromDate", @placeholder = "From Date", @onchange = "dateRangeValidation(this.value)" })
+
+                                        <label id="lblyear" class="label-style">Year :</label>
+                                        @Html.DropDownListFor(model => model.Year, ViewData["listYears"] as SelectList, new { @class = "form-control col-md-12 labelStyle", @id = "ddlYearly" })
+                                    </div>
+                                    <div class="col-md-4 col-lg-4">
+                                        <label id="lblmonth" class="label-style">Month :</label>
+                                        @Html.DropDownListFor(model => model.Month, ViewData["listMonths"] as SelectList, new { @class = "form-control col-md-12 labelStyle", @id = "ddlMonthly" })
+                                        <label id="lbltodate" class="label-style">To Date :</label>
+                                        @Html.TextBoxFor(model => model.EndDate, "{0:dd-MMM-yyyy}", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtToDate", @placeholder = "To Date", @onchange = "dateRangeValidation(this.value)" })
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                                    <div class="col-md-12 col-lg-12" style="padding-top:10px;padding-left:inherit">
+                                        <input type="checkbox" id="chkOrientation" value=""> Include Orientation
+                                    </div>
+                                </div>*@
+                            </div>
+                            <div class="col-md-12" style="padding-top: 15px;">
+                                <div class="col-md-5"></div>
+                                <div class="col-md-3 text-center">
+                                    <button type="submit" id="btnSearch" class="btn btn-primary ">ReGenerate </button>
+                                    <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container animsition" style="padding-bottom: 15px;">
+
+                <div class="row">
+                    <div class="equal-height-panels">
+                        <div class="ui segment">
+                            <div id="dvMain" name="dvMain">
+                                <div class="clr"></div>
+                                <div class="col-md-12">
+                                    <div class="signature-pad col-md-12">
+
+                                        <div class="panel panel-group panel-success">
+                                            <div class="panel-heading"><h5>Invoice</h5></div>
+                                            <div class="panel-body">
+                                                <div id="policyContent" type="text" readonly="readonly">
+
+                                                    @*<iframe src=@Model.policyContent frameBorder="0"></iframe>*@
+                                                    @*<iframe src='@Url.Action("GetPDF", "Admin")' width="100%" height="1000" frameBorder="0"></iframe>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="spinner">
+
+            </div>
+            <script>
+                $(document).ready(function () {
+                    debugger;
+                    var tempinvoiceDate = new Date($("#InvoiceDate").val());
+                           var invoiceDate = new Date(tempinvoiceDate).toDateString("MM/dd/yyyy");
+
+
+                    $('#txtInvoiceDate').val(invoiceDate);
+                    var invoiceNumber = $("#InvoiceNumber").val();
+                     $('#txtInvoiceNumber').val(invoiceNumber);
+
+                    $("#ddlSearchRange").change(function () {
+                       // debugger
+
+                        var currentTime = new Date();
+                        var year = currentTime.getFullYear();
+                        if ($(this).val() == "1") { // It doesn't work over here.
+                            $("#ddlYearly").show();
+                            $("#divyear").show();
+                            $("#divmonth").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").show();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+
+                        } else if ($(this).val() == "2") {
+                            $("#divyear").show();
+                            $("#divmonth").show();
+                            $("#ddlYearly").show();
+                            $("#ddlMonthly").show();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").show();
+                            $("#lblmonth").show();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+                        }
+                        else if ($(this).val() == "3") {
+                            $("#divyear").show();
+                            $("#divmonth").show();
+                            $("#ddlYearly").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").show();
+                            $("#txtToDate").show();
+
+                            $("#lblyear").hide();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").show();
+                            $("#lbltodate").show();
+
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                        }
+                        else {
+                            $("#divyear").hide();
+                            $("#divmonth").hide();
+                            $("#ddlYearly").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").hide();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                        }
+                    });
+
+
+                    $('#ddlSearchRange').trigger('change');
+
+                });
+
+                $(function () {
+                    $('#txtInvoiceDate').datepicker({
+                        dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+                        showStatus: true,
+                        showWeeks: true,
+                        currentText: 'Now',
+                        autoSize: true,
+                        gotoCurrent: true,
+                        showAnim: 'blind',
+                        changeMonth: true,
+                        changeYear: true,
+                        highlightWeek: true
+                    });
+                    $('#txtFromDate').datepicker({
+                        dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+                        showStatus: true,
+                        showWeeks: true,
+                        currentText: 'Now',
+                        autoSize: true,
+                        gotoCurrent: true,
+                        showAnim: 'blind',
+                        changeMonth: true,
+                        changeYear: true,
+                        highlightWeek: true
+                    });
+
+                    $('#txtToDate').datepicker({
+                        dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+                        showStatus: true,
+                        showWeeks: true,
+                        currentText: 'Now',
+                        autoSize: true,
+                        gotoCurrent: true,
+                        showAnim: 'blind',
+                        changeMonth: true,
+                        changeYear: true,
+                        highlightWeek: true
+                    });
+
+                    $("#ddlSearchRange").change(function () {
+
+                        var currentTime = new Date();
+                        var year = currentTime.getFullYear();
+                        if ($(this).val() == "1") { // It doesn't work over here.
+                            $("#ddlYearly").show();
+                            $("#divyear").show();
+                            $("#divmonth").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").show();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+
+                        } else if ($(this).val() == "2") {
+                            $("#divyear").show();
+                            $("#divmonth").show();
+                            $("#ddlYearly").show();
+                            $("#ddlMonthly").show();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").show();
+                            $("#lblmonth").show();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+                        }
+                        else if ($(this).val() == "3") {
+                            $("#divyear").show();
+                            $("#divmonth").show();
+                            $("#ddlYearly").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").show();
+                            $("#txtToDate").show();
+
+                            $("#lblyear").hide();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").show();
+                            $("#lbltodate").show();
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                        }
+                        else {
+                            $("#divyear").hide();
+                            $("#divmonth").hide();
+                            $("#ddlYearly").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").hide();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                        }
+                    });
+
+
+
+
+                    $('#btnSearch').click(function () {
+                        debugger;
+                        var searchText = $("#ddlUser").val();
+                       
+                        var year = $("#ddlYearly").val();
+                        var month = $("#ddlMonthly").val();
+                        var monthText = $("#ddlMonthly option:selected").text()
+                        var fromdate = $("#txtFromDate").val();
+                        var todate = $("#txtToDate").val();
+                        var Mode = $("#ddlSearchRange").val();
+
+                        var invoiceNumber = $("#InvoiceNumber").val();
+                        var serviceId = $("#SelectedService").val();
+
+                        var invoicePrefix = $("#InvoicePrefix").val();
+                      
+                        
+                        var InvoiceSearchInputId = $("#InvoiceSearchInputId").val();
+                        var invoiceDate = $("#txtInvoiceDate").val();
+
+                        //ASPX page URL to load report
+                        var src = '../Reports/UpdateUserInvoice.aspx?';
+
+                        var range = $("#ddlSearchRange").val();
+
+                        if (range == 0 ) {
+                            alert("Please select any date range!")
+                            return;
+                        }
+
+                        if (range == 2 && month == 0)
+                        {
+                            alert("Please select any month!")
+                            return;
+                        }
+
+                        //We can add parameters here
+                        if (searchText == "") {
+                            alert("Select any client");
+                            return;
+                        }
+                        else {
+                            showProgress();
+                            src = src + "userId=" + searchText
+                            src = src + "&year=" + year
+                            src = src + "&month=" + month
+                            src = src + "&monthText=" + monthText
+                            src = src + "&fromdate=" + fromdate
+                            src = src + "&todate=" + todate
+                            
+                            src = src + "&Mode=" + Mode
+                            src = src + "&invoicePrefix=" + encodeURIComponent(invoicePrefix)
+                            src = src + "&invoiceNumber=" + encodeURIComponent(invoiceNumber)
+                           
+                           
+                            src = src + "&InvoiceSearchInputId=" + encodeURIComponent(InvoiceSearchInputId)
+                            src = src + "&serviceId=" + serviceId
+                            src = src + "&invoiceDate=" + invoiceDate
+                        }
+                        //setTimeout(function () {
+
+                        //    hideProgress();
+
+                        //}, 6000);
+
+                        $("#policyContent").html('<iframe  src="' + src + '"style="width: 100%; height: 900px" onload="hideProgress()" ></iframe>');
+                    });
+                });
+
+            </script>
+        }
+    }
+
+</body>
+</html>
+

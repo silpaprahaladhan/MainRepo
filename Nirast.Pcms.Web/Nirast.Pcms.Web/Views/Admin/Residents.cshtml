@@ -1,0 +1,114 @@
+﻿@model Nirast.Pcms.Web.Models.Resident
+
+@{
+    ViewBag.Title = "Resident";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<head>
+    @*<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>*@
+
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+</head>
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["Success"] != null)
+                    {
+                        <p id="messages" class="alert alert-success statusmessage">@TempData["Success"]</p>
+                    }
+                    @if (TempData["Failure"] != null)
+                    {
+                        <p class="alert custom-alert-danger statusmessage">@TempData["Failure"]</p>
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Manage Residents</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-12">
+
+                                @using (Html.BeginForm("SaveResidentDetails", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12 form-group">
+                                            <div class="row">
+                                                <div class="col-md-4 col-lg-4">
+                                                    @Html.HiddenFor(Model => Model.ResidentId)
+                                                    @*@Html.TextBoxFor(Model => Model.CountryId, "", new { @class = "hidden" })*@
+                                                    @Html.Label("Resident Name", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                                    @Html.TextBoxFor(Model => Model.ResidentName, "", new { @class = "form-control labelStyle" })
+
+                                                    @Html.ValidationMessageFor(Model => Model.ResidentName, "", new { @class = "no-padding required" })
+                                                </div>
+                                                <div class="col-md-4 col-lg-4">
+                                                    
+                                                    @Html.Label("Client", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                                    @Html.DropDownListFor(Model => Model.ClientId, ViewData["clientList"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                    @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger required" })
+                                                    @Html.HiddenFor(Model => Model.ClientId)
+                                                    @Html.HiddenFor(Model => Model.ClientName)
+
+                                                </div>
+                                                <div class="col-md-4 col-lg-4">
+                                                    @Html.Label("Other Info", new { @class = "control-label label-style marginTopStyle" })
+                                                    @Html.TextBoxFor(Model => Model.OtherInfo, "", new { @class = "form-control labelStyle" })
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <div class="text-center country">
+                                            @if (ViewBag.AllowEdit)
+                                            {
+                                                <input type="submit" id="saveResident" class="btn btn-primary" value="Save">
+                                                <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                            }
+                                            else
+                                            {
+                                                <div class="wrapper">
+                                                    <input type="submit" id="cancel" class="btn btn-primary" value="Save" disabled>
+                                                    <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id ="divResidentList" class="col-lg-12 col-md-12 col-sm-12">
+                    @{Html.RenderAction("ResidentList");}
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        debugger;
+        $('#ResidentList').DataTable({
+            "responsive": "true",
+            "pagingType": "full_numbers"
+        });
+      
+
+    });
+   
+</script>

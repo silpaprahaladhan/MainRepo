@@ -1,0 +1,338 @@
+﻿@model Nirast.Pcms.Web.Models.CaretakerBooking
+@{
+    ViewBag.Title = "CaretakerBooking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    function nextTab() {
+        if (validateCareRecipient() == true) {
+            $('#liCareRecipient').removeClass('active');
+            $('#CareRecipient').removeClass('active in');
+            $('#liQuestionnaire').addClass('active');
+            $('#questionnaire').addClass('active in');
+        }
+    }
+
+    function previousTabQuestionnare() {
+        $('#liCareRecipient').addClass('active');
+        $('#CareRecipient').addClass('active in');
+        $('#liQuestionnaire').removeClass('active');
+        $('#questionnaire').removeClass('active in');
+    }
+
+</script>
+<script>
+
+    $(function () {
+        $('.datetimepicker').datepicker();
+    });
+
+
+</script>
+<script>
+    function validateCareRecipient() {
+        if ($('#FirstName').val() == "") {
+            alert("First name should not be empty.");
+            $('#FirstName').focus();
+            return false;
+        }
+        else if ($('#LastName').val() == "") {
+            alert("Last name should not be empty.");
+            $('#LastName').focus();
+            return false;
+        }
+
+        else if ($('#PrimaryPhoneNo').val() == "") {
+            alert("Phone #1 should not be empty.");
+            $('#PrimaryPhoneNo').focus();
+            return false;
+        }
+        else if ($('#Address').val() == "") {
+            alert("Address Line should not be empty.");
+            $('#Address').focus();
+            return false;
+        }
+        else if ($('#ddlCountry').val() == "") {
+            alert("Please select Country.");
+            return false;
+        }
+        else if ($('#ddlStates').val() == 0) {
+            alert("Please select State.");
+            $('#ddlStates').focus();
+            return false;
+        }
+        else if ($('#ddlCity').val() == 0) {
+            alert("Please select City.");
+            $('#ddlCity').focus();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    $(document).ready(function () {
+
+        $(function () {
+            $("#BookingStartTime").val(localStorage.getItem("bookingFromDate") + ' ' + localStorage.getItem("bookingFromTime"));
+            $("#BookingEndTime").val(localStorage.getItem("bookingToDate") + ' ' + localStorage.getItem("bookingToTime"));
+            $("#BookingTimeFrom").timepicker({ 'timeFormat': 'h:i A' });
+            $("#BookingTimeTo").timepicker({ 'timeFormat': 'h:i A' });
+        });
+
+        $("input[name='SubmitBooking']").on("click", function () {
+
+            if ($('#FirstName').val() == "") {
+                alert("First name should not be empty.");
+                return false;
+            }
+            if ($('#LastName').val() == "") {
+                alert("Last name should not be empty.");
+                return false;
+            }
+            if ($('#PrimaryPhoneNo').val() == "") {
+                alert("Phone Number should not be empty.");
+                return false;
+            }
+            if ($('#Address').val() == "") {
+                alert("Address Line should not be empty.");
+                return false;
+            }
+
+            if ($('#ddlCountry').val() == "") {
+                alert("Please select Country.");
+                return false;
+            }
+            if ($('#ddlStates').val() == 0) {
+                alert("Please select State.");
+                return false;
+            }
+            if ($('#ddlCity').val() == 0) {
+                alert("Please select City.");
+                return false;
+            }
+        });
+    });
+</script>
+
+<div class="clearfix"> </div>
+<div class="container">
+    <div class="row">
+        <h3 class="h4-label" style="margin-top:10px;">Caregiver Booking</h3>
+        <div class="bootstrap-tab animated wow slideInUp animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: slideInUp;">
+            <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                @*@if (TempData["SaveBooking"] != null)
+                    {
+                        if (TempData["SaveBooking"].ToString() == "Booking failed")
+                        {
+                            <p class="alert alert-danger statusmessage" id="successMessage">@TempData["SaveBooking"]</p>
+                        }
+                        else
+                        {
+                            <p class="alert alert-success" id="successMessage statusmessage">@TempData["SaveBooking"]</p>
+                        }
+
+                    }*@
+                <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
+                    <li id="liCareRecipient" role="presentation" class="active"><a href="#CareRecipient" id="home-tab" role="tab" data-toggle="tab" aria-controls="CareRecipient" aria-expanded="true">Care Recipient Details</a></li>
+                    <li id="liQuestionnaire" role="presentation"><a href="#questionnaire" role="tab" id="profile-tab" data-toggle="tab" aria-controls="Profile">Questionnaire</a></li>
+                </ul>
+                @using (Html.BeginForm("SaveCareRecipientDetails", "PublicUser", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    { Html.EnableClientValidation(); }
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div id="myTabContent" class="tab-content panel panel-default no-padding">
+
+                        <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body active in" id="CareRecipient" aria-labelledby="home-tab">
+
+                            <div class="padT25" style="margin: 0 auto;">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding">
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                         
+                                                @Html.Label("First Name", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                @Html.TextBoxFor(m => m.FirstName, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "First Name" })
+                                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger required" })
+                                                @Html.HiddenFor(m => m.ServiceRequiredId)
+                                                @Html.HiddenFor(m => m.CareTakerId)
+                                                @Html.HiddenFor(m => m.BookingStartTime)
+                                                @Html.HiddenFor(m => m.BookingEndTime)
+                                           
+                                        </div>
+                                        <div class="col-md-6">
+                                           
+                                                @Html.Label("Last Name", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                @Html.TextBoxFor(m => m.LastName, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Last Name" })
+                                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger required" })
+                                         
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                         
+
+                                                @Html.Label("Country", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.Country, "Value", "Text"), "--Select--", new { @Id = "ddlCountry", @class = "form-control labelStyle", @onchange = "GetStates()" })
+                                                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger required" })
+
+                                        </div>
+                                        <div class="col-md-6">
+                                           
+                                                @Html.Label(@Resource.State, new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                @Html.DropDownListFor(model => model.StateId, new SelectList(ViewBag.States, "Value", "Text"), "--Select--", new { @Id = "ddlStates", @class = "form-control labelStyle", @onchange = "GetCities()" })
+                                                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger required" })
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                           
+                                                @Html.Label("City", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                @Html.DropDownListFor(model => model.CityId, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @Id = "ddlCity", @class = "form-control labelStyle" })
+                                                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger required" })
+
+                                        </div>
+                                        <div class="col-md-6">
+                                          
+                                                @Html.Label("Address Line", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                @Html.TextBoxFor(model => model.Address, new { @autocomplete = "off", @class = "form-control", @Placeholder = "Address Line " })
+                                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger required" })
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                           
+                                                @Html.Label(Resource.ZIPCode, new { @class = "label-style" })
+                                                @Html.TextBoxFor(m => m.ZipCode, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Zip Code" })
+                                                @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger required" })
+                                         
+                                        </div>
+                                        <div class="col-md-6">
+                                           
+                                                @Html.Label("Phone #1", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                <div class="input-group m-b-5">
+                                                    <span class="input-group-addon"><label id="lblPhoneCodePrimary1">+1</label></span>
+                                                    @Html.TextBoxFor(m => m.PrimaryPhoneNo, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Phone #1" })
+                                                    </div>
+                                                    @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = "text-danger required" })
+                                               
+                                            </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            
+                                                @Html.Label("Phone #2", new { @class = "label-style" })
+                                                <div class="input-group m-b-5">
+                                                    <span class="input-group-addon"><label id="lblPhoneCodePrimary2">+1</label></span>
+                                                    @Html.TextBoxFor(m => m.SecondaryPhoneNo, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Phone #2" })
+                                                    </div>
+                                                    @Html.ValidationMessageFor(model => model.SecondaryPhoneNo, "", new { @class = "text-danger required" })
+                                              
+                                            </div>
+                                        <div class="col-md-6">
+                                          
+                                                @Html.Label("Purpose", new { @class = "label-style" })
+                                                @Html.TextAreaFor(model => model.Purpose, new { @class = "col-md-12 form-control labelStyle" })
+                                                @Html.ValidationMessageFor(model => model.Purpose, "", new { @class = "text-danger required" })
+                                            </div>
+                                       
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="col-md-12">
+                                    <div class="row newsright panel-body p-b-0 text-center">
+                                        <label onclick="location.href ='@(Url.Action("ServiceDescription", "Home", new { @serviceId = Model.ServiceRequiredId }))'" class="btn btn-primary margin-right-15">Back</label>
+                                        <label onclick="nextTab()" class="btn btn-primary margin-right-15">Next</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="questionnaire" aria-labelledby="profile-tab">
+                            <div class="tab-spacing"> </div>
+                            <div class="col-lg-6">
+                                <div class="col-md-12 innerDiv">
+                                    <label class="col-md-12 label-style no-padding" for="What_are_the_service_details_required_">
+                                        @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 1).FirstOrDefault() == null ? "What are the services required?" : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 1).FirstOrDefault().Questions))
+                                    </label>
+                                </div>
+                                <div class="col-md-12">
+
+                                    @Html.TextArea("txtServicesRequired", "", new { @class = "form-control col-md-12 labelStyle", @cols = "5", @rows = "5" })
+                                </div>
+                                <div class="col-md-12 innerDiv">
+                                    <label class="col-md-12 label-style no-padding" for="Explain_the_disease_details_of_patient">
+                                        @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 2).FirstOrDefault() == null ? "Explain the health condition of Care Receipient." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 2).FirstOrDefault().Questions))
+                                    </label>
+                                </div>
+
+                                <div class="col-md-12">
+                                    @Html.TextArea("txtDiseases", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                                </div>
+
+                                <div class="col-md-12 innerDiv">
+                                    <label class="col-md-12 label-style no-padding" for="Any_medication_history_">
+                                        @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 3).FirstOrDefault() == null ? "Any medication history? If any." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 3).FirstOrDefault().Questions))
+                                    </label>
+                                </div>
+
+                                <div class="col-md-12">
+                                    @Html.TextArea("txtMedicationHistory", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="col-md-12 innerDiv">
+                                    <label class="col-md-12 label-style no-padding" for="Explain_the_allergy_details">@(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 4).FirstOrDefault() == null ? "Explain the allergy details.If any." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 4).FirstOrDefault().Questions))</label>
+                                </div>
+                                <div class="col-md-12">
+
+                                    @Html.TextArea("txtAllergy", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                                </div>
+
+                                <div class="col-md-12 innerDiv">
+                                    <label class="col-md-12 label-style no-padding" for="Extra_services_required_">@(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 5).FirstOrDefault() == null ? "Extra services required? If any." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 5).FirstOrDefault().Questions))</label>
+                                </div>
+                                <div class="col-md-12">
+
+                                    @Html.TextArea("txtExtraService", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                                </div>
+
+                                <div class="col-md-12 innerDiv">
+                                    <label class="col-md-12 label-style no-padding" for="Any_remarks_">@(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 6).FirstOrDefault() == null ? "Any remarks?" : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 6).FirstOrDefault().Questions))</label>
+                                </div>
+                                <div class="col-md-12">
+
+                                    @Html.TextArea("txtRemarks", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <label onclick="previousTabQuestionnare()" class=" btn btn-primary register-style">Prev</label>
+                                <input type="submit" data-toggle="modal" class="btn btn-primary register-style" value="Submit" name="SubmitBooking" style="margin-left:10px;">
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"> </div>
+</div>
+<style>
+    .box-footer {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+</style>
+
+
+
+

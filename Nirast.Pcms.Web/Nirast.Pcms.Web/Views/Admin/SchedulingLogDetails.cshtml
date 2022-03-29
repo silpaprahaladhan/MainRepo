@@ -1,0 +1,376 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.ScheduledData>
+@using Nirast.Pcms.Web.Models
+@{
+    ViewBag.Title = "SchedulingLogDetails";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<head>
+    @*<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>*@
+
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+
+</head>
+@*@using (Html.BeginForm("ManageOfficeStaff", "Admin", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+    {*@
+
+<div class="container animsition">
+    <script src="~/js/easyResponsiveTabs.js" type="text/javascript"></script>
+    @if (ViewBag.Error != null)
+    {
+        <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+    }
+    else
+    {
+        <h3 class="h4-label">Scheduling AuditLog Details</h3>
+        if (TempData["Success"] != null)
+        {
+            <p class="alert alert-success statusmessage">@TempData["Success"].ToString()</p>
+        }
+        <div class="row">
+            <div class="equal-height-panels">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <input type="hidden" id="hdnCTId" />
+                    <div class=" filterable table-responsive">
+                        <table class="table table-striped padding-top-10 table-earning" id="userList">
+                            <thead>
+                                <tr>
+                                    <th>DateTime</th>
+                                    <th>Client</th>
+                                    <th>CareGiver</th>
+                                    <th>UserName</th>                                  
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                    <th class="text-right">More Info</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+
+                                    foreach (var item in Model)
+                                    {
+                                        
+                                        var oldData = item.OldData;
+                                        var newData = item.NewData;
+                                        var logid = item.LogId;
+                                        var actionType = @item.AuditLogActionType == Enums.AuditLogActionType.Add ? "Add" : @item.AuditLogActionType == Enums.AuditLogActionType.Edit ? "Edit" : "Delete";
+                                <tr>
+                                    <td style="width:15%" onclick="MoreInfo(@item.LogId)">@item.UpdatedDate</td>
+                                    <td style="width:15%" onclick="MoreInfo(@item.LogId)">@item.ClientName </td>
+                                    <td style="width:15%" onclick="MoreInfo(@item.LogId)">@item.CareTakerName </td>
+                                    <td style="width:15%" onclick="MoreInfo(@item.LogId)">@item.FirstName </td>                                    
+                                    <td style="width:15%" onclick="MoreInfo(@item.LogId)">@actionType</td>
+                                    <td style="width:15%" onclick="MoreInfo(@item.LogId)">@item.MessageContent</td>
+
+                                    <td class="text-right" style="width:15%">
+                                        <button class="btn btn-xs btn-info fa fa-info-circle" title="Info" data-toggle="modal" data-target="#modal-logDetails" onclick="MoreInfo(@item.LogId)"></button>
+                                    </td>
+                                </tr>
+
+                                    }
+                                }
+                            </tbody>
+                            </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal-delete">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                        <h4 class="modal-title">Delete Office Staff Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        Record will be deleted from system. Are you sure to delete?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="deleteUser()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="bookingDetailDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content panel">
+            <div class="modal-header panel-heading padding-10">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Reset Password</h4>
+            </div>
+            <div id="bookingDetail" class="modal-body no-padding">
+
+            </div>
+
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-primary " onclick="SavePassword()">Save</button>
+                <button type="button" class="btn btn-primary " data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-UnMapCaretaker">
+    <div class="modal-dialog">
+        <div class="panel panel-group panel-success">
+            <div class="panel-heading" style="padding:10px 15px">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 id="clientNametitle1" class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="col-md-12 labelStyle table-responsive" style="margin-bottom:18px">
+                        <table class="table table-bordered table-striped table-earning dynamic-table" id="tblCaretaker">
+                            <thead>
+                                <tr>
+                                    <th>Workshift</th>
+                                    <th class="col-md-2">Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="workmodeList1"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer mapping-style">
+                <button id="btnMapUpdate" type="button" class="btn btn-primary" data-dismiss="modal">Update</button>
+                <button id="btnUnMap" type="button" class="btn btn-primary" data-dismiss="modal">UnMap Caretaker</button>
+                <button type="button" class="btn btn-primary" onclick="clearFields()">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div id="spinner">
+
+</div>
+<div class="modal fade" id="modal-logDetails">
+    <div class="modal-dialog" style="overflow:auto; width: 55%;">
+        <div class="panel panel-group panel-success">
+            <div class="panel-heading" style="padding:10px 15px">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title">LOG DETAILS</h4>
+            </div>
+
+            <div class="modal-body" style="overflow:auto; word-break: break-all; word-wrap:break-word;">
+                <table class="table table-striped padding-top-10" id="userList">
+                    <thead>
+                        <tr>
+                            <th>Old Data</th>
+                            <th>New Data</th>
+                        </tr>
+                    </thead>
+                    <tbody id="testbody"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            $('#OfficeStaffManagement').DataTable({
+                "pagingType": "full_numbers"
+            });
+            $("#ddlYearly").hide();
+            $("#ddlMonthly").hide();
+            $("#txtFromDate").hide();
+            $("#txtToDate").hide();
+            $("#ddlSearchRange").change(function () {
+                if ($(this).val() == "1") { // It doesn't work over here.
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+
+                } else if ($(this).val() == "2") {
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").show();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                }
+                else if ($(this).val() == "3") {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").show();
+                    $("#txtToDate").show();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+                else {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+            });
+        });
+    });
+
+    function setOfficeStaffId(userId) {
+        $('#hdnCTId').val(userId);
+    }
+    function deleteUser() {
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/ChangeStatus",
+            data: { userId: $('#hdnCTId').val(), status: 3 },
+            success: function () {
+                window.location.reload();
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while deleting a office staff. Function: setOfficeStaffId(userId). Page: ManageOfficeStaff.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+    function changeStatus(userId, status) {
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/ChangeStatus",
+            data: { userId: userId, status: status },
+            success: function (data) {
+                window.location.reload();
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while changing a office staff status. Function: changeStatus(userId, status) . Page: ManageOfficeStaff.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+    $(document).ready(function () {
+        //$.fn.dataTable.moment('MM/DD/YYYY');
+        $('#userList').DataTable({
+
+            "pagingType": "full_numbers",
+
+            'order': [[0, 'desc']],
+            'paging': true,
+        });
+       
+    })
+
+
+    function showBookingDetails(bookingId) {
+        showProgress();
+        $.ajax({
+            url: "../Admin/UserLoginDetails/",
+            data: {
+                bookingId: bookingId
+            },
+            success: function (feed) {
+                $('#bookingDetail').html(feed);
+                $('#bookingDetailDialog').modal('show');
+                spinnerVisible = true;
+                hideProgress();
+            },
+            error: function (feed) {
+                spinnerVisible = true;
+                hideProgress();
+                console.log(feed.responseText);
+                logError(feed.statusText + ' - Error occurred while showing a office staff login details. Function: showBookingDetails(bookingId). Page: ManageOfficeStaff.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+
+    
+
+    function SavePassword() {
+        var newPswd = $("#newpswd").val();
+        var cnfrmPswd = $("#cnfrmpswd").val();
+        var emailID = $("#lblemail").text();
+        var password = $("#lblpassword").text();
+
+        if (((newPswd.length > 0) && (newPswd.length < 8)) || ((cnfrmPswd.length > 0) && (cnfrmPswd.length < 8))) {
+            alert("Password must be minimum 8 characters long");
+            return;
+        }
+        else if (newPswd.length == 0 || cnfrmPswd.length == 0) {
+            alert("Password fields are required");
+            return;
+        }
+        if (newPswd == cnfrmPswd) {
+            $.ajax({
+                url: "../Admin/ChangePswd/",
+                data: {
+                    newPswd: newPswd,
+                    emailID: emailID
+                },
+                success: function (feed) {
+                    alert("Password changed successfully");
+                    $('#bookingDetailDialog').modal('hide');
+                },
+                error: function (feed) {
+                    console.log(feed.responseText);
+                    logError(feed.statusText + ' - Error occurred while changing a office staff login password. Function: SavePassword(). Page: ManageOfficeStaff.cshtml');
+                    //alert('Some network error has occurred. Please try again after some time.');
+                }
+            });
+        }
+        else {
+            alert("Passwords does not match!");
+        }
+    }
+    function MoreInfo(logId) {
+        debugger;
+        if (logId > 0) {
+            showProgress();
+            $.ajax({
+                url: "../Admin/SchedulingLogDetailsById/",
+                type: "GET",
+                dataType: "JSON",
+                data: {
+                    logId: logId
+                },
+                success: function (data) {
+                    $('#testbody').html('');
+                    if (data == "[]") {
+                        $('#testbody').html("<tr>" + "<td colspan='3'>No LogDetails found.</td>" + "</tr>");
+                    }
+                    else {
+                        var strQual = "";
+                        strQual = strQual + "<tr>" + "<td class='col-md-3'>" + data.OldData + "</td>" +
+                            "<td class='col-md-3'>" + data.NewData + "</td>" +
+                          "</tr>";
+                        $('#testbody').html(strQual);
+                        hideProgress();
+                        $('#modal-logDetails').modal('show');
+                    }
+                }
+            });
+        }
+    }
+    
+    
+</script>
+

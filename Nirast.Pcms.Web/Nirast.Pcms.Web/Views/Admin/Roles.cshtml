@@ -1,0 +1,133 @@
+﻿@model Nirast.Pcms.Web.Models.Roles
+
+@{
+    ViewBag.Title = "Roles";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<head>
+    @*<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>*@
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script type="text/javascript" language="javascript" src="~/js/CustomScript.js"></script>
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+</head>
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 statusmessage">
+                    @if (TempData["Success"] != null && TempData["Success"] != "")
+                    {
+                        <p class="alert alert-success statusmessage" id="successMessage">@TempData["Success"]</p>
+                    }
+
+                    @if (TempData["Failure"] != null && TempData["Failure"] != "")
+                    {
+                        <p class="alert alert-danger statusmessage" id="successMessage">@TempData["Failure"]</p>
+                    }
+                    @using (Html.BeginForm("AddRoles", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Manage Roles</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-12 ">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.HiddenFor(Model => Model.RoleId)
+
+                                            @Html.Label("Roles", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(model => model.RoleName, "", new { @class = "form-control labelStyle" })
+
+                                            @Html.ValidationMessageFor(model => model.RoleName, "", new { @class = "labelStyle required" })
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                                <div class="roles text-center form-group">
+                                    <input type="submit" class="btn btn-primary m-t-10" value="Save">
+                                    <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-lg-12 col-md-12 col-sm-12 no-padding">
+                        @{Html.RenderAction("RoleList");}
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+
+        $(document).ready(function () {
+            $('#ListRoles').DataTable({
+                "pagingType": "full_numbers"
+            });
+            $("#ddlYearly").hide();
+            $("#ddlMonthly").hide();
+            $("#txtFromDate").hide();
+            $("#txtToDate").hide();
+            $("#ddlSearchRange").change(function () {
+                if ($(this).val() == "1") { // It doesn't work over here.
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlCountry").selectedIndex = "1";
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+
+                } else if ($(this).val() == "2") {
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").show();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                }
+                else if ($(this).val() == "3") {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").show();
+                    $("#txtToDate").show();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+                else {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+            });
+        });
+    });
+
+</script>
+
+
+
+

@@ -1,0 +1,925 @@
+﻿@model Nirast.Pcms.Web.Models.ClientModel
+@{
+    ViewBag.Title = "AdminDashboard";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+    var country = Session["CountryId"].ToString();
+    var state = Session["StateID"].ToString();
+    var city = Session["CityIdk"].ToString();
+
+
+}
+<head>
+
+
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+</head>
+<div>
+    <h3 class="h4-label"> Admin Dashboard</h3>
+</div>
+
+<div class="col-md-2" id="countrydiv">
+
+    <label class="label-style">Country</label>
+    @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control  ddlCountry1 labelStyle" })
+    @Html.ValidationMessageFor(model => model.CountryId1, "", new { @class = "no-padding required" })
+
+</div>
+<div class="col-md-2" id="statediv">
+    <label class="label-style">State</label>
+    @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates", @class = "form-control ddlStates1 labelStyle", @onchange = "GetCities1()" })
+    @Html.ValidationMessageFor(model => model.StateId1, "", new { @class = "no-padding required" })
+
+</div>
+<div class="col-md-2" id="citydiv">
+
+    <label class="label-style">City</label>
+    @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity", @class = "form-control ddlCity1 labelStyle", onchange = "SetCity1()" })
+    @Html.ValidationMessageFor(model => model.CityId1, "", new { @class = "no-padding required" })
+
+</div>
+<div class="col-md-2" id="branchdiv">
+
+    <label class="label-style">Franchise/Branch</label>
+    @Html.DropDownListFor(model => model.BranchId2, ViewData["ListBranch"] as SelectList, "--Select--", new { @Id = "Branch2", @class = "form-control Branch1 labelStyle", onchange = "SetCity1()" })
+    @Html.ValidationMessageFor(model => model.BranchId2, "", new { @class = "no-padding required" })
+
+
+</div>
+
+
+<div class="col-md-2" id="branchadmindemodiv">
+
+    <label class="label-style">Franchise/Branch</label>
+    @Html.DropDownListFor(model => model.BranchId2, ViewData["ListBranchdemo"] as SelectList, "--Select--", new { @Id = "Branch1", @class = "form-control Branch1 labelStyle", onchange = "SetCity1()" })
+    @Html.ValidationMessageFor(model => model.BranchId2, "", new { @class = "no-padding required" })
+
+
+</div>
+
+
+
+<div class="col-md-3" style="margin-top:39px;" id="main">
+    <button class="btn btn-primary float-left editButton" title="Edit" onclick="LoadClientByLocation1()">Submit</button>
+</div>
+
+@if (ViewBag.Error != null)
+{
+    <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3">@ViewBag.Error</p></div>
+}
+else
+{
+    <div class="row">
+
+        <div class="col-md-12" style="margin-top:5px;">
+            @{Html.RenderAction("AdminCalendarView");}
+        </div>
+        @*<div class="col-md-6">
+                @{Html.RenderAction("BookingNotification");}
+            </div>*@
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            @{Html.RenderAction("BookingNotification");}
+        </div>
+        @*<div class="col-md-6">
+                @{Html.RenderAction("ClientList");}
+            </div>*@
+        <div class="col-md-6">
+            @{Html.RenderAction("NewBooking");}
+        </div>
+        @*<div class="col-md-6">
+
+            </div>*@
+    </div>
+
+    @*<div class="row">
+            <div class="col-md-6">
+                @{Html.RenderAction("UserList");}
+            </div>
+
+        </div>*@
+    <div class="row">
+        <div class="col-md-12">
+            @{Html.RenderAction("CareTakerList");}
+        </div>
+    </div>
+
+
+
+
+}
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>*@
+    @*<script src="~/js/fullcalendar.min.js"></script>*@
+    <script src="~/js/fullCalendar.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script>
+         $(document).ready(function () {
+             //dropdown disable as per Role
+            var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+             var admindrp = @Html.Raw(Json.Encode(ViewData["Admin"]));
+
+             if (admindrp == 0) {
+                 document.getElementById('branchadmindemodiv').style.display = "none";
+             } else {
+                 document.getElementById('branchdiv').style.display = "none";
+             }
+                    if (role == 1) {
+
+
+                        document.getElementById('countrydiv').style.display = "none";
+
+                    }
+                    if (role == 2) {
+
+                        document.getElementById('countrydiv').style.display = "none";
+                        document.getElementById('statediv').style.display = "none";
+
+                    }
+                    if (role == 3) {
+                        document.getElementById('countrydiv').style.display = "none";
+                        document.getElementById('statediv').style.display = "none";
+                        document.getElementById('citydiv').style.display = "none";
+
+                    }
+             if (role == 4) {
+                 document.getElementById('countrydiv').style.display = "none";
+                 document.getElementById('statediv').style.display = "none";
+                 document.getElementById('citydiv').style.display = "none";
+                 document.getElementById('branchdiv').style.display = "none";
+                 document.getElementById('main').style.display = "none";
+             }
+         })
+            var eventList = [];
+            var abcd = [];
+            $(function () {
+                //$('#tblTimeShift').hide();
+                var holidays = [];
+
+                function populateTimeShiftByClientId() {
+                    if ($('#ddlClient').val() != "" || $('#ddlClient').val() != "null" || $('#ddlClient').val() != null || $('#ddlClient').val() != NaN) {
+                        var ID = $('#ddlClient').val();
+                    }
+                    else {
+                        var ID = 0;
+                    }
+                    $.ajax({
+                        url: "/Client/LoadTimeShiftByClientId",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        data: { clientId: ID },
+                        success: function (result) {
+                            $("#ddWorkTime").html(""); // clear before appending new list
+                            $("#ddWorkTime").append($('<option></option>').val("").html("--Select--"));
+                            $.each($.parseJSON(result), function (i, care) {
+
+                                $("#ddWorkTime").append($('<option></option>').val(care.TimeShiftId + '|' + care.WorkingHours + '|' + moment(care.StartTime).format('hh:mm A')).html(care.TimeShiftName));
+                            })
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while loading Admin dashboard. Function: populateTimeShiftByClientId(). Page: AdminDashboard.cshtml');
+
+                        }
+                    });
+                }
+
+                $.ajax({
+                    url: "/Client/GetHolidays",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+
+                        $.each($.parseJSON(result), function (i, care) {
+                            var holidaydate = new Date(care.HolidayDate);
+                            holidaydate = new Date(holidaydate.getTime() + (holidaydate.getTimezoneOffset() * 60000));
+                            holidays.push({
+                                'dates': holidaydate
+                            });
+
+                        })
+                        GenerateCalender();
+                    },
+                    error: function (data) {
+
+                        logError(data.statusText + ' - Error occurred while loading Admin dashboard - Holidays. Function: "/Client/GetHolidays". Page: AdminDashboard.cshtml');
+
+                    }
+                });
+                $.ajax({
+                    url: "/Client/LoadCategory",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+
+                        $("#ddServiceType").html(""); // clear before appending new list
+                        $("#ddServiceType").append($('<option></option>').val("").html("--Select--"));
+                        $.each($.parseJSON(result), function (i, care) {
+                            $("#ddServiceType").append($('<option></option>').val(care.CategoryId).html(care.Name));
+                        })
+
+                        $("#ddServiceType").val(1);
+                        $('#ddServiceType').change();
+
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Admin dashboard - Caregiver Category. Function: "/Client/LoadCategory". Page: AdminDashboard.cshtml');
+
+                    }
+                });
+
+                $.ajax({
+                    url: "/Client/LoadClient",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+
+                        $("#ddlClient").html(""); // clear before appending new list
+                        $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+                        $.each($.parseJSON(result), function (i, care) {
+                            $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+                        })
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Admin dashboard - Clients. Function: "/Client/LoadClient". Page: AdminDashboard.cshtml');
+
+                    }
+                });
+
+                var saveDate = new Date();
+                $('#ddlClient').change(function () {
+                    eventList = [];
+                    GenerateCalender();
+                })
+
+                //function to generate calendar
+                function GenerateCalender() {
+                    debugger;
+
+                    $('#calender').fullCalendar('destroy');
+                    $('#calender').fullCalendar({
+
+                        contentheight: 'auto',
+                        //height: 650,
+                        height: 'auto',
+                        defaultDate: saveDate,
+                        //timeFormat: 'hh(:mm)a',
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,basicWeek,basicDay'
+                        },
+                        eventDrop: false,
+                        dayClick: function (date, jsEvent, view) {
+                            $('#hdStartDate').val(date.format());
+                        },
+
+                        slotminutes: 15,
+                        eventLimit: true,
+                        views: {
+                            month: {
+                                eventLimit: 11
+                            },
+                            day: {
+                                eventLimit: 11
+                            },
+                            week: {
+                                eventLimit: 11
+                            }
+                        },
+                        displayEventTime: false,
+                        timezone: 'utc',
+
+                        dayRender: function (date, cell, $el) {
+                            var check = $.fullCalendar.formatDate(date, 'DD/MM/YYYY');
+                            var fullDate = new Date()
+                            var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
+                            var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+
+                            $.each(holidays, function (index, value) {
+                                var Month;
+                                var daterec;
+                                var montStr = value.dates.getMonth().toString();
+
+                                if (value.dates.getMonth() + 1 < 9) {
+                                    Month = '0' + (value.dates.getMonth() + 1);
+                                }
+                                else {
+                                    Month = (value.dates.getMonth() + 1);
+                                }
+
+                                if (value.dates.getDate() < 9) {
+                                    daterec = '0' + (value.dates.getDate());
+                                }
+                                else {
+                                    daterec = (value.dates.getDate());
+                                }
+
+                                var HolidayDate = daterec + "/" + Month + "/" + value.dates.getFullYear();
+                                if (HolidayDate == check) {
+                                    cell.css("background-color", "yellow");
+                                }
+                            });
+                        },
+                        eventRender: function (calEvent, $el) {
+                        },
+                        eventMouseover: function (data, events, jsEvent, view) {
+                            $.each(events, function (index, value) {
+                                tooltip = '<div class="tooltiptopicevent" style="border-radius: 25px;border: 2px solid ;-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);box-shadow:7px 7px 5px 0px rgba(50, 50, 50, 0.75);width:auto;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + '<b>Client : </b>' + data.clientname + '</br>' + '<b>Caregiver : </b>' + data.caretakername + '</br>' + '<b>Category : </b>' + data.careTakerTypeName + '</br>' + '<b>Work Mode : </b>' + data.workmodename + '</br>' + '<b>Time Shift : </b>' + data.fromtime + ' ' + '<b> - </b>' + data.endtime + '</br>' + '<b>Description : </b>' + data.description + '</div>';
+                            });
+                            $("body").append(tooltip);
+                            $(this).mouseover(function (e) {
+                                $(this).css('z-index', 10000);
+                                $('.tooltiptopicevent').fadeIn('500');
+                                $('.tooltiptopicevent').fadeTo('10', 1.9);
+                            }).mousemove(function (e) {
+                                $('.tooltiptopicevent').css('top', e.pageY + 10);
+                                $('.tooltiptopicevent').css('left', e.pageX + 20);
+                            });
+
+                        },
+                        eventMouseout: function (data, jsEvent, view) {
+                            $(this).css('z-index', 8);
+
+                            $('.tooltiptopicevent').remove();
+                        },
+                        events: function (start, end, timezone, callback) {
+                            var date = new Date($('#calender').fullCalendar('getDate'));
+                            var month = date.getUTCMonth() + 1;
+                            var year = date.getUTCFullYear();
+                            if ($('#ddlClient').val() != "" && $('#ddlClient').val() != null && $('#ddlClient').val() != 'null' && $('#ddlClient').val() != NaN) {
+                                var ID = $('#ddlClient').val();
+                            }
+                            else {
+                                var ID = 0;
+                            }
+                            GetCalenderEvents(ID, month, year, callback);
+                        },
+                        selectable: true
+                    })
+                }
+
+            })
+
+
+
+        function GenerateCalender1() {
+            debugger;
+
+            var holidays = [];
+
+            function populateTimeShiftByClientId() {
+                if ($('#ddlClient').val() != "" || $('#ddlClient').val() != "null" || $('#ddlClient').val() != null || $('#ddlClient').val() != NaN) {
+                    var ID = $('#ddlClient').val();
+                }
+                else {
+                    var ID = 0;
+                }
+                $.ajax({
+                    url: "/Client/LoadTimeShiftByClientId",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    data: { clientId: ID },
+                    success: function (data) {
+                        $("#ddWorkTime").html(""); // clear before appending new list
+                        $("#ddWorkTime").append($('<option></option>').val("").html("--Select--"));
+                        $.each($.parseJSON(data), function (i, care) {
+
+                            $("#ddWorkTime").append($('<option></option>').val(care.TimeShiftId + '|' + care.WorkingHours + '|' + moment(care.StartTime).format('hh:mm A')).html(care.TimeShiftName));
+                        })
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Admin dashboard. Function: populateTimeShiftByClientId(). Page: AdminDashboard.cshtml');
+
+                    }
+                });
+            }
+
+            $.ajax({
+                url: "/Client/GetHolidays",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+
+                    $.each($.parseJSON(data), function (i, care) {
+                        var holidaydate = new Date(care.HolidayDate);
+                        holidaydate = new Date(holidaydate.getTime() + (holidaydate.getTimezoneOffset() * 60000));
+                        holidays.push({
+                            'dates': holidaydate
+                        });
+
+                    })
+
+                },
+                error: function (data) {
+
+                    logError(data.statusText + ' - Error occurred while loading Admin dashboard - Holidays. Function: "/Client/GetHolidays". Page: AdminDashboard.cshtml');
+
+                }
+            });
+            $.ajax({
+                url: "/Client/LoadCategory",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+
+                    $("#ddServiceType").html(""); // clear before appending new list
+                    $("#ddServiceType").append($('<option></option>').val("").html("--Select--"));
+                    $.each($.parseJSON(data), function (i, care) {
+                        $("#ddServiceType").append($('<option></option>').val(care.CategoryId).html(care.Name));
+                    })
+
+                    $("#ddServiceType").val(1);
+                    $('#ddServiceType').change();
+
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while loading Admin dashboard - Caregiver Category. Function: "/Client/LoadCategory". Page: AdminDashboard.cshtml');
+
+                }
+            });
+
+            $.ajax({
+                url: "/Client/LoadClient",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+
+                    $("#ddlClient").html(""); // clear before appending new list
+                    $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+                    $.each($.parseJSON(data), function (i, care) {
+                        $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+                    })
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while loading Admin dashboard - Clients. Function: "/Client/LoadClient". Page: AdminDashboard.cshtml');
+
+                }
+            });
+
+            var saveDate = new Date();
+
+
+            $('#calender').fullCalendar('destroy');
+            $('#calender').fullCalendar({
+
+                contentheight: 'auto',
+                //height: 650,
+                height: 'auto',
+                defaultDate: saveDate,
+                //timeFormat: 'hh(:mm)a',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,basicWeek,basicDay'
+                },
+                eventDrop: false,
+                dayClick: function (date, jsEvent, view) {
+                    $('#hdStartDate').val(date.format());
+                },
+
+                slotminutes: 15,
+                eventLimit: true,
+                views: {
+                    month: {
+                        eventLimit: 11
+                    },
+                    day: {
+                        eventLimit: 11
+                    },
+                    week: {
+                        eventLimit: 11
+                    }
+                },
+                displayEventTime: false,
+                timezone: 'utc',
+
+                dayRender: function (date, cell, $el) {
+                    var check = $.fullCalendar.formatDate(date, 'DD/MM/YYYY');
+                    var fullDate = new Date()
+                    var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
+                    var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+
+                    $.each(holidays, function (index, value) {
+                        var Month;
+                        var daterec;
+                        var montStr = value.dates.getMonth().toString();
+
+                        if (value.dates.getMonth() + 1 < 9) {
+                            Month = '0' + (value.dates.getMonth() + 1);
+                        }
+                        else {
+                            Month = (value.dates.getMonth() + 1);
+                        }
+
+                        if (value.dates.getDate() < 9) {
+                            daterec = '0' + (value.dates.getDate());
+                        }
+                        else {
+                            daterec = (value.dates.getDate());
+                        }
+
+                        var HolidayDate = daterec + "/" + Month + "/" + value.dates.getFullYear();
+                        if (HolidayDate == check) {
+                            cell.css("background-color", "yellow");
+                        }
+                    });
+                },
+                eventRender: function (calEvent, $el) {
+                },
+                eventMouseover: function (data, events, jsEvent, view) {
+                    $.each(events, function (index, value) {
+                        tooltip = '<div class="tooltiptopicevent" style="border-radius: 25px;border: 2px solid ;-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);box-shadow:7px 7px 5px 0px rgba(50, 50, 50, 0.75);width:auto;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + '<b>Client : </b>' + data.clientname + '</br>' + '<b>Caregiver : </b>' + data.caretakername + '</br>' + '<b>Category : </b>' + data.careTakerTypeName + '</br>' + '<b>Work Mode : </b>' + data.workmodename + '</br>' + '<b>Time Shift : </b>' + data.fromtime + ' ' + '<b> - </b>' + data.endtime + '</br>' + '<b>Description : </b>' + data.description + '</div>';
+                    });
+                    $("body").append(tooltip);
+                    $(this).mouseover(function (e) {
+                        $(this).css('z-index', 10000);
+                        $('.tooltiptopicevent').fadeIn('500');
+                        $('.tooltiptopicevent').fadeTo('10', 1.9);
+                    }).mousemove(function (e) {
+                        $('.tooltiptopicevent').css('top', e.pageY + 10);
+                        $('.tooltiptopicevent').css('left', e.pageX + 20);
+                    });
+
+                },
+                eventMouseout: function (data, jsEvent, view) {
+                    $(this).css('z-index', 8);
+
+                    $('.tooltiptopicevent').remove();
+                },
+                events: function (start, end, timezone, callback) {
+                    var date = new Date($('#calender').fullCalendar('getDate'));
+                    var month = date.getUTCMonth() + 1;
+                    var year = date.getUTCFullYear();
+                    if ($('#ddlClient').val() != "" && $('#ddlClient').val() != null && $('#ddlClient').val() != 'null' && $('#ddlClient').val() != NaN) {
+                        var ID = $('#ddlClient').val();
+                    }
+                    else {
+                        var ID = 0;
+                    }
+                    LoadClientByLocation(ID, month, year, callback);
+                },
+                selectable: true
+            })
+        }
+
+            function LoadClientByLocation1() {
+              GenerateCalender1();
+
+                DropdownLoadClientByLocation();
+                ReloadCaregiverTable();
+                ReloadNewBooking();
+            }
+
+          function SetDropdownValuesByRole() {
+
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+            if (role == 1) {
+                $('#ddlCountry1').val(@country);
+                return;
+            }
+            if (role == 2) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                return;
+            }
+            if (role == 3) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                $('#ddlCity1').val(@city);
+                return;
+        }
+        return;
+        }
+
+
+            function LoadClientByLocation(ID, month, year, callback) {
+                console.log("1");
+                //if (eventList != null && eventList.filter(x => x.year == year && x.month == month).length <= 0) {
+
+                    var data = { clientId: ID, month: month, year: year }
+                    var data2 = {
+                        clientId: ID, month: month, year: year, countryId: $('.ddlCountry1').val(), stateId: $('.ddlStates1').val(), cityId: $('.ddlCity1').val(), BranchId: $('.Branch1').val()
+                    }
+
+                    console.log(data2);
+                    showProgress();
+                    $.ajax({
+                        type: "POST",
+                        url: '/Client/LoadClientByLocation',
+                        data: data2,
+                        success: function (data) {
+                            events = [];
+                            $.each(data, function (i, v) {
+                                events.push({
+                                    eventID: v.Id,
+                                    title: v.CareTakerName + '  ' + v.CareTakerTypeName + '  ' + v.FromTime + ' - ' + v.EndTime,
+                                    description: v.Description,
+                                    start: (v.Start),
+                                    end: (v.Start),
+                                    endshow: v.End != null ? moment(v.End).subtract(1, "days") : null,
+                                    color: v.ThemeColor,
+                                    allDay: v.IsFullDay,
+                                    caretaker: v.CareTaker,
+                                    careTakerType: v.CareTakerType,
+                                    careTakerTypeName: v.CareTakerTypeName,
+                                    workmode: v.WorkMode,
+                                    workshifdetails: v.WorkShifDetails,
+                                    worktime: v.WorkTime,
+                                    customtiming: v.CustomTiming,
+                                    caretakername: v.CareTakerName,
+                                    workitimename: v.WorkTimeName,
+                                    workmodename: v.WorkModeName,
+                                    contactperson: v.ContactPerson,
+                                    workitimedetails: v.WorkTimeDetails,
+                                    clientname: v.ClientName,
+                                    fromtime: v.FromTime,
+                                    endtime: v.EndTime,
+                                    allDay: false
+                                });
+                            })
+                            eventList.push({ month, year, events });
+                            callback(events);
+                            spinnerVisible = true;
+                            hideProgress();
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while loading Client Events. Function: GenerateCalender- events. Page: ScheduledCalenderView.cshtml');
+                            //alert('Some network error has occurred. Please try again after some time.');
+                        }
+                    })
+                //}
+                //else {
+                //    console.log("3");
+                //    callback(eventList.filter(x => x.year == year && x.month == month)[0].events);
+                //}
+            }
+            function GetCalenderEvents(ID, month, year, callback) {
+                debugger;
+
+                if (eventList != null && eventList.filter(x => x.year == year && x.month == month).length <= 0) {
+                    var data = { clientId: ID, month: month, year: year }
+                    var data2 = {
+                        clientId: ID, month: month, year: year, countryId: $('.ddlCountry1').val(), stateId: $('.ddlStates1').val(), cityId: $('.ddlCity1').val()
+                    }
+                    showProgress();
+                    $.ajax({
+                        type: "POST",
+                        url: '/Client/GetEventsBySearchParams',
+                        data: data2,
+                        success: function (data) {
+                            events = [];
+                            $.each(data, function (i, v) {
+                                events.push({
+                                    eventID: v.Id,
+                                    title: v.CareTakerName + '  ' + v.CareTakerTypeName + '  ' + v.FromTime + ' - ' + v.EndTime,
+                                    description: v.Description,
+                                    start: (v.Start),
+                                    end: (v.Start),
+                                    endshow: v.End != null ? moment(v.End).subtract(1, "days") : null,
+                                    color: v.ThemeColor,
+                                    allDay: v.IsFullDay,
+                                    caretaker: v.CareTaker,
+                                    careTakerType: v.CareTakerType,
+                                    careTakerTypeName: v.CareTakerTypeName,
+                                    workmode: v.WorkMode,
+                                    workshifdetails: v.WorkShifDetails,
+                                    worktime: v.WorkTime,
+                                    customtiming: v.CustomTiming,
+                                    caretakername: v.CareTakerName,
+                                    workitimename: v.WorkTimeName,
+                                    workmodename: v.WorkModeName,
+                                    contactperson: v.ContactPerson,
+                                    workitimedetails: v.WorkTimeDetails,
+                                    clientname: v.ClientName,
+                                    fromtime: v.FromTime,
+                                    endtime: v.EndTime,
+                                    allDay: false
+                                });
+
+                            })
+
+                            eventList.push({ month, year, events });
+                            abcd.push(events[0]);
+                            abcd.push(events[1]);
+                            abcd.push(events[2]);
+                            abcd.push(events[3]);
+                            abcd.push(events[4]);
+                            console.log("events",abcd);
+                            callback(events);
+                            spinnerVisible = true;
+                            hideProgress();
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while loading Client Events. Function: GenerateCalender- events. Page: ScheduledCalenderView.cshtml');
+                            //alert('Some network error has occurred. Please try again after some time.');
+                        }
+                    })
+                }
+                else {
+                    callback(eventList.filter(x => x.year == year && x.month == month)[0].events);
+                }
+            }
+        function DropdownLoadClientByLocation() {
+            SetDropdownValuesByRole();
+            $.ajax({
+                url: "/Client/LoadClientByLocationInvoiceReport",
+                type: "POST",
+                data: {
+                    countryId: $('#ddlCountry1').val(),
+                    stateId: $('.ddlStates1').val(),
+                    cityId: $('.ddlCity1').val()
+                },
+                success: function (data) {
+                    $("#ddlClient").html(""); // clear before appending new list
+                    $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+                    $.each($.parseJSON(data), function (i, care) {
+                        $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+                    })
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while loading Clients. Function: "/Client/LoadClient". Page: AvailableCaretakerReport.cshtml');
+                    //alert('Some network error has occurres. Please try again after some time.');
+                }
+            });
+        }
+
+
+        function ReloadCaregiverTable() {
+            SetDropdownValuesByRole();
+            $.ajax({
+                url: "/Admin/CareTakerListByLocation",
+                type: "POST",
+                data: {
+                    countryId: $('#ddlCountry1').val(),
+                    stateId: $('.ddlStates1').val(),
+                    cityId: $('.ddlCity1').val()
+                },
+                success: function (data) {
+
+                    $("#CareTakerList").html(result);
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while loading Clients. Function: "/Client/LoadClient". Page: AvailableCaretakerReport.cshtml');
+                    //alert('Some network error has occurres. Please try again after some time.');
+                }
+            });
+        }
+
+        function ReloadNewBooking() {
+            SetDropdownValuesByRole();
+            debugger
+            $.ajax({
+                url: "/Admin/NewBookingByLocation",
+                type: "POST",
+                data: {
+                    countryId: $('#ddlCountry1').val(),
+                    stateId: $('.ddlStates1').val(),
+                    cityId: $('.ddlCity1').val()
+                },
+                success: function (data) {
+                    $("#BookingList").html(result);
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while loading Clients. Function: "/Client/LoadClient". Page: AvailableCaretakerReport.cshtml');
+                    //alert('Some network error has occurres. Please try again after some time.');
+                }
+            })
+
+        }
+
+
+        GetStates1($('#StateId1').val(), $('#CityId1').val());
+
+        $("#ddlCountry1").change(function () {
+            var stateId = $('#ddlCountry1').val();
+           
+
+            $.ajax({
+                url: '/Admin/LoadStatesByCountry?CountryId=' + stateId,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                   
+                    $("#ddlStates").html("");
+                    var ddlState = $("#ddlStates");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+                      
+                        ddlState.append($("<option></option>").val(value.StateId).html(value.Name));
+                    });
+
+                }
+            });
+        });
+
+        $("#ddlStates").change(function () {
+            var stateId = $('#ddlStates').val();
+            //alert(stateId);
+
+            $.ajax({
+                url: '/Admin/GetCity?state='+stateId,
+                type: "POST",
+               contentType: "application/json; charset=utf-8",
+               datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                    var ddlState = $("#ddlCity");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.CityId).html(value.CityName));
+                    });
+
+                }
+            });
+        });
+
+
+        $("#ddlCity").change(function () {
+            var cityId = $('#ddlCity').val();
+                var admindrp = @Html.Raw(Json.Encode(ViewData["Admin"]));
+
+            $.ajax({
+                url: '/Admin/GetBranch?city=' + cityId,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    var ddlState;
+                    if (admindrp == 1) {
+                        ddlState = $("#Branch1");
+                    }
+                    else {
+                        ddlState = $("#Branch2");
+                    }
+
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                    });
+
+                }
+            });
+        });
+
+        $("#ddlCity").change(function () {
+            var cityId = $('#ddlCity').val();
+            //alert(stateId);
+
+            $.ajax({
+                url: '/Admin/GetBranch?city=' + cityId,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                    var ddlState = $("#Branch1");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                    });
+
+                }
+            });
+        });
+
+    </script>
+    <style>
+        #calendar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+
+}
+
+

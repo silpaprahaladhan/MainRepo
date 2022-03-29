@@ -1,0 +1,106 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.CountryViewModel>
+
+<div class="table--no-card table-responsive">
+    <input type="hidden" id="hiddenCountryID" />
+    <table id="CountryList" class="table table-borderless table-striped table-earning padding-top-10">
+        <thead>
+            <tr>
+                <th>Country Code</th>
+                <th>Country</th>
+                <th>Phone Code</th>
+                <th>Currency</th>
+                <th>Symbol</th>
+                <th>Is Default</th>
+                <th style="width:80px">Action</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null)
+            {
+
+                foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td onclick="editCountryDetails(@item.CountryId,'@item.Code','@item.Name','@item.PhoneCode','@item.Currency','@item.CurrencySymbol','@item.Isdefault')">@item.Code</td>
+                        <td onclick="editCountryDetails(@item.CountryId,'@item.Code','@item.Name','@item.PhoneCode','@item.Currency','@item.CurrencySymbol','@item.Isdefault')">@item.Name</td>
+                        <td onclick="editCountryDetails(@item.CountryId,'@item.Code','@item.Name','@item.PhoneCode','@item.Currency','@item.CurrencySymbol','@item.Isdefault')">@item.PhoneCode</td>
+                        <td onclick="editCountryDetails(@item.CountryId,'@item.Code','@item.Name','@item.PhoneCode','@item.Currency','@item.CurrencySymbol','@item.Isdefault')">@item.Currency</td>
+                        <td onclick="editCountryDetails(@item.CountryId,'@item.Code','@item.Name','@item.PhoneCode','@item.Currency','@item.CurrencySymbol','@item.Isdefault')">@item.CurrencySymbol</td>
+                        <td onclick="editCountryDetails(@item.CountryId,'@item.Code','@item.Name','@item.PhoneCode','@item.Currency','@item.CurrencySymbol','@item.Isdefault')">@(item.Isdefault ? "Yes" : "No")</td>
+                        <td>
+                            @if (ViewBag.AllowEdit)
+                            {
+                                <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" onclick="editCountryDetails(@item.CountryId,'@item.Code','@item.Name','@item.PhoneCode','@item.Currency','@item.CurrencySymbol','@item.Isdefault')" data-target="#modal-default"><span class="fa fa-edit"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-primary" title="Modify" disabled><span class="fa fa-edit"></span></button>
+                                </div>
+                            }
+
+                            @if (ViewBag.AllowDelete)
+                            {
+                                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" data-target="#modal-delete" onclick="getID(@item.CountryId)"><span class="fa fa-minus-circle"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                                </div>
+                            }
+
+                        </td>
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="modal-delete" role="dialog">
+    
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Delete Country</h4>
+            </div>
+            <div class="modal-body">
+                Record will be deleted from the system. Are you sure you want to delete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteCountry()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function getID(countryId) {
+       
+        $('#hiddenCountryID').val(countryId)
+    }
+    function deleteCountry() {
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/DeleteCountry",
+            data: { countryId: $('#hiddenCountryID').val()},
+            success: function (data) {
+                alert(data);
+                location.reload();
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Deletingcountry. Function: deleteUser(). Page: Country.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+</script>
+

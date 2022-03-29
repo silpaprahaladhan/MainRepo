@@ -1,0 +1,45 @@
+﻿.article.media {
+    width: 100%;
+    border-bottom: 2px solid #E6E9ED;
+}
+
+.media .date {
+    background: #ccc;
+    width: 70px;
+    margin-right: 10px;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+    .media .date .day,
+    .media .date .month,
+    .media .date .time {
+        margin: 0;
+        text-align: center;
+        color: #fff;
+    }
+
+    .media .date .day {
+        font-size: 27px;
+        line-height: 27px;
+        font-weight: 700;
+    }
+
+    .media .date .time {
+        font-size: 12px;
+        line-height: 14px;
+        font-weight: 600;
+    }
+
+.btn-dashboard {
+    font-size: 11px !important;
+    font-style: normal !important;
+}
+
+.title {
+    color:black;
+    font-weight:bold;
+}
+.sub-title {
+    color: #73879C;
+}

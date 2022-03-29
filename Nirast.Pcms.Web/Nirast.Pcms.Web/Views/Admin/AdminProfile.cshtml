@@ -1,0 +1,452 @@
+﻿@model Nirast.Pcms.Web.Models.UsersDetails
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+
+    function cancel() {
+        window.location.reload();
+    }
+    function EditUser() {
+        $("#EditProfile").show();
+        $("#ViewProfile").hide();
+        $('#profilePicUpdate').removeClass('hidden');
+        // document.getElementById('lblBrowse').style.visibility = 'visible';
+        //data contains the details of the user
+        // now showing those details in the textbox
+    }
+    function CancelUpdate() {
+        $("#EditProfile").hide();
+        $("#ViewProfile").show();
+        //document.getElementById('lblBrowse').style.visibility = 'hidden';
+    }
+    function EditCard() {
+        $("#EditCard").show();
+        $("#ViewCard").hide();
+    }
+
+    function CancelCard() {
+        $("#EditCard").hide();
+        $("#ViewCard").show();
+    }
+
+    function removeImage() {
+        $('#imgUser').attr('src', "data:image;base64,@System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg")))");
+        $('#ProfilePicByte').val($('#imgUser').attr('src').split(',')[1]);
+    }
+
+    function readUserImage(input) {
+        var ext = $("#file").val().split('.').pop();
+        var size = parseFloat($("#file")[0].files[0].size / 1024).toFixed(2);
+        if (ext == "jpg" || ext == "png" || ext == "JPG" || ext == "PNG") {
+
+            if (size > 100) {
+                alert("Image size should be maximum 100KB!")
+                return;
+            }
+            else {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imgUser')
+                            .attr('src', e.target.result);
+                        //.width(150)
+                        //.height(200);
+                        $('#ProfilePicByte').val(e.target.result.split(',')[1]);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        }
+        else {
+            alert("You have uploaded an invalid image file type")
+        }
+
+    }
+    function EditClick() {
+
+        $('#ViewProfile').hide();
+        $('#EditProfile').show();
+
+    }
+    $(document).ready(function () {
+        $('#EditProfile').hide();
+        $("input[name='btnUpdateCard']").on("click", function () {
+
+            if (document.getElementById("invalidCardNumber").textContent == "invalid card number") {
+                return false;
+            }
+        });
+
+    });
+</script>
+<div class="container">
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="row profile-details">
+                    @{
+                        if (ViewBag.Error != null)
+                        {
+                            <div><p class="alert alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+                        }
+                        else
+                        {
+                            <div class="equal-height-panels">
+
+                                <div class="col-lg-12 col-md-12 col-sm-12" id="ViewProfile">
+                                    @if (TempData["Userupdate"] != null)
+                                    {
+                                        <p class="alert alert-success statusmessage" id="successMessage">@TempData["Userupdate"]</p>
+                                    }
+                                    <div>
+                                        <button class="btn btn-primary float-right editButton" title="Edit" onclick="EditClick()">Edit</button>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4>Admin Profile</h4>
+                                            </div>
+                                            <div class="panel-body" style="padding:7px;">
+
+                                                <div class="col-lg-9 col-md-9 col-sm-9">
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                @Html.HiddenFor(model => model.UserRegnId)
+                                                                <label class=" label-style">First Name <span></span></label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.FirstName</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="label-style">Last Name</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.LastName</label>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="label-style">Country</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.Country</label>
+
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="label-style">@Resource.State</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.State</label>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="label-style">City</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.City</label>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="label-style">Location</label>
+                                                                <label class="col-md-6 form-control labelStyle">@(Model.Location == null || Model.Location == string.Empty ? "NA" : Model.Location)</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+
+                                                            <div class="form-group">
+                                                                <label class="label-style">@Resource.StreetName</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.HouseName</label>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class=" label-style">@Resource.ZIPCode</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.ZipCode</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class=" label-style">Phone #1</label>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.PrimaryPhoneNo</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class=" label-style">Phone #2</label>
+                                                            
+                                                                <label class="col-md-6 form-control labelStyle">@Model.SecondaryPhoneNo</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="label-style">Email</label><span class="mandatoryField">*</span>
+                                                                <label class="col-md-6 form-control labelStyle">@Model.EmailAddress</label>
+                                                                @Html.HiddenFor(model => model.EmailAddress)
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                    <div class="newsright profile-pic image_size">
+                                                        @Html.HiddenFor(model => model.UserRegnId)
+                                                        @if (Model != null)
+                                                        {
+                                                            if (Model.ProfilePicPath != null)
+                                                            {
+                                                                <img src="@Model.ProfilePicPath" class="image-style image_height imgUser" style="min-height:188px;" />
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <img name="ProfilePic" src="~/images/NOImage.jpg" class="image-style image_height imgUser" style="min-height:188px;" />
+                                                            }
+                                                        }
+                                                        <div class="p-b-10 clearfix">
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="equal-height-panels" id="EditProfile">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div>
+                                        @using (Html.BeginForm("UpdateAdminProfile", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                        {
+                                            if (TempData["Userupdate"] != null)
+                                            {
+                                                <p class="alert alert-success statusmessage" id="successMessage">@TempData["Userupdate"]</p>
+                                            }
+                                            @Html.HiddenFor(model => model.ProfilePicByte)
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4>Admin Profile</h4>
+                                                </div>
+                                                <div class="panel-body" style="padding:7px;">
+
+                                                    <div class="col-lg-9 col-md-9 col-sm-9">
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                @Html.HiddenFor(model => model.UserRegnId)
+                                                                @*@Html.HiddenFor(model => model.ProfilePic)*@
+                                                                <label class=" label-style">First Name <span></span></label><span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.FirstName, "", new { @class = "form-control labelStyle  ", @Placeholder = "FirstName" })
+                                                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Last Name</label><span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.LastName, "", new { @class = "form-control labelStyle", @Placeholder = "LastName " })
+                                                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">Country</label><span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.Country, "Value", "Text"), "--Select--", new {@id= "ddlCountry", @class = "form-control labelStyle", @onchange = "GetStates()" })
+                                                                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">@Resource.State</label><span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.StateId, new SelectList(ViewBag.Name, "Value", "Text"), "--Select--", new { @id = "ddlStates", @class = "form-control labelStyle", @onchange = "GetCities()" })
+                                                                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">City</label><span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.CityId, new SelectList(ViewBag.City, "Value", "Text"), "--Select--", new { @id= "ddlCity",@class = "form-control labelStyle" })
+                                                                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">Location</label>
+                                                                @Html.TextBoxFor(model => model.Location, new { @class = "form-control labelStyle", @Placeholder = "Location" })
+                                                                @Html.ValidationMessageFor(model => model.Location, "", new { @class = " no-padding required" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">@Resource.StreetName</label><span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.HouseName, new { @class = "form-control labelStyle", @Placeholder = @Resource.StreetName })
+                                                                @Html.ValidationMessageFor(model => model.HouseName, "", new { @class = " no-padding required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style">@Resource.ZIPCode</label>
+                                                                @Html.TextBoxFor(model => model.ZipCode, "", new { @class = "form-control labelStyle", @Placeholder = @Resource.ZIPCode })
+                                                                @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style">Phone #1</label>
+                                                                @Html.TextBoxFor(model => model.PrimaryPhoneNo, "", new { @class = "form-control labelStyle", @Placeholder = "Phone #1" })
+                                                                @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style">Phone #2</label>
+                                                                @Html.TextBoxFor(model => model.SecondaryPhoneNo, "", new { @class = "form-control labelStyle", @Placeholder = "Phone #2" })
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Email</label><span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.EmailAddress, "", new { @class = "form-control labelStyle", @Placeholder = "Email" })
+                                                                @Html.HiddenFor(model => model.EmailAddress)
+                                                                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                        <div class="newsright profile-pic image_size">
+                                                            @Html.HiddenFor(model => model.UserRegnId)
+
+                                                            @Html.HiddenFor(model => model.ProfilePicPath)
+
+                                                            @if (Model != null)
+                                                            {
+                                                                if (Model.ProfilePicPath != null)
+                                                                {
+                                                                    <img id="imgUser" src="@Model.ProfilePicPath" class="image-style image_height " style="min-height:188px;"/>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    <img id="imgUser" src="~/images/NOImage.jpg" class="image-style image_height " />
+                                                                }
+                                                            }
+                                                            <div class="p-b-10 clearfix">
+
+                                                            </div>
+                                                      
+                                                        </div>
+                                                        <div class="newsright outer-border" style="width: 200px;">
+                                                            <div style="text-align:center">
+                                                                <label class="btn-bs-file btn btn-sm btn-warning btn-profilepic">
+                                                                    Change
+                                                                    <input type="file" hidden="" accept="image/png,image/jpg,image/jpeg" onchange="readUserImage(this);" name="file" id="file" />
+                                                                </label>
+                                                                <label class="btn btn-sm btn-warning btn-profilepic" onclick="removeImage();">
+                                                                    Remove
+                                                                </label>
+                                                                <label class="btn-bs-file btn btn-sm btn-warning profile-button hidden" id="lblBrowse">
+                                                                    Browse
+                                                                    <input type="file" onchange="readUserImage(this);" name="file" id="file" />
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 no-padding text-center">
+                                                        <input type="submit" class="btn btn-primary" value="update" name="update">
+                                                        <input type="button" class="btn btn-primary " onclick="cancel()" value="cancel" name="Cancel" style="margin-left:10px;">
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <style>
+                .editButton {
+                    margin: 5px 10px;
+                }
+
+                .btn-bs-file {
+                    position: relative;
+                }
+
+                    .btn-bs-file input[type="file"] {
+                        position: absolute;
+                        top: -9999999;
+                        filter: alpha(opacity=0);
+                        opacity: 0;
+                        width: 0;
+                        height: 0;
+                        outline: none;
+                        cursor: inherit;
+                    }
+
+                .register {
+                    color: lightslategrey;
+                }
+
+                .box-body {
+                    padding: 10px;
+                }
+
+                @@media (min-width: 200px) {
+                    .userProfile-style {
+                        width: 50%;
+                    }
+                }
+
+                @@media (max-width: 340px) {
+                    .updateButton {
+                        float: unset;
+                        margin-bottom: 12px;
+                    }
+                }
+            </style>
+
+        </div>
+    </div>
+</div>
+
+

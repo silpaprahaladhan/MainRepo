@@ -1,0 +1,114 @@
+﻿@model List<Nirast.Pcms.Web.Models.LoggedInUser>
+
+@using (Html.BeginForm("Search", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+   
+
+
+<div class="new_arrivals">
+    <div id="services" class="container">
+        <h3><span>Personal </span>Logins</h3>
+        <div class="contentAlign">
+            <p>
+                Tranquil Care is here to help you, ensuring that every individual irrespective of their physical, social or psychological condition have the right to be treated with dignity and respect and to be supported to maintain choice and control over their own lives.
+                It’s our privilege to create care and support programme for each individual and their family to meet their specific wishes, goals and aspirations through our multi-disciplinary approach in all stages of Life.
+            </p>
+        </div>
+        @{var i = 1;
+            var count = 1;
+        }
+        @if (Model != null)
+        {
+            foreach (var service in Model)
+            {
+                if (i == 1)
+                {
+                    @Html.Raw("<div class='new_grids'>");
+                }
+
+    <div class="col-lg-4 product-men no-pad-men">
+        <div class="men-thumb-item">
+
+            <div class="men-cart-pro">
+                @*<div class="inner-men-cart-pro">
+                    @Html.ActionLink("Find People", "Search", "Home", new { serviceId = service.ServiceId }, htmlAttributes: new { serviceId = service.ServiceId, @class = "link-product-add-cart" })
+                </div>*@
+            </div>
+
+        </div>
+        <div class="item-info-product ">
+            <h4 style="cursor:pointer;word-break:break-all"><a>@service.EmailAddress</a></h4>
+
+        </div>
+        <div class="item-info-product ">
+            <h4 style="cursor:pointer;word-break:break-all"><a>@service.countryname</a></h4>
+
+        </div>
+
+        <div class="item-info-product">
+            
+                @Html.ActionLink("Login", "LogindoubleEmail", "Home", new { serviceId = service.EmployeeNumber }, htmlAttributes: new { serviceId = service.EmployeeNumber, @class = "link-product-add-cart",@style= "width: 100px;" })
+            
+        </div>
+
+    </div>
+              
+                if (i == 3 || Model.Count == count)
+                {
+                    @Html.Raw("<div class='clearfix'></div></div> ");
+                    i = 0;
+                }
+                i = i + 1;
+                count = count + 1;
+
+            }
+        }
+
+    </div>
+</div>
+
+<!-- //content -->
+<!-- content-bottom -->
+<hr />
+
+<!-- //content-bottom -->
+}
+
+<script type="text/javascript" src="~/js/pignose.layerslider.js"></script>
+<script type="text/javascript">
+    //<![CDATA[
+    $(window).load(function () {
+        $('#visual').pignoseLayerSlider({
+            play: '.btn-play',
+            pause: '.btn-pause',
+            next: '.btn-next',
+            prev: '.btn-prev'
+        });
+    });
+    //]]>
+
+    $(document).ready(function ($) {
+        //for scrolling from other page
+        if ($(window.location.hash).length) {
+            $('html,body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            }, 1000);
+            window.location.hash = '';
+        }
+
+        $('.men-pro-item').hover(
+            function () {
+                $(this).animate({
+                    marginTop: "-=1%"
+                }, 200);
+            },
+            function () {
+                $(this).animate({
+                    marginTop: "0%"
+                }, 200);
+            }
+        );
+    });
+
+
+</script>

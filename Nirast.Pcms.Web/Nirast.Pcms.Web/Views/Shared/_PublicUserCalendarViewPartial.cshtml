@@ -1,0 +1,61 @@
+﻿
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+<style>
+    textarea {
+        resize: none;
+    }
+</style>
+
+@{
+    if (ViewBag.Error != null)
+    {
+        <div class="padT25"><p class="alert custom-alert-danger col-md-6 col-md-offset-3">@ViewBag.Error</p></div>
+    }
+    else
+    {
+
+        <div class="x_panel">
+
+            <div class="x_title">
+              
+
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                @*<ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <select id="ddlClient" class="form-control"></select>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            Client:
+                        </li>
+                    </ul>*@
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+
+                <div id="calender"></div>
+                <div class="clearfix "></div>
+            </div>
+        </div>
+
+        <style>
+            #calendar-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+        </style>
+
+
+
+    }
+}

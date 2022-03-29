@@ -1,0 +1,87 @@
+﻿@model List<Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel>
+
+<table class="table table-striped padding-top-10 table-earning" id="caretakerList">
+    <thead>
+
+        <tr class="non-filter-header">
+            <th>Profile ID</th>
+            <th>Name</th>
+            <th>Email ID</th>
+            <th>Phone #1</th>
+            <th>Category</th>
+            <th>Login Status</th>
+            <th>Email Verification</th>
+
+            <th class="text-right">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                var verified = @item.UserVerified == true ? "Verified" : "Pending";
+                var status = @item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.Active ? "Active" : "Disabled";
+                <tr>
+                    <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.CaretakerProfileId</td>
+                    <td style="width:20%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.CareTakerFullName</td>
+                    <td style="width:20%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.EmailAddress</td>
+                    <td style="width:15%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.PrimaryPhoneNo</td>
+                    <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@item.CategoryName</td>
+
+                    <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@status</td>
+                    <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId}))'">@verified</td>
+                    <td class="text-right">
+                        @if (ViewBag.AllowEdit)
+                        {
+                            <a class="btn btn-xs btn-primary" title="View" href="@Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId })"><span class="fa fa-eye"></span></a>
+                            <button href="#" class="btn btn-xs theme-button fa fa-key" title="Reset password" onclick="showBookingDetails('@item.UserId')"></button>
+                            if (item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.Active)
+                            {
+                                <button class="btn btn-xs btn-warning" title="Active" onclick="changeStatus('@item.UserId','2')"><span class="fa fa-toggle-on"></span></button>
+                            }
+                            else if (item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.InActive)
+                            {
+                                <button class="btn btn-xs btn-warning" title="InActive" onclick="changeStatus('@item.UserId','1')"><span class="fa fa-toggle-off"></span></button>
+                            }
+                        }
+                        else
+                        {
+                            <div class="wrapper">
+                                <a class="btn btn-xs btn-primary" title="Modify" disabled><span class="fa fa-edit"></span></a>
+                                @if (item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.Active)
+                                {
+                                    <button class="btn btn-xs btn-warning" title="Active" disabled><span class="fa fa-toggle-on"></span></button>
+                                }
+                                else if (item.UserStatus == Nirast.Pcms.Web.Models.Enums.UserStatus.InActive)
+                                {
+                                    <button class="btn btn-xs btn-warning" title="InActive" disabled"><span class="fa fa-toggle-off"></span></button>
+                                }
+                            </div>
+                        }
+
+                        @if (ViewBag.AllowDelete)
+                        {
+                            <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" onclick="setCaretakerId('@item.UserId')" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                        }
+                        else
+                        {
+                            <div class="wrapper">
+                                <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                            </div>
+                        }@if (item.UserVerified == true)
+                        {
+
+                            <button class="btn btn-xs btn btn-success" title="VerifyEmail" onclick="verifyEmail('@item.UserId')" disabled="disabled"><span class="fa fa-check"></span></button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-xs btn btn-success" title="VerifyEmail" onclick="verifyEmail('@item.UserId')"><span class="fa fa-check"></span></button>
+
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

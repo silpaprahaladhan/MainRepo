@@ -1,0 +1,136 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.LoginLogs>
+@using Nirast.Pcms.Web.Models
+@{
+    ViewBag.Title = "LoginLogDetails";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+    <head>
+        @*<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>*@
+        <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+        @Styles.Render("~/css/CustomStyles.css")
+
+    </head>
+@*@using (Html.BeginForm("ManageOfficeStaff", "Admin", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+    {*@
+
+<div class="container animsition">
+    <script src="~/js/easyResponsiveTabs.js" type="text/javascript"></script>
+    @if (ViewBag.Error != null)
+    {
+        <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+    }
+    else
+    {
+        @*if (TempData["Success"] != null)
+            {
+            <p class="alert alert-success statusmessage">@TempData["Success"].ToString()</p>
+            }*@
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Login AuditLog Details</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.Label("UserType", new { @class = "control-label label-style marginTopStyle" })
+                                @Html.DropDownList("ddlUserTypeId", ViewBag.listUserType as SelectList, new { @class = " form-control labelStyle" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                </div>
+            </div>
+            <div class="equal-height-panels">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <input type="hidden" id="hdnCTId" />
+                    <div class=" filterable table-responsive">
+                        <table class="table table-striped padding-top-10 table-earning" id="userList">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>DateTime</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+
+                                            <td>@item.FullName </td>
+                                            <td>@item.LoginDate</td>
+                                        </tr>
+
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+<div id="spinner">
+
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        debugger;
+        $('#userList').DataTable({
+            "pagingType": "full_numbers",
+            'order': [[1, 'desc']],
+            'paging': true,
+            columnDefs: [
+                { type: 'date-uk', targets: 1 }
+            ]
+        });
+         $('#ddlUserTypeId').val(@ViewBag.selectedUserType);
+        
+    });
+    $("#ddlUserTypeId").change(function () {
+        LoadDetails($('#ddlUserTypeId').val());
+    });
+    function LoadDetails(id) {
+        debugger;
+       
+       
+        //$.ajax({
+        //    type: "POST",
+        //    url: '/Admin/LoginLogDetails/',
+        //    data: {
+        //        id: id
+        //    },
+           
+        //    success: function (data) {
+        //         //spinnerVisible = true;
+        //         //       hideProgress();
+        //         //       $("#userList").html('');
+        //         //       $("#userList").html(data);
+        //         window.location = "/Admin/LoginLogDetails/" + id;
+                 
+              
+             
+        //    },
+        //    error: function (data) {
+        //        logError(data.statusText + ' - Error occurred while loading Client Events. Function: GenerateCalender- events. Page: ScheduledCalenderView.cshtml');
+        //        //alert('Some network error has occurred. Please try again after some time.');
+        //    }
+        //})
+        window.location = "/Admin/LoginLogDetails/" + id;
+       
+    }
+
+
+
+</script>
+

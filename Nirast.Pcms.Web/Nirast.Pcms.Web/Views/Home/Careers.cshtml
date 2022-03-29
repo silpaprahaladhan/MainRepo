@@ -1,0 +1,164 @@
+﻿
+@{
+	ViewBag.Title = "Careers";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+	$(document).ready(function ($) {
+		//for scrolling from other page
+		if ($(window.location.hash).length) {
+			$('html,body').animate({
+				scrollTop: $(window.location.hash).offset().top
+			});
+			window.location.hash = '';
+		}
+		$('li').removeClass('menu__item--current');
+		$('#liCareers').addClass('menu__item--current');
+
+		$('ul.nav').find('a').click(function () {
+			var $href = $(this).attr('href');
+			var li = $(this).parent('li');
+			$('li').removeClass('menu__item--current');
+			$(li).addClass('menu__item--current');
+			$('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+			var $anchor = $($href).offset();
+			$('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+			return false;
+		});
+	});
+
+
+</script>
+<style type="text/css">
+    .panel {
+        min-height: 230px;
+    }
+
+    .buttonStyle {
+        color: #fff;
+        background: #1c6db3;
+        border: none;
+        text-transform: uppercase;
+        padding-bottom: 20px;
+    }
+    .panel-job {
+        min-height: unset;
+        margin-top:10px;
+        margin-bottom:unset;
+    }
+    .newCaretaker {
+        text-align: center;
+        margin-top:10px;
+    }
+    .panel-body {
+        text-align: justify;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="sign-gd-two">
+             
+                <h4 style="padding-top:30px;padding-bottom:10px;">Tranquil Care Inc.</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9 panel-body">
+            We are a 100% Canadian owned equal opportunity service providers and is committed to a policy of treating all Service Users, Independent Contractors and job applicants equally. It is very important for us to ensure a safe working environment for our staff in compliance
+            with all legal requirements under the WCB / WSIB and the Occupational Health and Safety Act (Provincial) and the regulations that apply to workplace.
+
+        </div>
+        <div class="col-md-3">
+            <img src="~/images/CareerPage.jpg" alt="">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-success panel-job">
+                <div class="panel-heading">
+                    <h3 class="panel-title">New Caregiver</h3> 
+                </div>
+                <div class="panel-body" style="text-align:center;">
+                    <span>
+                        @*Tranquil care Inc is a much sought after agency by the leading care homes throughout Greater Toronto and nearby areas. We have Registered Nurses, Registered Practical Nurses, Rehab Support Workers, Certified Personal Support Workers, Attendants and housekeeping staffs 7 days per week.*@
+                   If you are looking for a challenging career, then Tranquil Care would be a better place to start with.
+                    Go ahead registering with us by clicking on the below button.
+                    </span>
+                    @using (Html.BeginForm("CaretakerRegistration", "CareTaker", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                    {
+                        <div class="newCaretaker" style="">
+                            <button class="btn btn-sm buttonStyle" >New Caregiver Registration</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Career Opportunities</h3>
+                </div>
+                <div class="panel-body"><span>Tranquil Care Inc. is a much sought after agency by the leading care homes throughout Greater Toronto and nearby areas. We have Registered Nurses, Registered Practical Nurses, Rehab Support Workers, Certified Personal Support Workers, Attendants and housekeeping staffs 7 days per week.</span></div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Flexible </h3>
+                </div>
+                <div class="panel-body"><span>Whether you are looking for full-time or part-time work, or you just want to supplement your income on evenings or weekends; with attractive pay cheques Tranquil Care International could provide the employment solution for you. </span></div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">We Work For You </h3>
+                </div>
+                <div class="panel-body"><span>Let&#39;s work as a perfect team. Our tailor-made agency software allows us to allocate work to you based on your availability. This makes us fast, efficient and flexible. You state the hours you would like to work on a weekly or monthly basis and our allocations staff work for you, matching up your availability with suitable placements. </span></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Experienced </h3>
+                </div>
+                <div class="panel-body"><span>Tranquil Care build up a reputation for professional service with personal commitment. Our experience is paramount to ensuring clients all over the country to choose Tranquil Care . This means that there is no shortage of work for our team of care and nursing staff. </span></div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Job Application </h3>
+                </div>
+                <div class="panel-body">
+                    <span>Looking ahead for an exciting and highly rewarding career with Tranquil Care.Please forward your resume to <a href="mailto:careers@tranquilcare.ca">careers@tranquilcare.ca</a> or Fax to 416 960 1042 </span>
+                    @*<center><b>OR</b></center>
+
+                        <center>
+                          Click above button to Register
+
+                        </center>*@
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">What we look for in a Home Care Assistant </h3>
+                </div>
+                <div class="panel-body"><span>Tranquil Care support workers are special people. Not everyone is cut out to be a support worker and our care recipients expect the best quality service. So how do you know you&#39;re a potential Tranquil Care support worker ? Please Check by sending your resume to us. </span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

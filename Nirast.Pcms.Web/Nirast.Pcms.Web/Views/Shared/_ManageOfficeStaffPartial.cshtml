@@ -1,0 +1,87 @@
+﻿@model List<Nirast.Pcms.Web.Models.OfficeStaffRegistration>
+@using Nirast.Pcms.Web.Models
+<table class="table table-striped padding-top-10 table-earning" id="OfficeStaffManagement">
+    <thead>
+        <tr>
+            <th>Staff Name</th>
+            <th>Designation</th>
+            <th>Contact Number</th>
+            <th>Country</th>
+            <th>@Resource.State</th>
+            <th>City</th>
+            <th>Login Status</th>
+            <th>Email Verification</th>
+
+            <th class="text-right">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                var verified = @item.UserVerified == true ? "Verified" : "Pending";
+                var status = @item.UserStatus == Enums.UserStatus.Active ? "Active" : "Disabled";
+                <tr>
+
+                    <td style="width:20%" onclick="location.href ='@(Url.Action("ViewOfficeStaffProfile", "Admin", new {id=item.UserRegnId }))'">@item.FirstName</td>
+                    <td style="width:20%" onclick="location.href ='@(Url.Action("ViewOfficeStaffProfile", "Admin", new {id=item.UserRegnId }))'">@item.Designation</td>
+                    <td style="width:15%" onclick="location.href ='@(Url.Action("ViewOfficeStaffProfile", "Admin", new {id=item.UserRegnId }))'">@item.PrimaryPhoneNo</td>
+                    <td style="width:15%" onclick="location.href ='@(Url.Action("ViewOfficeStaffProfile", "Admin", new {id=item.UserRegnId }))'">@item.Country</td>
+                    <td style="width:20%" onclick="location.href ='@(Url.Action("ViewOfficeStaffProfile", "Admin", new {id=item.UserRegnId }))'">@item.State</td>
+                    <td style="width:20%" onclick="location.href ='@(Url.Action("ViewOfficeStaffProfile", "Admin", new {id=item.UserRegnId }))'">@item.City</td>
+                    <td style="width:20%" onclick="location.href ='@(Url.Action("ViewOfficeStaffProfile", "Admin", new {id=item.UserRegnId }))'">@status</td>
+                    <td style="width:20%" onclick="location.href ='@(Url.Action("ViewOfficeStaffProfile", "Admin", new {id=item.UserRegnId }))'">@verified</td>
+
+                    <td class="text-right">
+                        @if (ViewBag.AllowEdit)
+                        {
+                            <button class="btn btn-xs btn-primary" title="View" data-toggle="modal" data-target="#modal-default" onclick="window.location='@Url.Action("ViewOfficeStaffProfile", "Admin",new { id=item.UserRegnId})'"><span class="fa fa-eye"></span></button>
+                            <button href="#" class="btn btn-xs theme-button fa fa-key" title="Reset password" onclick="showBookingDetails('@item.UserRegnId')"></button>
+                            if (item.UserStatus == Enums.UserStatus.Active)
+                            {
+                                <button class="btn btn-xs btn-warning" title="Make Inactive" onclick="changeStatus(@item.UserRegnId,@((int)Enums.UserStatus.InActive))"><span class="fa fa-toggle-on"></span></button>
+                            }
+                            else if (item.UserStatus == Enums.UserStatus.InActive)
+                            {
+                                <button class="btn btn-xs btn-warning" title="Make Active" onclick="changeStatus(@item.UserRegnId,@((int)Enums.UserStatus.Active))"><span class="fa fa-toggle-off"></span></button>
+                            }
+                        }
+
+                        else
+                        {
+                            <div class="wrapper">
+                                <button class="btn btn-xs btn-primary" title="View" disabled><span class="fa fa-eye"></span></button>
+                                @{
+                                    if (item.UserStatus == Enums.UserStatus.Active)
+                                    {
+                                        <button class="btn btn-xs btn-warning" title="Make Inactive" disabled><span class="fa fa-toggle-on"></span></button>
+                                    }
+                                    else if (item.UserStatus == Enums.UserStatus.InActive)
+                                    {
+                                        <button class="btn btn-xs btn-warning" title="Make Active" disabled><span class="fa fa-toggle-off"></span></button>
+                                    }
+                                }
+                            </div>
+                        }
+
+                        @if (ViewBag.AllowDelete)
+                        {
+                            <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" data-target="#modal-delete" onclick="setOfficeStaffId('@item.UserRegnId')">
+                                <span class="fa fa-minus-circle"></span>
+                            </button>
+                        }
+                        else
+                        {
+                            <div class="wrapper">
+                                <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                            </div>
+                        }
+
+
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

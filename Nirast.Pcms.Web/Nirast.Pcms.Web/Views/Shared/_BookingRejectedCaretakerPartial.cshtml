@@ -1,0 +1,42 @@
+﻿@using Nirast.Pcms.Web.Models
+@model IEnumerable<Nirast.Pcms.Web.Models.BookingHistory>
+<table id="tblBookingHistory" class="table table-borderless table-striped table-earning padding-top-10">
+    <thead>
+        <tr>
+            <th>Rejected Date</th>
+            <th>Booking Date</th>
+            <th>User</th>
+            <th>Location</th>
+            <th>Caregiver</th>
+            <th>Location</th>
+            <th>Service</th>
+            <th>Paying Rate</th>
+            @*<th>Status</th>*@
+            <th>Action</th>
+            @*
+        <th class="text-right">Amount</th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+        <tr onclick="showBookingDetails('@item.BookingId')">
+            <td>@item.StatusModifiedDate.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString())</td>
+            <td>@item.BookingDate.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString())</td>
+            <td>@item.BookedUser</td>
+            <td>@item.UserLocation</td>
+            <td>@item.Caretaker</td>
+            <td>@item.CaretakerLocation</td>
+            <td>@item.ServiceName</td>
+            <td>@item.CurrencySymbol @item.ServiceRate /hr</td>
+            @*<td>@((Enums.BookingStatus)item.BookingStatus) </td>*@
+            <td><button href="#" class="btn btn-primary" onclick="showBookingDetails('@item.BookingId')" title="View"><span class="fa fa-eye"></span></button></td>
+
+        </tr>
+            }
+
+        }
+    </tbody>
+</table>

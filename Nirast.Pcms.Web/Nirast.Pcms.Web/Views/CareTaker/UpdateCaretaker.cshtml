@@ -1,0 +1,1123 @@
+﻿@model Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="clearfix"> </div>
+
+<script>
+    $(function () {
+        $('#txtFromDate').datepicker({
+            maxDate: 0, changeMonth: true,
+            changeYear: true,
+        });
+        $('#txtToDate').datepicker({
+            maxDate: 0, changeMonth: true,
+            changeYear: true,
+        });
+    });
+
+    function readCaretakerImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgCaretaker')
+                    .attr('src', e.target.result);
+                    //.width(150)
+                    //.height(200);
+                $('#ProfilePicByte').val(e.target.result.split(',')[1]);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    var changeDateFormat = function (dateToConvert) {
+        var date = new Date(Number(dateToConvert.match(/\d+/)[0]));
+        var day = date.getDate();
+        day = day = (day < 10) ? ("0" + day) : day;
+        var month = date.getMonth() + 1;
+        month = (month < 10) ? ("0" + month) : month;
+        var dateStr = month + "-" + day + "-" + date.getFullYear();
+        return dateStr;
+    }
+    $(document).ready(function () {
+
+
+        //////////////// Start Dynamic Organisation //////////////////////////////       
+
+        $('#btnSaveOrganisation').click(function () {
+            if ($('#txtOrganisation').val() != '') {
+
+                $.ajax({
+                    url: "../CareTaker/AddExperienceDetails",
+                    type: "POST",
+                    data: { dateFrom: $('#txtFromDate').val(), dateTo: $('#txtToDate').val(), company: $('#txtOrganisation').val() },
+                    success: function (data) {
+                        var strOrg = "";
+                        console.log(data);
+                        $('#organisationContent').html('');
+                        for (var i = 0; i < data.length; i++) {
+                            
+                            var fromDate = changeDateFormat(data[i].DateFrom);
+                            var toDate = changeDateFormat(data[i].DateTo);
+                            var company = "'" + data[i].Company + "'";
+                            console.log(company);
+                            strOrg = strOrg + "<tr>" + "<td class='col-md-5'>" + data[i].Company + "</td>" + "<td class='col-md-3'>" + fromDate + "</td>" + "<td class='col-md-3'>" + toDate + "</td>" + "<td class='col-md-1'>" + "<button class='btn btn-danger float-right' onclick = RemoveExperience(" + company + "); title='Delete' ><span class='fa fa-close'></span></button>" + "</td>" + "</tr>";
+                        }
+                        $('#organisationContent').html(strOrg);
+
+                        $('#tblOrganisations').show();
+                        $('#txtOrganisation').val('');
+                        $('#txtFromDate').val('');
+                        $('#txtToDate').val('');
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while adding Caregiver Experience details. Function: $("#btnSaveOrganisation").click(function ()). Page: UpdateCaretaker.cshtml');
+                        //alert("Some network error has occurred. Please try again after some time.");
+                    }
+                });
+
+            }
+        });
+
+
+        if ($("#tblOrganisations td").closest("tr").length > 0) {
+            $('#tblOrganisations').show();
+        }
+        else {
+            $('#tblOrganisations').hide();
+        }
+
+
+        //////////////// End of Dynamic Organisation //////////////////////////////
+
+
+        //////////////// Start Dynamic Qualification ///////////////////////////////
+
+        $('#btnSaveQualification').click(function () {
+            if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() != '--Select--') {
+                $.ajax({
+                    url: "../CareTaker/AddQualificationDetails",
+                    type: "POST",
+                    data: { qualificationId: $('#ddlQualification').val(), qualification: $('#ddlQualification option:selected').text() },
+                    //, qualificationDate: null, university: null
+                    success: function (data) {
+                        if (data.length > 0) {
+                            var strQual = "";
+                            $('#qualificationContent').html('');
+                            for (var i = 0; i < data.length; i++) {
+                                strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].Qualification + "</td>" + "<td>" + "<button class='btn btn-danger float-right' onclick = " + "RemoveQualification(" + data[i].QualificationId + ")" + " title='Delete' ><span class='fa fa-close'></span></button>" + "</td>" + "</tr>";
+                            }
+                            $('#qualificationContent').html(strQual);
+                            //$('#qualificationContent').append("<tr>" + "<td class='col-md-11'>" + data[i].Qualification + "</td>" + "<td>" + "<button class='btn btn-danger float-right' onclick = 'removeQualification(" + data[i].QualificationId + ")' title='Delete' ><span class='fa fa-close'></span></button>" + "</td>" + "</tr>");
+                            $('#tblQualifications').show();
+                            $("select#ddlQualification").val('0');
+                        }
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while adding Caregiver Qualification details. Function: $("#btnSaveQualification").click(function ()). Page: UpdateCaretaker.cshtml');
+                        //alert("Some network error has occurred. Please try again after some time.");
+                    }
+                });
+
+            }
+
+        });
+
+        if ($("#tblQualifications td").closest("tr").length > 0) {
+            $('#tblQualifications').show();
+        }
+        else {
+            $('#tblQualifications').hide();
+        }
+        //////////////// End of Dynamic Qualification types //////////////////////////////
+
+
+        //////////////// Start Dynamic Service types //////////////////////////////
+
+        //var counterService = 2;
+
+        //$("#btnAddService").click(function () {
+
+        //    if (counterService > 10) {
+        //        alert("Only 10 services allowed");
+        //        return false;
+        //    }
+
+        //    var newServiceDiv = $(document.createElement('div'))
+        //         .attr("id", 'dvService' + counterService)
+        //            .attr("class", 'form-group');
+
+        //    newServiceDiv.after().html('<div class="col-md-4 required labelStyle"><label class="required labelStyle">Service #' + counterService + ' : </label></div>' +
+        //          '<div class="col-md-4 required labelStyle"> <select class="form-control labelStyle" id="ddlService' + counterService + '" name="ddlService' + counterService + '">' +
+        //                                                    '<option selected="selected" value="0">--Select--</option>'+
+        //                                                    '<option value="1">Elder care</option>'+
+        //                                                    '<option value="2">Pediatric care</option>' +
+        //                                                    '<option value="3">Home Nurse</option></select> </div>' +
+        //          '<div class="col-md-2 required labelStyle"><label class="required labelStyle float-right">Rate #' + counterService + ' : </label></div>' +
+        //    '<div class="col-md-1 required labelStyle"><input class="form-control" type="text" name="txtRate' + counterService +
+        //    '" id="txtExperience' + counterService + '" value="" /></div>');
+
+        //    newServiceDiv.appendTo("#dvServiceGroup");
+
+        //    counterService++;
+        //});
+
+        //$("#btnRemoveService").click(function () {
+        //    if (counterService == 1) {
+        //        alert("No more service to remove");
+        //        return false;
+        //    }
+
+        //    counterService--;
+
+        //    $("#dvService" + counterService).remove();
+
+        //});
+
+        $('#btnSaveService').click(function () {
+
+            if ($('#ddlService option:selected').text() != '' && $('#ddlService option:selected').text() != '--Select--') {
+                $.ajax({
+                    url: "../CareTaker/AddServiceDetails",
+                    type: "POST",
+                    data: { serviceId: $('#ddlService').val(), expectedRate: $('#txtServiceRate').val(), approvedRate: "0", serviceName: $('#ddlService option:selected').text() },
+                    success: function (data) {
+                        var strService = "";
+                        $('#serviceContent').html('');
+                        for (var i = 0; i < data.length; i++) {
+                            strService = strService + "<tr>" + "<td class='col-md-9'>" + data[i].ServiceName + "</td>" + "<td class='col-md-2'>" + data[i].ExpectedServiceRate + "</td>" + "<td class='col-md-1'>" + "<button class='btn btn-danger float-right' onclick = 'RemoveService(" + data[i].ServiceId + ");' title='Delete' ><span class='fa fa-close'></span></button>" + "</td>" + "</tr>";
+                        }
+                        $('#serviceContent').html(strService);
+
+                        $('#tblServices').show();
+                        $('#txtServiceRate').val('');
+                        $("select#ddlService").val('0');
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while adding Caregiver Qualification details. Function: $("#btnSaveService").click(function ()). Page: UpdateCaretaker.cshtml');
+                        //alert("Some network error has occurred. Please try again after some time.");
+                    }
+                });
+            }
+        });
+
+        if ($("#tblServices td").closest("tr").length > 0) {
+            $('#tblServices').show();
+        }
+        else {
+            $('#tblServices').hide();
+        }
+        //////////////// End of Dynamic Service types //////////////////////////////       
+    });
+
+    function RemoveExperience(companyName) {
+        var comName = companyName;
+        $.ajax({
+            url: "../CareTaker/RemoveExperienceDetails",
+            type: "POST",
+            data: { company: companyName },
+            //, qualificationDate: null, university: null
+            success: function (data) {
+                $('#organisationContent').html('');
+                if (data.length > 0) {
+                    var strOrg = "";
+                    for (var i = 0; i < data.length; i++) {
+                        
+                        var fromDate = changeDateFormat(data[i].From);
+                        var toDate = changeDateFormat(data[i].DateTo);
+                        var company = "'" + data[i].Company + "'";
+                        console.log(company);
+                        strOrg = strOrg + "<tr>" + "<td class='col-md-5'>" + data[i].Company + "</td>" + "<td class='col-md-3'>" + fromDate + "</td>" + "<td class='col-md-3'>" + toDate + "</td>" + "<td class='col-md-1'>" + "<button class='btn btn-danger float-right' onclick = RemoveExperience(" + company + "); title='Delete' ><span class='fa fa-close'></span></button>" + "</td>" + "</tr>";
+                    }
+                    $('#organisationContent').html(strOrg);
+                }
+                if ($("#tblOrganisations td").closest("tr").length > 0) {
+                    $('#tblOrganisations').show();
+                }
+                else {
+                    $('#tblOrganisations').hide();
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while removing Caregiver Experience details. Function: RemoveExperience(companyName). Page: UpdateCaretaker.cshtml');
+                //alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    };
+
+    function RemoveQualification(qualificationId) {
+        $.ajax({
+            url: "../CareTaker/RemoveQualificationDetails",
+            type: "POST",
+            data: { qualificationId: qualificationId },
+            //, qualificationDate: null, university: null
+            success: function (data) {
+                if (data.length > 0) {
+                    var strQual = "";
+                    $('#qualificationContent').html('');
+                    for (var i = 0; i < data.length; i++) {
+                        strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].Qualification + "</td>" + "<td>" + "<button class='btn btn-danger float-right' onclick = " + "RemoveQualification(" + data[i].QualificationId + ")" + " title='Delete' ><span class='fa fa-close'></span></button>" + "</td>" + "</tr>";
+                    }
+                    $('#qualificationContent').html(strQual);
+                }
+                if ($("#tblQualifications td").closest("tr").length > 0) {
+                    $('#tblQualifications').show();
+                }
+                else {
+                    $('#tblQualifications').hide();
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while removing Caregiver Qualification details. Function: RemoveQualification(qualificationId). Page: UpdateCaretaker.cshtml');
+                //alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    };
+
+    function RemoveService(servId) {
+        $.ajax({
+            url: "../CareTaker/RemoveServiceDetails",
+            type: "POST",
+            data: { serviceId: servId },
+            //, qualificationDate: null, university: null
+            success: function (data) {
+                var strService = "";
+                $('#serviceContent').html('');
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        strService = strService + "<tr>" + "<td class='col-md-9'>" + data[i].ServiceName + "</td>" + "<td class='col-md-2'>" + data[i].ExpectedServiceRate + "</td>" + "<td class='col-md-1'>" + "<button class='btn btn-danger float-right' onclick = 'RemoveService(" + data[i].ServiceId + ");' title='Delete' ><span class='fa fa-close'></span></button>" + "</td>" + "</tr>";
+                    }
+                    $('#serviceContent').html(strService);
+                }
+
+                if ($("#tblServices td").closest("tr").length > 0) {
+                    $('#tblServices').show();
+                }
+                else {
+                    $('#tblServices').hide();
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while removing Caregiver Services details. Function: RemoveService(servId). Page: UpdateCaretaker.cshtml');
+                //alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    };
+
+    
+
+    function nextTabPersonal() {
+        $('#liCareTakerPersonal').removeClass('active');
+        $('#careTakerPersonal').removeClass('active in');
+        $('#liCareTakerService').removeClass('active');
+        $('#careTakerService').removeClass('active in');
+        $('#liCareTakerProfessional').addClass('active');
+        $('#careTakerProfessional').addClass('active in');
+    }
+    function nextTabProfessional() {
+        $('#liCareTakerPersonal').removeClass('active');
+        $('#careTakerPersonal').removeClass('active in');
+        $('#liCareTakerService').addClass('active');
+        $('#careTakerService').addClass('active in');
+        $('#liCareTakerProfessional').removeClass('active');
+        $('#careTakerProfessional').removeClass('active in');
+    }
+    function previousTabProfessional() {
+        $('#liCareTakerPersonal').addClass('active');
+        $('#careTakerPersonal').addClass('active in');
+        $('#liCareTakerService').removeClass('active');
+        $('#careTakerService').removeClass('active in');
+        $('#liCareTakerProfessional').removeClass('active');
+        $('#careTakerProfessional').removeClass('active in');
+    }
+    function previousTabService() {
+        $('#liCareTakerPersonal').removeClass('active');
+        $('#careTakerPersonal').removeClass('active in');
+        $('#liCareTakerService').removeClass('active');
+        $('#careTakerService').removeClass('active in');
+        $('#liCareTakerProfessional').addClass('active');
+        $('#careTakerProfessional').addClass('active in');
+    }
+</script>
+
+@using (Html.BeginForm("CaretakerRegistration", "CareTaker", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="container">
+        <div class="main-content">
+            <div class="section__content section__content--p30">
+                <div class="container-fluid">
+                    <h3 class="register">Update Caregiver</h3>
+                    <div class="bootstrap-tab animated wow slideInUp animated " data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: slideInUp;">
+                        <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                            <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
+                                <li id="liCareTakerPersonal" role="presentation" class="active"><a href="#careTakerPersonal" id="home-tab" role="tab" style="border: 1px solid #28a745;" data-toggle="tab" aria-controls="home" aria-expanded="true">Personal Details</a></li>
+                                <li id="liCareTakerProfessional" role="presentation"><a href="#careTakerProfessional" role="tab" style="border: 1px solid #28a745;" id="profile-tab" data-toggle="tab" aria-controls="profile">Professional Details</a></li>
+                                <li id="liCareTakerService" role="presentation" class=""><a href="#careTakerService" role="tab" id="profile2-tab" data-toggle="tab" aria-controls="profile">Service Details</a></li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content panel panel-default">
+                                <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body active in" id="careTakerPersonal" aria-labelledby="home-tab">
+
+                                    <div class="profile_Style">
+                                        <div class="col-md-9 left">
+
+                                            <form class="form-horizontal">
+                                                <fieldset>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            @Html.Label("Profile Id", new { @class = "required label-style" })
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(model => model.CaretakerProfileId, new { @class = "form-control", @placeholder = "Profile Id" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="First_Name">First Name</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(model => model.FirstName, "", new { @class = "form-control", @placeholder = "First Name" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="Last_Name">Last Name</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(model => model.LastName, "", new { @class = "form-control", @placeholder = "Last Name" })
+                                                        </div>
+                                                    </div>
+                                                    <!-- Multiple Radios (inline) -->
+
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="Address">Address</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control", @placeholder = "Address"})
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="State">State</label>
+                                                        </div>
+                                                        <div class="col-md-8 labelStyle">
+                                                            @Html.DropDownListFor(model => model.StateId, ViewData["StateList"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                            @*<select class="form-control labelStyle" id="ddlState" name="ddlState">
+                                                                <option selected="selected" value="0">--Select--</option>
+                                                                <option value="1">Alberta</option>
+                                                                <option value="2">British Columbia</option>
+                                                                <option value="3">New Brunswick</option>
+                                                                <option value="4">Nova Scotia</option>
+                                                            </select>*@
+                                                            @*@Html.DropDownListFor(model => model.DesignationId, new SelectList(ViewBag.Designation, "Value", "Text"), new { @class = "form-control labelStyle" })*@
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="City">City</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.DropDownListFor(model => model.CityId, ViewData["ListCity"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                            @*<select class="form-control labelStyle" id="ddlState" name="ddlState">
+                                                                <option selected="selected" value="0">--Select--</option>
+                                                                <option value="1">Alberta</option>
+                                                                <option value="2">British Columbia</option>
+                                                                <option value="3">New Brunswick</option>
+                                                                <option value="4">Nova Scotia</option>
+                                                            </select>*@
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="Postal_Code">@Resource.ZIPCode</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(model => model.ZipCode, "", new { @class = "form-control", @placeholder = "Postal Code" })
+                                                        </div>
+                                                    </div>
+
+
+                                                    @*<div class="form-group">
+                                                        <div class="col-md-4 required labelStyle">
+                                                            <label class="required labelStyle" for="Gender">Gender</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <span class="wpcf7-form-control-wrap duration">
+                                                                <span class="wpcf7-form-control wpcf7-radio radio-type">
+                                                                    <span class="wpcf7-list-item first">
+                                                                        <input type="radio" name="gender" value="Male">&nbsp;<span class="wpcf7-list-item-label">Male</span>
+                                                                    </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <span class="wpcf7-list-item">
+                                                                        <input type="radio" name="gender" value="Female">&nbsp;<span class="wpcf7-list-item-label">Female</span>
+                                                                    </span>
+                                                                </span>
+                                                                <span class="wpcf7-list-item">
+                                                                    <input type="radio" name="gender" value="Other">&nbsp;<span class="wpcf7-list-item-label">Other</span>
+                                                                </span>
+                                                            </span>
+
+                                                        </div>
+                                                    </div>*@
+
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="Phone_Number">Phone Number(Primary)</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(model => model.PrimaryPhoneNo, "", new { @class = "form-control", @placeholder = "Primary Phone Number" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="Phone_Number">Phone Number(Secondary)</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(model => model.SecondaryPhoneNo, "", new { @class = "form-control", @placeholder = "Secondary Phone Number" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="Email">Email</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(model=> model.EmailAddress, "", new { @class = "form-control", @placeholder = "Email Address" })
+                                                        </div>
+                                                    </div>
+                                                  
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="pwd">Password</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextBoxFor(model => model.Password, "", new { @class = "form-control", @placeholder = "Password" })
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="pwd">Re-type Password</label>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            @Html.TextBoxFor(model => model.RetypePassword, "", new { @class = "form-control labelStyle", @Placeholder = "Re-type Password" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-md-4 required ">
+                                                            <label class="required  label-style" for="About">About Me</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            @Html.TextAreaFor(model=> model.AboutMe, new { @class = "form-control labelStyle", @placeholder = "Description about yourself", @cols = "20", @rows = "2" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-xs-12">
+                                                            <div class="row newsright">
+                                                                <button onclick="nextTabPersonal()" class="btn btn-primary float-right margin-right-15">Next</button>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="clearfix"></div>
+
+
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                        <style>
+                                            .btn-bs-file {
+                                                position: relative;
+                                            }
+
+                                                .btn-bs-file input[type="file"] {
+                                                    position: absolute;
+                                                    top: -9999999;
+                                                    filter: alpha(opacity=0);
+                                                    opacity: 0;
+                                                    width: 0;
+                                                    height: 0;
+                                                    outline: none;
+                                                    cursor: inherit;
+                                                }
+                                        </style>
+                                        <div class="col-xs-3 col-sm-3 col-md-3">
+                                            <div class="newsright profile-pic image_size">
+                                                @if (Model != null)
+                                                {
+                                                    if (Model.ProfilePicPath != null)
+                                                    {
+                                                        <img id="@Model.ProfilePicPath" class="image-style image_height" />
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img id="imgCaretaker" src="~/images/NOImage.jpg" class="image-style image_height" />
+                                                }
+                                                 @*src="@Url.Content(Model.ProfilePicture)"*@
+                                                @Html.HiddenFor(model => model.ProfilePicByte)
+                                                <label class="btn-bs-file btn btn-sm btn-warning profile-button" style="width:100%">
+                                                    Browse
+                                                    <input type="file" onchange="readCaretakerImage(this);" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="careTakerProfessional" aria-labelledby="profile-tab">
+                                    <div class="bootstrap-tab-text-grids">
+                                        <div class="bootstrap-tab-text-grid">
+                                            <div class="container">
+                                                <div class="row centered-form" id="creatememberpanel">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 registration-div">
+                                                        <div class="profile_Style">
+                                                            <div class="col-md-10 left">
+                                                                <div class="form-horizontal">
+                                                                    <fieldset>
+                                                                        @*<div class="form-group">
+                                                                                <div class="col-md-4 required labelStyle">
+                                                                                    @Html.Label("Highest Qualification", new { @class = "required labelStyle" })
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <select class="form-control labelStyle" id="ddlState" name="ddlState">
+                                                                                        <option selected="selected" value="0">--Select--</option>
+                                                                                        <option value="1">Bsc Nursing</option>
+                                                                                        <option value="2">BDS</option>
+                                                                                        <option value="3">House Surgeoncy</option>
+                                                                                        <option value="4">MBBS</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>*@
+
+                                                                        @*<div id='dvQualificationGroup' >
+                                                                                <div id="dvQualification1" class="form-group">
+                                                                                    <div class="col-md-4 required labelStyle">
+                                                                                        <label class="required labelStyle">Qualification #1 : </label>
+                                                                                    </div>
+                                                                                    <div class="col-md-4 required labelStyle">
+                                                                                        <select class="form-control labelStyle" id="ddlQualification1" name="ddlQualification1">
+                                                                                            <option selected="selected" value="0">--Select--</option>
+                                                                                            <option value="1">Bsc Nursing</option>
+                                                                                            <option value="2">BDS</option>
+                                                                                            <option value="3">House Surgeoncy</option>
+                                                                                            <option value="4">MBBS</option>
+                                                                                        </select>
+
+                                                                                    </div>
+
+                                                                                    <div class="col-md-1 required labelStyle">
+                                                                                        <input type="button" id='btnAddQualification' value="+" class="btn btn-default form-control float-right" style="font-size:16px" />
+                                                                                    </div>
+                                                                                    <div class="col-md-1 required labelStyle">
+                                                                                        <input type="button" id='btnRemoveQualification' value="-" class="btn btn-default form-control" style="font-size:16px" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>*@
+                                                                        <h5 style="color:orange">QUALIFICATION DETAILS</h5>
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-3 required ">
+                                                                                @Html.Label("Qualification", new { @class = "required  label-style" })
+                                                                            </div>
+                                                                            <div class="col-md-8">
+                                                                                <select class="form-control labelStyle" id="ddlQualification" name="ddlQualification">
+                                                                                    <option selected="selected" value="0">--Select--</option>
+                                                                                    <option value="1">Bsc Nurs</option>
+                                                                                    <option value="2">BDS</option>
+                                                                                    <option value="3">House Surgeoncy</option>
+                                                                                    <option value="4">MBBS</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                @*<input type="button" id="btnSaveQualification" value="Add" class="btn btn-default form-control" style="font-size:16px" />*@
+                                                                                <button class="btn btn-xs btn-primary" id="btnSaveQualification" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-11 required ">
+                                                                                <div class="table-responsive m-b-40">
+                                                                                    <table class="table table-borderless table-striped table-earning dynamic-table" id="tblQualifications">@*dynamic-header-style*@
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th class='col-md-11'>Qualification</th>
+                                                                                                <th></th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody id="qualificationContent"></tbody>
+                                                                                    </table>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <h5 style="color:orange">EXPERIENCE DETAILS</h5>
+
+
+
+                                                                        @*<div id='dvOrganisationGroup' >
+                                                                                <div id="dvOrganisation1" class="form-group">
+                                                                                    <div class="col-md-4 required labelStyle">
+                                                                                        <label class="required labelStyle">Organisation #1 : </label>
+                                                                                    </div>
+                                                                                    <div class="col-md-4 required labelStyle">
+                                                                                        <input type='textbox' class="form-control" id='txtOrganisation1'>
+                                                                                    </div>
+                                                                                    <div class="col-md-2 required labelStyle">
+                                                                                        <input type="text" class="datetimepicker labelStyle " id="txtFromDate1" placeholder="From Date" />
+                                                                                    </div>
+                                                                                    <div class="col-md-2 required labelStyle">
+                                                                                        <input type="text" class="datetimepicker labelStyle " id="txtToDate1" placeholder="To Date" />
+                                                                                    </div>
+                                                                                    <div class="col-md-1 required labelStyle">
+                                                                                        <input type="button" id='btnAddOrganisation' value="+" class="btn btn-default form-control float-right" style="font-size:16px" />
+                                                                                    </div>
+                                                                                    <div class="col-md-1 required labelStyle">
+                                                                                        <input type="button" id='btnRemoveOrganisation' value="-" class="btn btn-default form-control" style="font-size:16px" />
+                                                                                    </div>
+
+                                                                                </div>
+
+                                                                            </div>*@
+
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-3 required ">
+                                                                                <label class="required  label-style" for="txtOrganisation">Organisation</label>
+                                                                            </div>
+                                                                            <div class="col-md-8">
+                                                                                @Html.TextBox("Organisation", "", new { @id = "txtOrganisation", @class = "form-control", @placeholder = "Organisation" })
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-3 required ">
+                                                                                <label class="required  label-style" for="txtFromDate">Experience Range</label>
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                @Html.TextBox("Date From", "", new { @id = "txtFromDate", @class = "datetimepicker form-control", @placeholder = "Date From" })
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                @Html.TextBox("Date To", "", new { @id = "txtToDate", @class = "datetimepicker form-control", @placeholder = "Date To" })
+                                                                            </div>
+                                                                            <div class="col-md-1">
+                                                                                <button class="btn btn-xs btn-primary" id="btnSaveOrganisation" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-11">
+                                                                                <div class="table-responsive m-b-40">
+                                                                                    <table class="table table-borderless table-striped table-earning dynamic-table" id="tblOrganisations">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th class='col-md-7'>Organisation</th>
+                                                                                                <th class='col-md-2'>Date From</th>
+                                                                                                <th class='col-md-2'>Date To</th>
+                                                                                                <th class='col-md-1'></th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody id="organisationContent"></tbody>
+                                                                                    </table>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        @*<div id='dvOrganisationGroup' class="form-group">
+
+                                                                                <div id="dvExperience1">
+
+
+                                                                                </div>
+                                                                            </div>*@
+
+                                                                        @*<div class="form-group">
+                                                                                <div class="col-md-4 required labelStyle">
+                                                                                    <label class="required labelStyle" for="Organization">Organization</label>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    @Html.TextBox("txtOrganizationold1", "", new { @class = "form-control", @placeholder = "Organization" })
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <div class="col-md-4 required labelStyle">
+                                                                                    <label class="required labelStyle" for="Total_Work_Experience">Total Work Experience</label>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+
+                                                                                    @Html.TextBox("txtExperienceold1", "", new { @class = "form-control", @placeholder = "Experience" })
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+
+                                                                                <div class="col-md-4 required labelStyle">
+                                                                                    <label class="required labelStyle" for="Organization">Organization</label>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    @Html.TextBox("txtOrganizationold2", "", new { @class = "form-control", @placeholder = "Organization" })
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <div class="col-md-4 required labelStyle">
+                                                                                    <label class="required labelStyle" for="Total_Work_Experience">Total Work Experience</label>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    @Html.TextBox("txtExperienceold2", "", new { @class = "form-control", @placeholder = "Experience" })
+                                                                                </div>
+                                                                            </div>*@
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-3 required ">
+                                                                                <label class="required  label-style" for="Key_Skills">Key Skills</label>
+                                                                            </div>
+                                                                            <div class="col-md-8">
+                                                                                @*<input class="form-control" id="skills" name="skills" placeholder="Key Skills" type="text" value="">*@
+                                                                                @Html.TextBoxFor(model=>model.KeySkills, "", new { @class = "form-control", @placeholder = "Key Skills" })
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-3 required ">
+                                                                                <label class="required  label-style" for="Upload_Documents">Upload Certificates</label>
+                                                                            </div>
+                                                                            <div class="col-md-8">
+                                                                                <input type="file" multiple="multiple">
+                                                                            </div>
+                                                                        </div>
+
+
+
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-3 required ">
+                                                                                <label class="required  label-style" for="Upload_Documents">Upload SIN</label>
+                                                                            </div>
+                                                                            <div class="col-md-8">
+                                                                                <input type="file" multiple="multiple">
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-3 required ">
+                                                                                <label class="required  label-style" for="Upload_Documents">Other documents</label>&nbsp;
+                                                                                <span class="fa fa-info-circle" title="CPR and First Aid, Police Clearance Report, Vaccination details, Void Cheque/Direct Deposit Slip and References"></span>
+                                                                            </div>
+                                                                            <div class="col-md-8">
+                                                                                <input type="file" multiple="multiple">
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-8 required ">
+                                                                                @Html.CheckBox("chkSystemCode", false, new { @class = "" }) Send documents through FAX
+                                                                            </div>
+                                                                            <div class="col-md-4">
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <div class="col-xs-9">
+                                                                                <div class="row newsright">
+                                                                                    <button onclick="previousTabProfessional()" class="btn btn-primary float-right">Prev</button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-xs-2">
+                                                                                <div class="row newsright">
+                                                                                    <button onclick="nextTabProfessional()" class="btn btn-primary float-right margin-right-15">Next</button>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+
+
+
+                                                                    </fieldset>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body" id="careTakerService" aria-labelledby="profile2-tab">
+                                    <div class="bootstrap-tab-text-grids">
+                                        <div class="bootstrap-tab-text-grid">
+                                            <div class="container">
+                                                <div class="row centered-form" id="creatememberpanel">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 registration-div">
+                                                        <div class="profile_Style">
+                                                            @**@
+                                                            <div class="col-md-10 left">
+                                                                <div class="form-horizontal">
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-3 required labelStyle">
+                                                                            @Html.Label("Client", new { @class = "required labelStyle" })
+                                                                        </div>
+                                                                        <div class="col-md-8">
+                                                                            <select class="form-control labelStyle" id="ddlClient" name="ddlClient">
+                                                                                <option selected="selected" value="0">--Select--</option>
+                                                                                <option value="1">Nursing Care</option>
+                                                                                <option value="2">Helping Hands</option>
+                                                                                <option value="3">Canadian Care</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-md-1">
+                                                                            <button class="btn btn-xs btn-primary" id="btnSaveClient" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-11 required labelStyle">
+                                                                            <div class="table-responsive m-b-40">
+                                                                                <table class="table table-borderless table-striped table-earning dynamic-table" id="tblClient">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th class='col-md-11'>Client</th>
+                                                                                            <th class='col-md-1'></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody id="clientContent"></tbody>
+                                                                                </table>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-3 required ">
+                                                                            @Html.Label("Orientation", new { @class = "required labelStyle" })
+                                                                        </div>
+                                                                        <div class="col-md-8">
+                                                                            @*@Html.DropDownList("ddlOrientation", ViewData["OrientationList"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })*@
+                                                                            <select class="form-control labelStyle" id="ddlOrientation" name="ddlOrientation">
+                                                                                <option selected="selected" value="0">--Select--</option>
+                                                                                <option value="1">Bsc Nurs</option>
+                                                                                <option value="2">BDS</option>
+                                                                                <option value="3">House Surgeoncy</option>
+                                                                                <option value="4">MBBS</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-md-1">
+                                                                            @*<input type="button" id="btnSaveQualification" value="Add" class="btn btn-default form-control" style="font-size:16px" />*@
+                                                                            <button class="btn btn-xs btn-primary" id="btnSaveOrientation" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-11 required ">
+                                                                            <div class="table-responsive m-b-40">
+                                                                                <table class="table table-borderless table-striped table-earning dynamic-table" id="tblOrientations">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th class='col-md-11'>Orientation</th>
+                                                                                            <th class='col-md-1'></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody id="orientationContent"></tbody>
+                                                                                </table>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-3 required ">
+                                                                            <label class="required labelStyle" for="Type_of_Service">Category</label>
+                                                                        </div>
+                                                                        <div class="col-md-8">
+                                                                            @Html.DropDownListFor(model => model.CategoryId, ViewData["ListCategory"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                            @*<select class="form-control labelStyle" id="ddlCategory" name="ddlCategory">
+                                                                                <option selected="selected" value="0">--Select--</option>
+                                                                                <option value="1">RN</option>
+                                                                                <option value="2">RPN</option>
+                                                                                <option value="3">PSW</option>
+
+                                                                            </select>*@
+
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    @*<div id='dvServiceGroup'>
+                                                                            <div id="dvService1" class="form-group">
+                                                                                <div class="col-md-4 required labelStyle">
+                                                                                    <label class="required labelStyle">Service #1 : </label>
+                                                                                </div>
+                                                                                <div class="col-md-4 required labelStyle">
+                                                                                    <select class="form-control labelStyle" id="ddlService1" name="ddlService1">
+                                                                                        <option selected="selected" value="0">--Select--</option>
+                                                                                        <option value="1">Bsc Nursing</option>
+                                                                                        <option value="2">BDS</option>
+                                                                                        <option value="3">House Surgeoncy</option>
+                                                                                        <option value="4">MBBS</option>
+                                                                                    </select>
+
+                                                                                </div>
+                                                                                <div class="col-md-2 required labelStyle">
+                                                                                    <label class="required labelStyle float-right">Rate #1 : </label>
+                                                                                </div>
+                                                                                <div class="col-md-1 required labelStyle">
+
+                                                                                    @Html.TextBox("txtRate1", "", new { @class = "form-control", @placeholder = "Rate" })
+                                                                                </div>
+                                                                                <div class="col-md-1 required labelStyle">
+                                                                                    <input type="button" id='btnAddService' value="+" class="btn btn-default form-control float-right" style="font-size:16px" />
+                                                                                </div>
+                                                                                <div class="col-md-1 required labelStyle">
+                                                                                    <input type="button" id='btnRemoveService' value="-" class="btn btn-default form-control" style="font-size:16px" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>*@
+
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-3 required ">
+                                                                            @Html.Label("Service", new { @class = "required labelStyle" })
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            @Html.DropDownList("ddlService", ViewData["ServiceList"] as SelectList,"--Select--", new { @class = "form-control labelStyle" })
+
+                                                                        </div>
+                                                                        <div class="col-md-2">
+                                                                            @Html.TextBox("Rate", "", new { @id = "txtServiceRate", @class = "form-control", @placeholder = "Rate" })
+                                                                        </div>
+                                                                        <div class="col-md-1">
+                                                                            <button class="btn btn-xs btn-primary" id="btnSaveService" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-11">
+                                                                            <div class="table-responsive m-b-40">
+                                                                                <table class="table table-borderless table-striped table-earning dynamic-table" id="tblServices">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th class='col-md-9'>Service</th>
+                                                                                            <th class='col-md-2'>Rate ($/Hr)</th>
+                                                                                            <th class='col-md-1'></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody id="serviceContent"></tbody>
+                                                                                </table>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-11">
+                                                                            <div class="login-grids">
+                                                                                <p for="terms"> <input type="checkbox" required name="terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" id="field_terms"> I agree with the <a href="#" title="You may read our terms and conditions by clicking on this link" data-toggle="modal" data-target="#myModal">Terms and Conditions </a> and <a href="#" data-toggle="modal" data-target="#myModal1">Privacy Policy</a> for Registration.</p>
+
+                                                                            </div>
+                                                                            @*<input type="checkbox" name="chkexpert[]">&nbsp;<label for="">I agree with the </label><a href="#" data-toggle="modal" data-target="#myModal">&nbsp;Terms and Conditions &nbsp;</a><label for="">and&nbsp; </label><a href="#" data-toggle="modal" data-target="#myModal1">Privacy Policy &nbsp;</a>for registration*@
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <div class="col-xs-9">
+                                                                            <div class="row newsright">
+                                                                                <button onclick="previousTabService()" class="btn btn-primary float-right">Prev</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xs-2">
+                                                                            <div class="row newsright">
+                                                                                <input type="submit" class="btn btn-default float-right" value="Register">
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    @*</div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+        <!-- Modal -->
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="color:orange;text-align:center">Terms and Conditions</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="policy" style="overflow-x:scroll;height:400px">
+                            @if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"TermsAndPrivacy"))
+                            {
+                                var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"TermsAndPrivacy\TermsAndConditions.txt";
+                                if (System.IO.File.Exists(absolutePath))
+                                {
+                                    @System.IO.File.ReadAllText(absolutePath)
+                                }
+                            }
+                        </p>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Ok</button>
+
+                        @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="myModal1" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="color:orange; text-align:center">Privacy Policy</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="policy" style="overflow-x:scroll;height:400px">
+                            @if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"TermsAndPrivacy"))
+                            {
+                                var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"TermsAndPrivacy\PrivacyAndPolicy.txt";
+                                if (System.IO.File.Exists(absolutePath))
+                                {
+                                    @System.IO.File.ReadAllText(absolutePath)
+                                }
+                            }
+                        </p>
+                    </div>
+
+                    <div class="modal-footer">
+
+
+                        <button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Ok</button>
+                        @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+

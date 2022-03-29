@@ -1,0 +1,74 @@
+﻿@model List<Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel>
+<table class="table table-striped padding-top-10 table-earning" id="caretakerList">
+    <thead>
+
+        <tr class="non-filter-header">
+            <th style="width:8%">Profile ID</th>
+            <th style="width:20%">Name</th>
+            <th style="width:20%">Email ID</th>
+            <th style="width:15%">Phone #1</th>
+            <th style="width:8%">Category</th>
+            <th style="width:15%">Service</th>
+            <th style="width:5%">Experience</th>
+            @*<th>Street Name</th>
+                <th>City</th>
+                <th>@Resource.State</th>*@
+            <th class="text-right">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@item.CaretakerProfileId</td>
+                <td style="width:20%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@item.CareTakerFullName</td>
+                <td style="width:20%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@item.EmailAddress</td>
+                <td style="width:15%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@item.PrimaryPhoneNo</td>
+                <td style="width:8%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@item.CategoryName</td>
+                <td style="width:15%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">
+                    <table id="caretakerRates">
+                        <tbody>
+                            @foreach (var service in item.CareTakerServices)
+                            {
+                                <tr>
+                                    <td onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@service.ServiceName</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+                <td style="width:5%" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@item.TotalExperience</td>
+                @*<td onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@item.HouseName</td>
+                    <td onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@item.City</td>
+                    <td onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId }))'">@item.State</td>*@
+                <td class="text-right">
+                    @if (ViewBag.AllowEdit)
+                    {
+                        <a class="btn btn-xs btn-primary" title="View/Edit" href="@Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId = item.UserId })"><span class="fa fa-edit"></span></a>
+                    }
+                    else
+                    {
+                        <div class="wrapper">
+                            <a class="btn btn-xs btn-primary" title="View/Edit" disabled><span class="fa fa-edit"></span></a>
+                        </div>
+                    }
+
+                    @if (ViewBag.AllowDelete)
+                    {
+                        <button class="btn btn-xs btn-warning" title="Reject" data-toggle="modal" onclick="setCaretakerId('@item.UserId')" data-target="#modal-reject"><span class="fa fa-times-circle"></span></button>
+                        <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" onclick="setCaretakerId('@item.UserId')" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+
+                    }
+                    else
+                    {
+                        <div class="wrapper">
+                            <button class="btn btn-xs btn-warning" title="Reject" disabled><span class="fa fa-times-circle"></span></button>
+                            <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

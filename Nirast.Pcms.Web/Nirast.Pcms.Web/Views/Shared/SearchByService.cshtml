@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.SearchedCareTakers>
+@if (Model != null)
+{
+    if (Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+
+
+            <div class="col-md-3 product-men">
+                <div class="men-pro-item simpleCart_shelfItem">
+                    <div class="imageStyle">
+                        <img src="data:image;base64,@System.Convert.ToBase64String(item.ProfilePicture)" alt="" class="pro-image-front imageSizeSearch">
+                        @*<img src="data:image;base64,@System.Convert.ToBase64String(item.ProfilePicture)" alt="" class="pro-image-front imageSizeSearch">*@
+                        <div class="men-cart-pro">
+                            <div class="inner-men-cart-pro">
+                                <h4> @Html.ActionLink("View Profile", "CareTakerDetailPage", "CareTaker", routeValues: new { id = item.CaretakerId }, htmlAttributes: new { @class = "link-product-add-cart" })</h4>
+                            </div>
+                        </div>
+                        @if (@item.TotalExperience > 1)
+                        {
+                            <span class="product-new-top">
+                                @item.TotalExperience yrs
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="product-new-top">
+                                @item.TotalExperience yr
+                            </span>
+                        }
+                        <span class="product-new-top-left">$ @item.DisplayRate /hr</span>
+
+                    </div>
+                    <div class="item-info-product ">
+                        <h4> @Html.Label(item.CareTakerFirstName + " " + item.CareTakerLastName)</h4>
+                        <p class="serviceSearch">@item.ServiceName</p>
+                        <div class="info-service-price">
+                            @*<span class="item_price">$@item.ApprovedRate/hr</span>*@
+                            @if (@item.Location != null)
+                            {
+                                <span class="item_price">
+                                    @item.Location, @item.State
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="item_price">
+                                    @item.State
+                                </span>
+                            }
+                            @*<del>$109.71</del>*@
+                        </div>
+                        <div class="item-info-product ">
+                            <h4> @Html.ActionLink(item.CareTakerFirstName + " " + item.CareTakerLastName, "CareTakerDetailPage", "CareTaker")</h4>
+                            <div class="info-service-price">
+                                @*<span class="item_price">$@item.ApprovedRate/hr</span>*@
+                                <span class="item_price">@item.ServiceName</span>
+                                @*<del>$109.71</del>*@
+                            </div>
+                            @Html.ActionLink("Book Now", actionName: "CareTakerBooking", controllerName: "PublicUser",
+                       routeValues: new { ServiceId = item.ServiceId, CaretakerId = item.CaretakerId, CaretakerName = item.CareTakerFirstName + " " + item.CareTakerLastName },
+                       htmlAttributes: new { @class = "item_add single-item hvr-outline-out button2", @onclick = "checkRequiredBookingDetails()" })
+                            @*@Html.ActionLink("Book Now", "CareTakerBooking", "PublicUser", null,routeValues: new { ServiceId = Model.FirstOrDefault().ServiceId, CaretakerId = Model.FirstOrDefault().CaretakerId }, htmlAttributes: new { @class = "item_add single-item hvr-outline-out button2" })*@
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-md-12 no-records-message">
+            All our Care givers are booked , Please contact us for further assistance !
+        </div>
+        <div style="padding-top:50px;">
+            @Html.ActionLink("View Contact", "Contact", null, new { @class = "btn btn-success" })
+        </div>
+    }
+}
+else
+{
+    <div class="col-md-12 no-records-message">
+        All our Care givers are booked , Please contact us for further assistance !
+    </div>
+    <div style="padding-top:50px;">
+        @Html.ActionLink("View Contact", "Contact", null, new { @class = "btn btn-success" })
+    </div>
+}
+
+
+

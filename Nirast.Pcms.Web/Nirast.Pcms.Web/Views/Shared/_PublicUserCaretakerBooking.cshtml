@@ -1,0 +1,194 @@
+﻿@model Nirast.Pcms.Web.Models.CaretakerBooking
+@{
+    ViewBag.Title = "CaretakerBooking";
+
+}<div class="bootstrap-tab animated wow slideInUp animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: slideInUp;">
+    <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+       
+        <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
+            <li id="liCareRecipient" role="presentation" class="active"><a href="#CareRecipient" id="home-tab" role="tab" data-toggle="tab" aria-controls="CareRecipient" aria-expanded="true">Care Recipient Details</a></li>
+            <li id="liQuestionnaire" role="presentation"><a href="#questionnaire" role="tab" id="profile-tab" data-toggle="tab" aria-controls="Profile">Questionnaire</a></li>
+        </ul>
+
+
+
+        <div id="myTabContent" class="tab-content panel panel-default no-padding">
+            <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body active in" id="CareRecipient" aria-labelledby="home-tab">
+
+                <div class="padT25" style="margin: 0 auto;">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-padding">
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+                                @Html.Label("First Name", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                @Html.TextBoxFor(m => m.FirstName, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "First Name" })
+                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger required" })
+                                @Html.HiddenFor(m => m.ServiceRequiredId)
+                                @Html.HiddenFor(m => m.CareTakerId)
+                                @Html.HiddenFor(m => m.BookingStartTime)
+                                @Html.HiddenFor(m => m.BookingEndTime)
+
+                            </div>
+                            <div class="col-md-6">
+
+                                @Html.Label("Last Name", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                @Html.TextBoxFor(m => m.LastName, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Last Name" })
+                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger required" })
+
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+
+                                @Html.Label("Country", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                @Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.Country, "Value", "Text"), "--Select--", new { @Id = "ddlCountry", @class = "form-control labelStyle", @onchange = "GetStates()" })
+                                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger required" })
+
+                            </div>
+                            <div class="col-md-6">
+
+                                @Html.Label(@Resource.State, new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                @Html.DropDownListFor(model => model.StateId, new SelectList(ViewBag.States, "Value", "Text"), "--Select--", new { @Id = "ddlStates", @class = "form-control labelStyle", @onchange = "GetCities()" })
+                                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger required" })
+
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+                                @Html.Label("City", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                @Html.DropDownListFor(model => model.CityId, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @Id = "ddlCity", @class = "form-control labelStyle" })
+                                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger required" })
+
+                            </div>
+                            <div class="col-md-6">
+
+                                @Html.Label("Address Line", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                @Html.TextBoxFor(model => model.Address, new { @autocomplete = "off", @class = "form-control", @Placeholder = "Address Line " })
+                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger required" })
+
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+                                @Html.Label(Resource.ZIPCode, new { @class = "label-style" })
+                                @Html.TextBoxFor(m => m.ZipCode, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Zip Code" })
+                                @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger required" })
+
+                            </div>
+                            <div class="col-md-6">
+
+                                @Html.Label("Phone #1", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                <div class="input-group m-b-5">
+                                    <span class="input-group-addon"><label id="lblPhoneCodePrimary1">+1</label></span>
+                                    @Html.TextBoxFor(m => m.PrimaryPhoneNo, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Phone #1" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = "text-danger required" })
+
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+                                @Html.Label("Phone #2", new { @class = "label-style" })
+                                <div class="input-group m-b-5">
+                                    <span class="input-group-addon"><label id="lblPhoneCodePrimary2">+1</label></span>
+                                    @Html.TextBoxFor(m => m.SecondaryPhoneNo, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Phone #2" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.SecondaryPhoneNo, "", new { @class = "text-danger required" })
+
+                            </div>
+                            <div class="col-md-6">
+
+                                @Html.Label("Purpose", new { @class = "label-style" })
+                                @Html.TextAreaFor(model => model.Purpose, new { @class = "col-md-12 form-control labelStyle" })
+                                @Html.ValidationMessageFor(model => model.Purpose, "", new { @class = "text-danger required" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="questionnaire" aria-labelledby="profile-tab">
+                <div class="tab-spacing"> </div>
+                <div class="padT25" style="margin: 0 auto;">
+                    <div class="col-lg-6">
+                        <div class="col-md-12 innerDiv">
+                            <label class="col-md-12 label-style no-padding" for="What_are_the_service_details_required_">
+                                @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 1).FirstOrDefault() == null ? "What are the services required?" : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 1).FirstOrDefault().Questions))
+                            </label>
+                        </div>
+                        <div class="col-md-12">
+
+                            @Html.TextArea("txtServicesRequired", "", new { @class = "form-control col-md-12 labelStyle", @cols = "5", @rows = "5" })
+                        </div>
+                        <div class="col-md-12 innerDiv">
+                            <label class="col-md-12 label-style no-padding" for="Explain_the_disease_details_of_patient">
+                                @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 2).FirstOrDefault() == null ? "Explain the health condition of Care Receipient." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 2).FirstOrDefault().Questions))
+                            </label>
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.TextArea("txtDiseases", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                        </div>
+
+                        <div class="col-md-12 innerDiv">
+                            <label class="col-md-12 label-style no-padding" for="Any_medication_history_">
+                                @(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 3).FirstOrDefault() == null ? "Any medication history? If any." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 3).FirstOrDefault().Questions))
+                            </label>
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.TextArea("txtMedicationHistory", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                        </div>
+
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-md-12 innerDiv">
+                            <label class="col-md-12 label-style no-padding" for="Explain_the_allergy_details">@(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 4).FirstOrDefault() == null ? "Explain the allergy details.If any." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 4).FirstOrDefault().Questions))</label>
+                        </div>
+                        <div class="col-md-12">
+
+                            @Html.TextArea("txtAllergy", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                        </div>
+
+                        <div class="col-md-12 innerDiv">
+                            <label class="col-md-12 label-style no-padding" for="Extra_services_required_">@(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 5).FirstOrDefault() == null ? "Extra services required? If any." : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 5).FirstOrDefault().Questions))</label>
+                        </div>
+                        <div class="col-md-12">
+
+                            @Html.TextArea("txtExtraService", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                        </div>
+
+                        <div class="col-md-12 innerDiv">
+                            <label class="col-md-12 label-style no-padding" for="Any_remarks_">@(((ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 6).FirstOrDefault() == null ? "Any remarks?" : (ViewBag.Questions as ICollection<Nirast.Pcms.Web.Models.Questionare>).Where(x => x.SortOrder == 6).FirstOrDefault().Questions))</label>
+                        </div>
+                        <div class="col-md-12">
+
+                            @Html.TextArea("txtRemarks", "", new { @class = "col-md-12 form-control labelStyle", @cols = "5", @rows = "5" })
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+

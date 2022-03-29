@@ -1,0 +1,390 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+
+@*<script type="text/javascript" src="~/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="~/js/app.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.10/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/CustomScript.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/js/jquery.timepicker.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
+
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />*@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ClientSchedulingReport</title>
+</head>
+<body>
+    @if (ViewBag.Error != null)
+    {
+        <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+    }
+    else
+    {
+        <div class="row profile_Style">
+            <div class="panel panel-default report-style ">
+                <div class="panel-heading">
+                    <h4>Client Scheduling Report</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="col-md-12 innerDiv">
+
+                            <div class="form-group">
+                                <div class="col-md-2 col-lg-2">
+                                    <label class="label-style">Client Name:</label>
+                                </div>
+                                <div class="col-md-2 col-lg-2">
+                                    <select id="ddlClient" class="form-control"></select>
+                                </div>
+                                <div class="col-md-2 col-lg-2">
+                                    <label class="label-style">Category :</label>
+                                </div>
+                                <div class="col-md-2 col-lg-2">
+                                    <select id="ddCategory" class="form-control"> </select>
+                                </div>
+
+
+                                <div class="col-md-2 col-lg-2">
+                                    <label class="label-style">Caregiver :</label>
+                                </div>
+                                <div class="col-md-2 col-lg-2">
+                                    <select id="ddCareTaker" class="form-control"> </select>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-md-2 col-lg-2">
+                                    <label class="label-style">Work Mode:</label>
+                                </div>
+                                <div class="col-md-2 col-lg-2">
+                                    <select id="ddWorkMode" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-md-2 col-lg-2">
+                                    <label class="label-style">Date range :</label>
+                                </div>
+                                <div class="col-md-2 col-lg-2">
+                                    @Html.DropDownList("ddlSearchRange", ViewData["listPaySearch"] as SelectList, new { @class = "form-control col-md-3 labelStyle" })
+                                </div>
+                                <div class="col-md-1 col-lg-2" id="divyear">
+                                    <label id="lblyear" class="label-style">Year :</label>
+                                    <label id="lblfrmdate" class="label-style">FromDate :</label>
+                                </div>
+                                <div class="col-md-1 col-lg-2">
+                                    @Html.DropDownList("ddlyear", ViewData["listYears"] as SelectList, new { @class = "form-control col-md-12 labelStyle", @id = "ddlYearly" })
+                                    @Html.TextBox("FromDate", "", new { @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtFromDate", @placeholder = "From Date" })
+                                </div>
+                                <div class="col-md-1 col-lg-2" id="divmonth">
+                                    <label id="lblmonth" class="label-style">Month :</label>
+                                    <label id="lbltodate" class="label-style">ToDate :</label>
+                                </div>
+                                <div class="col-md-1 col-lg-2">
+                                    @Html.DropDownList("ddlMonth", ViewData["listMonths"] as SelectList, new { @class = "form-control col-md-12 labelStyle", @id = "ddlMonthly" })
+                                    @Html.TextBox("ToDate", "", new { @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtToDate", @placeholder = "To Date" })
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12" style="padding-bottom: 15px;">
+                            <div class="col-md-5"></div>
+                            <div class="col-md-3 text-center">
+                                <button type="submit" id="btnSearch" class="btn btn-primary ">Search</button>
+                                <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container animsition" style="padding-bottom: 15px;">
+
+            <div class="row ">
+                <div class="equal-height-panels">
+                    <div class="ui segment">
+                        <div id="dvMain" name="dvMain">
+                            <div class="clr"></div>
+                            <div class="col-md-12">
+                                <div class="signature-pad col-md-12">
+
+                                    <div class="panel panel-group panel-success">
+                                        <div class="panel-heading"><h5>Report</h5></div>
+                                        <div class="panel-body" style="height:500px">
+                                            <div id="policyContent" type="text" readonly="readonly">
+                                                @*<iframe src=@Model.policyContent frameBorder="0"></iframe>*@
+                                                @*<iframe src='@Url.Action("GetPDF", "Admin")' width="100%" height="1000" frameBorder="0"></iframe>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="spinner">
+         
+        </div>
+        <script>
+            $.ajax({
+                url: "/Client/LoadClient",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (result) {
+
+                    $("#ddlClient").html(""); // clear before appending new list
+                    $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+                    $.each($.parseJSON(result), function (i, care) {
+                        $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+                    })
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while Loading Clients. Function: "/Client/LoadClient". Page: ClientSchedulingReport.cshtml');
+                    //alert('Some network error has occurres. Please try again after some time.');
+            }
+            });
+
+            $.ajax({
+                url: "/Client/LoadWorkShift",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (result) {
+
+                    $("#ddWorkMode").html(""); // clear before appending new list
+                    $("#ddWorkMode").append($('<option></option>').val("").html("--Select--"));
+                    $.each($.parseJSON(result), function (i, care) {
+
+                        $("#ddWorkMode").append($('<option></option>').val(care.ShiftId).html(care.ShiftName));
+                    })
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while Loading Work Shifts. Function: "/Client/LoadWorkShift". Page: ClientSchedulingReport.cshtml');
+                    //alert('Some network error has occurres. Please try again after some time.');
+                }
+            });
+
+            $.ajax({
+                url: "/Client/LoadCategory",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (result) {
+
+                    $("#ddCategory").html(""); // clear before appending new list
+                    $("#ddCategory").append($('<option></option>').val("").html("--Select--"));
+                    $.each($.parseJSON(result), function (i, care) {
+                        $("#ddCategory").append($('<option></option>').val(care.CategoryId).html(care.Name));
+                    })
+
+
+
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while Loading Caretaker Types. Function: "/Client/LoadCategory". Page: ClientSchedulingReport.cshtml');
+                    //alert('Some network error has occurres. Please try again after some time.');
+                }
+            });
+
+            $(function () {
+
+                $('#txtFromDate').datepicker({
+                    dateFormat: "yy/mm/dd",
+                    showStatus: true,
+                    showWeeks: true,
+                    currentText: 'Now',
+                    autoSize: true,
+                    gotoCurrent: true,
+                    showAnim: 'blind',
+                    changeMonth: true,
+                    changeYear: true, 
+                    highlightWeek: true
+                });
+
+                $('#txtToDate').datepicker({
+                    dateFormat: "yy/mm/dd",
+                    showStatus: true,
+                    showWeeks: true,
+                    currentText: 'Now',
+                    autoSize: true,
+                    gotoCurrent: true,
+                    showAnim: 'blind',
+                    changeMonth: true,
+                    changeYear: true, 
+                    highlightWeek: true
+                });
+                $("#divyear").hide();
+                $("#divmonth").hide();
+
+                $("#lblyear").hide();
+                $("#lblmonth").hide();
+                $("#lblfrmdate").hide();
+                $("#lbltodate").hide();
+
+                $("#ddlYearly").hide();
+                $("#ddlMonthly").hide();
+                $("#txtFromDate").hide();
+                $("#txtToDate").hide();
+
+
+                $('#ddCategory').change(function () {
+                    if ($('#ddCategory option:selected').text() != '' && $('#ddCategory option:selected').text() != '--Select--') {
+                        var categoryId = $('#ddCategory').val();
+                        $.ajax({
+                            url: '/Client/LoadCaretakersByCategory',
+                            type: "GET",
+                            dataType: "JSON",
+                            data: { categoryId: categoryId },
+                            success: function (data) {
+                                $("#ddCareTaker").html(""); // clear before appending new list
+                                $("#ddCareTaker").append(
+                                    $('<option></option>').val("").html("--Select--"));
+                                $.each($.parseJSON(data), function (i, care) {
+                                    $("#ddCareTaker").append(
+
+                                        $('<option></option>').val(care.CaretakerId).html(care.CareTakerName));
+
+                                });
+
+                                $('#ddCareTaker').val(selectedEvent.caretaker);
+
+                            },
+                        });
+                    }
+                })
+
+
+
+
+                $("#ddlSearchRange").change(function () {
+                    if ($(this).val() == "1") { // It doesn't work over here.
+                        $("#ddlYearly").show();
+                        $("#divyear").show();
+                        $("#divmonth").hide();
+                        $("#ddlMonthly").hide();
+                        $("#txtFromDate").hide();
+                        $("#txtToDate").hide();
+
+                        $("#lblyear").show();
+                        $("#lblmonth").hide();
+                        $("#lblfrmdate").hide();
+                        $("#lbltodate").hide();
+
+                        document.getElementById("ddlYearly").selectedIndex = "0";
+                        document.getElementById("ddlMonthly").selectedIndex = "0";
+                        document.getElementById("txtFromDate").value = "";
+                        document.getElementById("txtToDate").value = "";
+
+                    } else if ($(this).val() == "2") {
+                        $("#divyear").show();
+                        $("#divmonth").show();
+                        $("#ddlYearly").show();
+                        $("#ddlMonthly").show();
+                        $("#txtFromDate").hide();
+                        $("#txtToDate").hide();
+
+                        $("#lblyear").show();
+                        $("#lblmonth").show();
+                        $("#lblfrmdate").hide();
+                        $("#lbltodate").hide();
+
+                        document.getElementById("ddlYearly").selectedIndex = "0";
+                        document.getElementById("txtFromDate").value = "";
+                        document.getElementById("txtToDate").value = "";
+                    }
+                    else if ($(this).val() == "3") {
+                        $("#divyear").show();
+                        $("#divmonth").show();
+                        $("#ddlYearly").hide();
+                        $("#ddlMonthly").hide();
+                        $("#txtFromDate").show();
+                        $("#txtToDate").show();
+
+                        $("#lblyear").hide();
+                        $("#lblmonth").hide();
+                        $("#lblfrmdate").show();
+                        $("#lbltodate").show();
+
+                        document.getElementById("ddlYearly").selectedIndex = "0";
+                        document.getElementById("ddlMonthly").selectedIndex = "0";
+                    }
+                    else {
+                        $("#divyear").hide();
+                        $("#divmonth").hide();
+                        $("#ddlYearly").hide();
+                        $("#ddlMonthly").hide();
+                        $("#txtFromDate").hide();
+                        $("#txtToDate").hide();
+
+                        $("#lblyear").hide();
+                        $("#lblmonth").hide();
+                        $("#lblfrmdate").hide();
+                        $("#lbltodate").hide();
+                        document.getElementById("txtFromDate").value = "";
+                        document.getElementById("txtToDate").value = "";
+                        document.getElementById("ddlYearly").selectedIndex = "0";
+                        document.getElementById("ddlMonthly").selectedIndex = "0";
+                    }
+                });
+
+
+                $('#btnSearch').click(function () {
+                    showProgress();
+                    var clientId = $("#ddlClient").val();                    
+                    var work = $("#ddWorkMode").val();
+                    var category = $("#ddCategory").val();
+                    var caretaker = $("#ddCareTaker").val();
+                    var year = $("#ddlYearly").val();
+                    var month = $("#ddlMonthly").val();
+                    var fromdate = $("#txtFromDate").val();
+                    var todate = $("#txtToDate").val();
+
+                    //ASPX page URL to load report
+                    var src = '../Reports/ClientScheduleReport.aspx?';
+                    //We can add parameters here
+                    //setTimeout(function () {
+                    //    hideProgress();
+                    //}, 10000);
+                   
+                    src = src + "caretaker=" + caretaker
+                    src = src + "&work=" + work
+                    src = src + "&category=" + category
+                    src = src + "&year=" + year
+                    src = src + "&month=" + month
+                    src = src + "&fromdate=" + fromdate
+                    src = src + "&todate=" + todate
+                    src = src + "&clientId=" + clientId
+
+                    $("#policyContent").html('<iframe  src="' + src + '"style="width: 100%; height: 500px" onload="hideProgress()"></iframe>');
+                });
+            });
+
+        </script>
+    }
+</body>
+</html>

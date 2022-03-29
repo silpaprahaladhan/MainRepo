@@ -1,0 +1,815 @@
+﻿@model  Nirast.Pcms.Web.Models.OfficeStaffRegistration
+@{
+    ViewBag.Title = "OfficeStaff";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+    var c = Session["CountryId"].ToString();
+    var ci = Session["StateID"].ToString();
+    var st = Session["CityIdk"].ToString();
+  
+}
+<head>
+    <script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+</head>
+@*@Html.AntiForgeryToken()*@
+<div class="container">
+
+    <div class="row">
+        <div class="profile_Style">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    <div class="panel panel-default">
+                        @if (TempData["OfficeStaff"] != null)
+                        {
+                            <p class="alert alert-success statusmessage">@TempData["OfficeStaff"]</p>
+                        }
+                        @if (TempData["OfficeStaffFailure"] != null)
+                        {
+                            <p class="alert alert-danger statusmessage">@TempData["OfficeStaffFailure"]</p>
+                        }
+                        <div class="panel-heading">
+                            <h4 style="font-weight:bold">Office Staff Registration</h4>
+                        </div>
+                        <div class="panel-body">
+
+                            @using (Html.BeginForm("CreateOfficeStaffRegistration", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="col-lg-12 col-md-12 col-sm-12 no-padding ">
+                                    <form class="form-horizontal">
+                                        <fieldset>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">First Name</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.FirstName, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "First Name" })
+                                                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "no-padding required" })
+                                                    </div>
+
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">Last Name</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.LastName, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Last Name" })
+                                                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Qualification">Qualification</label>
+                                                        @Html.DropDownListFor(model => model.QualificationId, ViewData["ListQualification"] as SelectList, new { @class = "form-control labelStyle" })
+
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="label-style" for="Designation">Designation</label><span class="mandatoryField">*</span>
+                                                     
+                                                        @Html.DropDownListFor(model => model.DesignationId, ViewData["listDesignation"] as SelectList, new { @class = "form-control labelStyle" })
+                                                        @Html.ValidationMessageFor(model => model.DesignationId, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Gender">Role</label><span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.RoleId, ViewData["RolesList"] as SelectList, "--Select--", new { @class = "form-control  labelStyle",@id="rol" })
+
+                                                        @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                    @Html.TextBoxFor(model => model.RoleName, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2", @id = "rolname", @style = "display:none" })
+
+                                                    <div class="col-md-6">
+
+                                                        <label class=" label-style">Country</label><span class="mandatoryField">*</span>
+
+                                                        @Html.DropDownListFor(model => model.CountryId, ViewData["CountryList"] as SelectList, "--Select--", new { @class = "form-control cid labelStyle", @onchange = "LoadStates()" })
+
+                                                        @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">@Resource.State</label><span class="mandatoryField">*</span>
+
+                                                        @Html.DropDownListFor(model => model.StateId, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @class = "form-control sid labelStyle", @onchange = "LoadCities(this.value)" })
+
+                                                        @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">City</label><span class="mandatoryField">*</span>
+
+                                                        @Html.DropDownListFor(model => model.CityId, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @class = "form-control cyid labelStyle" })
+
+                                                        @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class=" label-style no-padding">Branch</label><span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.BranchId1, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @Id = "Branch1", @class = "form-control labelStyle" })
+                                                       
+                                                    </div>
+                                                    
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">Location</label>
+                                                        @Html.TextBoxFor(model => model.Location, new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Location" })
+                                                        @Html.ValidationMessageFor(model => model.Location, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">@Resource.StreetName</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.HouseName, new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = Resource.StreetName })
+                                                        @Html.ValidationMessageFor(model => model.HouseName, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">@Resource.ZIPCode</label>
+                                                        @Html.TextBoxFor(model => model.ZipCode, new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = Resource.ZIPCode })
+                                                        @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">Phone #1</label>
+                                                        @Html.TextBoxFor(model => model.PrimaryPhoneNo, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #1" })
+                                                        @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">Phone #2</label>
+                                                        @Html.TextBoxFor(model => model.SecondaryPhoneNo, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2" })
+                                                        @Html.ValidationMessageFor(model => model.SecondaryPhoneNo, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">Email ID</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.EmailAddress, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Email ID", @onblur = "checkLoginName()" })
+                                                        <span class="col-md-12 no-padding labelStyle info" title="" style="color:black;">Verification mail will be sent to the above Email ID</span><br />
+                                                        @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "no-padding required" })
+                                                        <span id="result" />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class=" label-style" for="pwd">Password</label><span class="mandatoryField">*</span>
+                                                        @Html.PasswordFor(model => model.Password, new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Password" })
+                                                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">
+                                                            Confirm Password
+                                                        </label><span class="mandatoryField">*</span>
+                                                        @Html.PasswordFor(model => model.ConfirmPassword, new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Confirm Password" })
+                                                        @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <fieldset>
+                                                <legend style="padding-top:20px;margin-left:10px;margin-bottom: 5px">Work Location Details:</legend>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-md-6">
+                                                                    <label class=" label-style" for="TestRole">Staff Type</label><span class="mandatoryField">*</span>
+                                                                    @Html.EnumDropDownListFor(model => model.Stafftype, "--Select--", new { @Id = "TestRole", @class = "form-control" })
+                                                                    @*<span class="error required" id="TestRole-error">Select Test Role</span>*@
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="col-lg-4">
+                                                                    <label class="label-style" id="lblCountry">Country</label>
+                                                                    @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle"@*, @onchange = "GetStates1()"*@ })
+                                                                    <span class="error required" id="CountryId1-error">Select Country</span>
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <label class="label-style" id="lblState">State</label>
+                                                                    @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                                                    <span class="error required" id="StateId1-error">Select State</span>
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <label class="label-style" id="lblCity">City</label>
+                                                                    @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                                                    <span class="error required" id="CityId1-error">Select City</span>
+                                                                </div>
+                                                                <div class="col-lg-4">
+                                                                    <label class="label-style" id="lblBranch1">Branch</label>
+                                                                    @Html.DropDownListFor(model => model.BranchId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlBranch1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                                                    @Html.TextBoxFor(model => model.CountryId1Name, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2" ,@id="cname",@style="display:none"})
+                                                                    @Html.TextBoxFor(model => model.StateId1Name, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2" ,id="sname", @style = "display:none" })
+                                                                    @Html.TextBoxFor(model => model.CityId1Name, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2",id="ctname", @style = "display:none" })
+                                                                    @Html.TextBoxFor(model => model.BranchId1Name, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2",id="cyname", @style = "display:none" })
+
+                                                                    <span class="error required" id="BranchId1-error">Select Branch</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </fieldset>
+                                                <div class="clearfix"></div>
+                                                <div class="box-footer">
+
+                                                    <div class="registerStyle">
+                                                        @if (ViewBag.AllowEdit)
+                                                        {
+                                                            <button class="btn btn-primary" value="" id="registerOfficeStaff">REGISTER</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="wrapper">
+                                                                <button class="btn btn-primary" value="" disabled>REGISTER</button>
+                                                            </div>
+                                                        }
+                                                        &nbsp;&nbsp;
+                                                        <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>&nbsp;&nbsp;
+                                                    </div>
+
+                                                </div>
+                                            </fieldset>
+</form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+    <!-- //login -->
+
+</div>
+<style type="text/css">
+    .form-control {
+        border-radius: 4px;
+    }
+
+    .registerStyle {
+        text-align: center;
+        padding-top: 10px;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#TestRole-error').hide();
+        $('#CountryId1-error').hide();
+        $('#StateId1-error').hide();
+        $('#CityId1-error').hide();
+        $('#BranchId1-error').hide();
+        //LoadStates();
+        hideStateCity();
+        $("#registerOfficeStaff").click(function () {
+            return checkValidation();
+        });
+    });
+    $(function () {
+        $("#ddlCountry1").hide();
+        $("#ddlStates1").hide();
+        $("#ddlCity1").hide();
+        $("#lblCountry").hide();
+        $("#lblState").hide();
+        $("#lblCity").hide();
+        $("#ddlBranch1").hide();
+        $("#lblBranch1").hide();
+
+        $("#TestRole").change(function () {
+            //country staff
+             var role = @Html.Raw(Json.Encode(ViewData["cou"]));
+             var roles = @Html.Raw(Json.Encode(ViewData["stat"]));
+            var rolec = @Html.Raw(Json.Encode(ViewData["city"]));
+            var roleb=@Html.Raw(Json.Encode(ViewData["BranchID"]));
+            if ($(this).val() == "1") {
+
+                if (role != "0") {
+                    $.ajax({
+                        url: '/Admin/GetCountry?city=' + role,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (data) {
+                            console.log(data);
+                            var ddlState = $("#ddlCountry1");
+
+                            ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                            $.each(data, function (data, value) {
+
+                                ddlState.append($("<option></option>").val(value.CountryId).html(value.CountryName));
+                            });
+
+                        }
+                    });
+                }
+
+                $("#ddlCountry1").show();
+                $("#lblCountry").show();
+                $("#ddlStates1").hide();
+                $("#lblState").hide();
+                $("#ddlCity1").hide();
+                $("#lblCity").hide();
+
+                $("#ddlBranch1").hide();
+                $("#lblBranch1").hide();
+            }
+            //State satff
+            if ($(this).val() == "2") {
+                if (role != "0" && roles=="0") {
+                    $.ajax({
+                        url: '/Admin/GetCountry?city=' + role,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (data) {
+                            console.log(data);
+                            var ddlState = $("#ddlCountry1");
+
+                            ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                            $.each(data, function (data, value) {
+
+                                ddlState.append($("<option></option>").val(value.CountryId).html(value.CountryName));
+                            });
+
+                        }
+                    });
+                }
+
+                if (role != "0" && roles != "0") {
+
+                    $.ajax({
+                        url: '/Admin/GetCountry?city=' + role,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (data) {
+                            console.log(data);
+                            var ddlState = $("#ddlCountry1");
+                           
+                            ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                            $.each(data, function (data, value) {
+
+                                ddlState.append($("<option></option>").val(value.CountryId).html(value.CountryName));
+                            });
+
+                        }
+                    });
+
+                }
+                $("#ddlCountry1").show();
+                $("#lblCountry").show();
+                $("#ddlStates1").show();
+                $("#lblState").show();
+                $("#ddlCity1").hide();
+                $("#lblCity").hide();
+
+                $("#ddlBranch1").hide();
+                $("#lblBranch1").hide();
+            }
+            //City staff
+            if ($(this).val() == "3") {
+                $("#ddlCountry1").show();
+                $("#lblCountry").show();
+                $("#ddlStates1").show();
+                $("#lblState").show();
+                $("#ddlCity1").show();
+                $("#lblCity").show();
+
+                $("#ddlBranch1").hide();
+                $("#lblBranch1").hide();
+                if (role != "0") {
+                    $.ajax({
+                        url: '/Admin/GetCountry?city=' + role,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (data) {
+                            console.log(data);
+                            var ddlState = $("#ddlCountry1");
+
+                            ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                            $.each(data, function (data, value) {
+
+                                ddlState.append($("<option></option>").val(value.CountryId).html(value.CountryName));
+                            });
+
+                        }
+                    });
+                }
+                if (role != "0" && roles != "0" && rolec != "0") {
+
+                    $.ajax({
+                        url: '/Admin/GetCountry?city=' + role,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (data) {
+                            console.log(data);
+                            var ddlState = $("#ddlCountry1");
+
+                            ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                            $.each(data, function (data, value) {
+
+                                ddlState.append($("<option></option>").val(value.CountryId).html(value.CountryName));
+                            });
+
+                        }
+                    });
+
+                }
+            }
+            //Branch staff
+            if ($(this).val() == "4") {
+                if (role != "0") {
+                    $.ajax({
+                        url: '/Admin/GetCountry?city=' + role,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (data) {
+                            console.log(data);
+                            var ddlState = $("#ddlCountry1");
+
+                            ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                            $.each(data, function (data, value) {
+
+                                ddlState.append($("<option></option>").val(value.CountryId).html(value.CountryName));
+                            });
+
+                        }
+                    });
+                }
+                $("#ddlCountry1").show();
+                $("#lblCountry").show();
+                $("#ddlStates1").show();
+                $("#ddlBranch1").show();
+                $("#lblState").show();
+                $("#ddlCity1").show();
+                $("#lblCity").show();
+                $("#lblBranch1").show();
+            }
+
+
+        })
+    });
+
+
+    function hideStateCity() {
+        $("#CountryDiv").hide();
+        $("#StateDiv").hide();
+        $("#CityDiv").hide();
+        }
+
+    function checkValidation() {
+        debugger;
+        var testRole = $("#TestRole").val();
+        if (testRole == 0) {
+            $('#TestRole-error').show();
+            return false;
+        }
+        if (testRole == 1) {
+            var q = $("#ddlCountry1").val();
+            if (($("#ddlCountry1").val() == null) || ($("#ddlCountry1").val() == "")) {
+                $('#CountryId1-error').show();
+                return false;
+            }
+            else {
+                $("#ddlStates1").val() = null;
+                $("#ddlCity1").val() = null;
+                return true;
+            }
+        }
+        if (testRole == 2) {
+            if (($("#ddlCountry1").val() == null) || ($("#ddlCountry1").val() == "")) {
+                $('#CountryId1-error').show();
+                return false;
+            }
+            if (($("#ddlStates1").val() == null) || ($("#ddlStates1").val() == "")) {
+                $('#StateId1-error').show();
+                return false;
+            }
+            else {
+                $("#ddlCity1").val() = null;
+                return true;
+            }
+        }
+        if (testRole == 3) {
+            if (($("#ddlCountry1").val() == null) || ($("#ddlCountry1").val() == "")) {
+                $('#CountryId1-error').show();
+                return false;
+            }
+            if (($("#ddlStates1").val() == null) || ($("#ddlStates1").val() == "")) {
+                $('#StateId1-error').show();
+                return false;
+            }
+            if (($("#ddlCity1").val() == null) || ($("#ddlCity1").val() == "")) {
+                $('#CityId1-error').show();
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    }
+
+    $("#rol").change(function () {
+
+
+        var cname = $("#rol option:selected").text();
+        
+        document.getElementById("rolname").value = cname;
+       
+    });
+
+    $("#ddlCity1").change(function () {
+        var cityId = $('#ddlCity1').val();
+        $.ajax({
+            url: '/Admin/GetBranch?city=' + cityId,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            success: function (data) {
+                console.log(data);
+                var ddlState = $("#ddlBranch1");
+                ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                $.each(data, function (data, value) {
+
+                    ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                });
+
+            }
+        });
+    });
+
+    $(".cyid").change(function () {
+        var cityId = $('.cyid').val();
+        $.ajax({
+            url: '/Admin/GetBranch?city=' + cityId,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            success: function (data) {
+                console.log(data);
+                var ddlState = $("#Branch1");
+                ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                $.each(data, function (data, value) {
+
+                    ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                });
+
+            }
+        });
+    });
+
+    $("#ddlBranch1").change(function () {
+
+      
+        var ctname = $("#ddlBranch1 option:selected").text();
+
+        document.getElementById("cyname").value = ctname;
+     
+    });
+
+
+    $("#ddlCountry1").change(function () {
+
+        var cname = $("#ddlCountry1 option:selected").text();
+        var crole = $("#ddlCountry1").val();
+        
+        document.getElementById("cname").value = cname;
+
+        var role = @Html.Raw(Json.Encode(ViewData["cou"]));
+        var roles = @Html.Raw(Json.Encode(ViewData["stat"]));
+        var rolec = @Html.Raw(Json.Encode(ViewData["city"]));
+      
+
+        if (role == "" && roles == "" && rolec == "") {
+         
+            var selectedCountry = ($('#CountryId').val() === "" || $('#CountryId').val() === undefined) ? 0 : $('#CountryId').val();
+            $.ajax({
+                url: '/Admin/LoadStatesByCountryId',
+                type: "GET",
+                dataType: "JSON",
+                data: { countryId: crole },
+                success: function (data) {
+
+                    $("#ddlStates1").html(""); // clear before appending new list
+                    $("#ddlStates1").append(
+                        $('<option></option>').val("").html("--Select--"));
+                    if (crole !== 0) {
+                        $.each($.parseJSON(data), function (i, state) {
+
+                            $("#ddlStates1").append(
+                                $('<option></option>').val(state.StateId).html(state.Name));
+                        });
+                    }
+                    $("#ddlStates1").prop('selectedIndex', 0);
+                    $('#ddlCity1').html('');
+                    $('#ddlCity1').append($('<option></option>').val('').html('--Select--'));
+                    $.ajax({
+                        url: '/admin/loadphonecodebycountryid',
+                        type: "get",
+                        datatype: "json",
+                        data: { countryid: crole },
+                        success: function (data) {
+                            $('#lblPhoneCodePrimary1').text(data);
+                            $('#lblPhoneCodePrimary2').text(data);
+
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while getting Phone Code for CountryId:' + selectedCountry + ' in function LoadStates(). Page: CustomScript.js');
+                            //alert('Some network error has occurred. Please try again after some time.');
+                        }
+                    });
+                },
+            });
+        }
+        else if (role != "0" && roles != "0") {
+          
+            $.ajax({
+                url: '/Admin/Getstate?city=' + roles,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                    var ddlState = $("#ddlStates1");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.StateId).html(value.StateName));
+                    });
+
+                }
+            });
+        }
+        else if (role != "0" && roles == "0") {
+           
+            GetStates1();
+        }
+        else if (role != "0" || roles != "0" || rolec != "0") {
+           
+            $.ajax({
+                url: '/Admin/GetCityDetails?city=' + rolec,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                    var ddlState = $("#ddlStates1");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.StateId).html(value.StateName));
+                    });
+
+                }
+            });
+        }
+
+        else if (role != "0") {
+          
+            GetStates1();
+        }
+    });
+
+
+    $("#ddlStates1").change(function () {
+
+        var sname = $("#ddlStates1 option:selected").text();
+
+        document.getElementById("sname").value = sname;
+
+        var role = @Html.Raw(Json.Encode(ViewData["cou"]));
+             var roles = @Html.Raw(Json.Encode(ViewData["stat"]));
+        var rolec = @Html.Raw(Json.Encode(ViewData["city"]));
+    
+        if (role != "0" && roles=="0" && rolec=="0") {
+            GetCities1();
+        }
+       
+       else if (role != "0" && roles != "0" && rolec != "0") {
+            $.ajax({
+                url: '/Admin/GetCityDetails?city=' + rolec,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                    var ddlState = $("#ddlCity1");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.CityId).html(value.CityName));
+                    });
+
+                }
+            });
+        }
+    });
+    $("#ddlCity1").change(function () {
+      
+        var ctname = $("#ddlCity1 option:selected").text();
+
+        document.getElementById("ctname").value = ctname;
+        var cityId =@Html.Raw(Json.Encode(ViewData["BranchID"]));
+        if (cityId != "0") {
+            $.ajax({
+                url: '/Admin/GetBranchbyId?city=' + cityId,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                    var ddlState = $("#ddlBranch1");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                    });
+
+                }
+            });
+        }
+        else {
+            var cityId = $('#ddlCity1').val();
+
+            $.ajax({
+                url: '/Admin/GetBranch?city=' + cityId,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    console.log(data);
+                    var ddlState = $("#ddlBranch1");
+                    ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                    $.each(data, function (data, value) {
+
+                        ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                    });
+
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,469 @@
+﻿@model Nirast.Pcms.Web.Models.ClientModel
+@{
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+    var country = Session["CountryId"].ToString();
+    var state = Session["StateID"].ToString();
+    var city = Session["CityIdk"].ToString();
+}
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Scheduling Report</title>
+</head>
+<body>
+    <hr />
+    @{
+        if (ViewBag.Error != null)
+        {
+            <div class="padT25"><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+        }
+        else
+        {
+            <div class="row profile_Style">
+                <div class="panel panel-default report-style " id="main">
+                    <div class="panel-heading">
+                        <h4>Select Location</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-2" id="countrydiv">
+                                    <label class="label-style">Country</label>
+                                    @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                    @Html.ValidationMessageFor(model => model.CountryId1, "", new { @class = "no-padding required" })
+                                </div>
+                                <div class="col-md-2" id="statediv">
+                                    <label class="label-style">State</label>
+                                    @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                    @Html.ValidationMessageFor(model => model.StateId1, "", new { @class = "no-padding required" })
+                                </div>
+                                <div class="col-md-2" id="citydiv">
+                                    <label class="label-style">City</label>
+                                    @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                    @Html.ValidationMessageFor(model => model.CityId1, "", new { @class = "no-padding required" })
+                                </div>
+
+                                <div class="col-md-2" id="citydiv">
+                                    <label class="label-style">Franchise/Branch</label>
+                                    @Html.DropDownListFor(model => model.BranchId2, ViewData["ListBranch"] as SelectList, "--Select--", new { @Id = "Branch1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                    @Html.ValidationMessageFor(model => model.BranchId2, "", new { @class = "no-padding required" })
+                                </div>
+                                <div class="col-md-3" style="margin-top:39px;">
+                                    <button class="btn btn-primary float-left editButton" title="Edit" onclick="LoadClientByLocation()">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="panel panel-default report-style ">
+                    <div class="panel-heading">
+                        <h4>Scheduling Report</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="col-md-12 innerDiv">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-4">
+                                        <label class="label-style">Client Name:</label>
+                                        <select id="ddlClient" class="form-control  col-md-12  labelStyle"></select>
+                                    </div>
+                                    <div class="col-md-4  col-lg-4">
+                                        <label id="lblfrmdate" class="label-style">From Date :</label><span class="mandatoryField">*</span>
+                                        @Html.TextBox("FromDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtFromDate", @placeholder = "From Date", @onchange = "dateRangeValidation(this.value)" })
+                                    </div>
+                                    <div class="col-md-4  col-lg-4">
+                                        <label id="lblfrmdate" class="label-style">To Date :</label><span class="mandatoryField">*</span>
+                                        @Html.TextBox("ToDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtToDate", @placeholder = "To Date", @onchange = "dateRangeValidation(this.value)" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-12" style="padding-bottom: 15px;">
+                                <div class="col-md-5"></div>
+                                <div class="col-md-3 text-center">
+                                    <button type="submit" id="btnSearch" class="btn btn-primary m-t-10">Search</button>
+                                    <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container animsition" style="padding-bottom: 15px;">
+
+                <div class="row">
+                    <div class="equal-height-panels">
+                        <div class="ui segment">
+                            <div id="dvMain" name="dvMain">
+                                <div class="clr"></div>
+                                <div class="col-md-12">
+                                    <div class="signature-pad col-md-12">
+
+                                        <div class="panel panel-group panel-success">
+                                            <div class="panel-heading"><h5>Report View</h5></div>
+                                            <div class="panel-body">
+                                                <div id="policyContent" type="text" readonly="readonly">
+                                                    @*<iframe src=@Model.policyContent frameBorder="0"></iframe>*@
+                                                    @*<iframe src='@Url.Action("GetPDF", "Admin")' width="100%" height="1000" frameBorder="0"></iframe>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="spinner">
+
+            </div>
+
+            <script>
+
+
+                $(document).ready(function () {
+
+                    var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+                    if (role == 1) {
+
+
+                        document.getElementById('countrydiv').style.display = "none";
+
+                    }
+                    if (role == 2) {
+
+                        document.getElementById('countrydiv').style.display = "none";
+                        document.getElementById('statediv').style.display = "none";
+
+                    }
+                    if (role == 3) {
+                        document.getElementById('countrydiv').style.display = "none";
+                        document.getElementById('statediv').style.display = "none";
+                        document.getElementById('citydiv').style.display = "none";
+                        document.getElementById('branchdiv').style.display = "none";
+                    }
+                    if (role == 4) {
+                        document.getElementById('main').style.display = "none";
+                    }
+                });
+
+                $("#ddlCity1").change(function () {
+                    var cityId = $('#ddlCity1').val();
+                    $.ajax({
+                        url: '/Admin/GetBranch?city=' + cityId,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        datatype: JSON,
+                        success: function (data) {
+                            console.log(data);
+                            var ddlState = $("#Branch1");
+                            ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                            $.each(data, function (data, value) {
+
+                                ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                            });
+
+                        }
+                    });
+                });
+
+                $.ajax({
+                    url: "/Client/LoadClient",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+                        debugger
+                        $("#ddlClient").html(""); // clear before appending new list
+                        $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+                        $.each($.parseJSON(result), function (i, care) {
+                            $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+                        })
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Clients. Function: "/Client/LoadClient". Page: AvailableCaretakerReport.cshtml');
+                        //alert('Some network error has occurres. Please try again after some time.');
+                    }
+                });
+
+
+                $.ajax({
+                    url: "/Client/LoadWorkShift",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+
+                        $("#ddWorkMode").html(""); // clear before appending new list
+                        $("#ddWorkMode").append($('<option></option>').val("").html("--Select--"));
+                        $.each($.parseJSON(result), function (i, care) {
+
+                            $("#ddWorkMode").append($('<option></option>').val(care.ShiftId).html(care.ShiftName));
+                        })
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Work Shifts. Function: "/Client/LoadWorkShift". Page: AvailableCaretakerReport.cshtml');
+                        //alert('Some network error has occurres. Please try again after some time.');
+                    }
+                });
+
+                $.ajax({
+                    url: "/Client/LoadCategory",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: JSON,
+                    success: function (result) {
+
+                        $("#ddCategory").html(""); // clear before appending new list
+                        $("#ddCategory").append($('<option></option>').val("").html("--Select--"));
+                        $.each($.parseJSON(result), function (i, care) {
+                            $("#ddCategory").append($('<option></option>').val(care.CategoryId).html(care.Name));
+                        })
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while loading Catetaker Types. Function: "/Client/LoadCategory". Page: AvailableCaretakerReport.cshtml');
+                        //alert('Some network error has occurres. Please try again after some time.');
+                    }
+                });
+
+                $(function () {
+
+                    $('#txtFromDate').datepicker({
+                        dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+                        showStatus: true,
+                        showWeeks: true,
+                        currentText: 'Now',
+                        autoSize: true,
+                        gotoCurrent: true,
+                        showAnim: 'blind',
+                        changeMonth: true,
+                        changeYear: true,
+                        highlightWeek: true
+                    });
+
+                    $('#txtToDate').datepicker({
+                        dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+                        showStatus: true,
+                        showWeeks: true,
+                        currentText: 'Now',
+                        autoSize: true,
+                        gotoCurrent: true,
+                        showAnim: 'blind',
+                        changeMonth: true,
+                        changeYear: true,
+                        highlightWeek: true
+                    });
+
+                    $('#ddCategory').change(function () {
+                        if ($('#ddCategory option:selected').text() != '' && $('#ddCategory option:selected').text() != '--Select--') {
+                            var categoryId = $('#ddCategory').val();
+                            $.ajax({
+                                url: '/Client/LoadCaretakersByCategory',
+                                type: "GET",
+                                dataType: "JSON",
+                                data: { categoryId: categoryId },
+                                success: function (data) {
+                                    $("#ddCareTaker").html(""); // clear before appending new list
+                                    $("#ddCareTaker").append(
+                                        $('<option></option>').val("").html("--Select--"));
+                                    $.each($.parseJSON(data), function (i, care) {
+                                        $("#ddCareTaker").append(
+
+                                            $('<option></option>').val(care.CaretakerId).html(care.CareTakerName));
+
+                                    });
+
+                                    $('#ddCareTaker').val(selectedEvent.caretaker);
+
+                                },
+                                error: function (data) {
+                                    logError(data.statusText + ' - Error occurred while loading Catetaker Types. Function: $("#ddCategory").change(function ()). Page: AvailableCaretakerReport.cshtml');
+                                    //alert('Some network error has occurred. Please try again after some time.');
+                                }
+                            });
+                        }
+                    })
+
+                    $("#ddlSearchRange").change(function () {
+                        if ($(this).val() == "1") { // It doesn't work over here.
+                            $("#ddlYearly").show();
+                            $("#divyear").show();
+                            $("#divmonth").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").show();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            document.getElementById("ddlYearly").selectedIndex = "0";
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+
+                        } else if ($(this).val() == "2") {
+                            $("#divyear").show();
+                            $("#divmonth").show();
+                            $("#ddlYearly").show();
+                            $("#ddlMonthly").show();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").show();
+                            $("#lblmonth").show();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            document.getElementById("ddlYearly").selectedIndex = "0";
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+                        }
+                        else if ($(this).val() == "3") {
+                            $("#divyear").show();
+                            $("#divmonth").show();
+                            $("#ddlYearly").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").show();
+                            $("#txtToDate").show();
+
+                            $("#lblyear").hide();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").show();
+                            $("#lbltodate").show();
+                            document.getElementById("ddlYearly").selectedIndex = "0";
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                        }
+                        else {
+                           // $("#divyear").hide();
+                            $("#divmonth").hide();
+                            $("#ddlYearly").hide();
+                            $("#ddlMonthly").hide();
+                            $("#txtFromDate").hide();
+                            $("#txtToDate").hide();
+
+                            $("#lblyear").hide();
+                            $("#lblmonth").hide();
+                            $("#lblfrmdate").hide();
+                            $("#lbltodate").hide();
+                            document.getElementById("txtFromDate").value = "";
+                            document.getElementById("txtToDate").value = "";
+                            document.getElementById("ddlYearly").selectedIndex = "0";
+                            document.getElementById("ddlMonthly").selectedIndex = "0";
+                        }
+                    });
+
+
+                    $('#btnSearch').click(function () {
+                        //var start = $('#txtFromDate').val();
+                        //var end = $('#txtToDate').val();
+                        //var startDate = new Date(start);
+                        //var endDate = new Date(end);
+                        //var diffDates = new Date(endDate - startDate);
+                        //var diffdays = diffDates / 1000 / 60 / 60 / 24;
+                        //if (diffdays > 31)
+                        //{
+                        //    alert("Duration should not be greater than 31 days!")
+                        //    $('#txtFromDate').val('');
+                        //    $('#txtToDate').val('');
+                        //    return;
+                        //}
+
+
+                        var searchText = $("#ddlClient").val();
+                        var work = $("#ddWorkMode").val();
+                        var category = $("#ddCategory").val();
+                        var caretaker = $("#ddCareTaker").val();
+                        var year = $("#ddlYearly").val();
+                        var month = $("#ddlMonthly").val();
+                        var fromdate = $("#txtFromDate").val();
+                        var todate = $("#txtToDate").val();
+                        var isorientation = $("#chkOrientation").prop("checked");
+
+                        var clientText = $("#ddlClient option:selected").text();
+                        //ASPX page URL to load report
+                        var src = '../Reports/CaretakerReport.aspx?';
+                        if (fromdate == "" || todate == "") {
+                            alert("Provide date range to create report!");
+                            return;
+                        }
+                        else {
+                            showProgress();
+
+                            src = src + "clientId=" + searchText
+                            src = src + "&year=" + year
+                            src = src + "&month=" + month
+                            src = src + "&fromdate=" + fromdate
+                            src = src + "&todate=" + todate
+                            src = src + "&isOrientation=" + isorientation
+                            src = src + "&clientText=" + clientText
+                        }
+
+                        $("#policyContent").html('<iframe  src="' + src + '"style="width: 100%; height: 700px" onload="hideProgress()"></iframe>');
+                    });
+                });
+
+                function LoadClientByLocation() {
+                    SetDropdownValuesByRole();
+                    $.ajax({
+                        url: "/Client/LoadClientByLocationInvoiceReport",
+                        type: "POST",
+                        data: {
+                            countryId: $('#ddlCountry1').val(),
+                            stateId: $('#ddlStates1').val(),
+                            cityId: $('#ddlCity1').val()
+                        },
+                        success: function (result) {
+                            $("#ddlClient").html(""); // clear before appending new list
+                            $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+                            $.each($.parseJSON(result), function (i, care) {
+                                $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+                            })
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while loading Clients. Function: "/Client/LoadClient". Page: AvailableCaretakerReport.cshtml');
+                            //alert('Some network error has occurres. Please try again after some time.');
+                        }
+                    });
+                }
+
+
+                 function SetDropdownValuesByRole() {
+        var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+            if (role == 1) {
+                $('#ddlCountry1').val(@country);
+                return;
+            }
+            if (role == 2) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                return;
+            }
+            if (role == 3) {
+                 $('#ddlCountry1').val(@country);
+                $('#ddlStates1').val(@state);
+                $('#ddlCity1').val(@city);
+                return;
+        }
+        return;
+        }
+
+            </script>
+
+        }
+    }
+
+</body>
+</html>
+

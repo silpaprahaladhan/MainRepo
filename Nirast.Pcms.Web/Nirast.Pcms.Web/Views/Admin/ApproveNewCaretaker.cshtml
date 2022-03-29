@@ -1,0 +1,2365 @@
+﻿@model Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel
+@{
+    ViewBag.Title = "ApproveNewCaretaker";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<script>
+    function Navigation() {
+                if (localStorage.getItem('CaretakerEditMode') == 'Edit') {
+                    $('#View').show();
+                    $('#editPage').show();
+                    $('#Edit').hide();
+                }
+                else {
+                    //window.location.replace("ManageCareTaker", "Admin")
+                     window.history.back();
+                }
+
+                localStorage.removeItem('CaretakerEditMode')
+            }
+            function NewCaretakerNavigation() {
+                debugger;
+                if (localStorage.getItem('CaretakerEditMode') == 'Edit') {
+                    $('#View').show();
+                    $('#editPage').show();
+                    $('#Edit').hide();
+                }
+                else {
+                    window.location.replace("AppliedCaretakers", "Admin")
+                }
+
+                localStorage.removeItem('CaretakerEditMode')
+            }
+            function UpdateEmail() {
+
+                $('#verifyEmail').modal('hide')
+                showProgress();
+                $.ajax({
+                    type: "POST",
+                    url: "../Admin/UpdateUserEmail",
+                    data: { id: $('#UserId').val(), emailId: $('#EmailId').val(), userType: $('#UserTypeId').val(), name: $('#FirstName').val() },
+                    success: function (data) {
+                        spinnerVisible = true;
+                        hideProgress();
+                        //location.reload();
+                        $('#EmailVerification').show();
+                        setTimeout(function () {
+
+                            $('#EmailVerification').hide();
+
+                        }, 10000);
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while Updating  User EmailID. Function: UpdateEmail(). Page: ApproveNewCaretaker.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+                    }
+
+                });
+            }
+            function isNumberKey1(element, evt) {
+                var e = window.event || evt;
+                //var charCode = (evt.which) ? evt.which : evt.keyCode
+                var charCode = (window.Event) ? element.which : element.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57) && !(charCode == 46 || charCode == 8) && charCode != undefined)
+                    return false;
+                else {
+                    var len = $(element).val().length;
+                    var index = $(element).val().indexOf('.');
+                    if (index > 0 && charCode == 46) {
+                        return false;
+                    }
+                    if (index > 0) {
+                        var CharAfterdot = (len + 1) - index;
+                        if (CharAfterdot > 3) {
+                            return false;
+                        }
+                    }
+
+                }
+                return true;
+            }
+
+            function isPrivate(){
+                var radioValue = $("input[name='IsPrivateCT']:checked").val();
+                if (radioValue === "Yes") {
+                    $('#IsPrivate').val(true);
+                } else {
+                    $('#IsPrivate').val(false);
+                }
+            }
+
+            function isPrivateApprove() {
+                var radioValue = $("input[name='IsPrivateCTApprove']:checked").val();
+                if (radioValue === "Yes") {
+                    $('#IsPrivate').val(true);
+                } else {
+                    $('#IsPrivate').val(false);
+                }
+            }
+            function removeImage() {
+                $('#imgCaretaker').attr('src', "data:image;base64,@System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg")))");
+                $('#ProfilePicByte').val($('#imgCaretaker').attr('src').split(',')[1]);
+                $("#myPic").val(null);
+            }
+
+            function setCaretakerId(caretakerId) {
+                $('#hdnCTId').val(caretakerId);
+                //if ($('#payRate').val() < 0) {
+                //    $('#showerror').show();
+                //}
+                //else {
+                //    $('#hdnCTId').val(caretakerId);
+                //}
+            }
+            $(function () {
+                $('#txtFromDate').datepicker({
+                    maxDate: 0,
+                    changeMonth: true,
+                    changeYear: true,
+                });
+                  $('#txtDateFrom').datepicker({
+                    onSelect: function (dateText) {
+                        debugger;
+                        $.ajax({
+                            type: "POST",
+                            url: '/CareTaker/GetCaretakerPayRiseRatesonDateChange',
+                            data: { Date: dateText, CaretakerId: $('#UserId').val() },
+                            dataType: "json",
+                            success: function (data) {
+                                debugger;
+                                 var data1 = $.parseJSON(data.Result);
+                                if (data == "[]") {
+                                    $('#workmodeList').html("<tr>" + "<td>No Services found.</td>" + "</tr>");
+                                }
+                                else if (data1.length > 0) {
+                                    var strQual = "";
+
+                                    $.each((data1), function (i, care) {
+                                        strQual = strQual + "<tr>" + "<td>" + care.ServiceName + "</td>" +
+                                        "<td>@ViewData["CurrencySymbol"] " + "<input class='qty disrate1-table-txt' type = 'text' id ='" + care.ServiceId + "' value='" + care.PayingRate + "'  maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" +
+                                        "<td>@ViewData["CurrencySymbol"] " + "<input class='qty disrate-table-txt' type = 'text' id ='" + care.ServiceId + "' value='" + care.DisplayRate + "'  maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" +
+                                        "</tr>";
+
+                                    });
+
+                                    $('#workmodeList2').html(strQual);
+                                }
+
+                            },
+                            error: function (data) {
+                                logError(data.statusText + ' - Error occurred while Mapping a Caregiver to a Client. Function: MapCaretaker(data). Page: ClientDetails.cshtml');
+                                alert('Failed Mapping!');
+                            }
+                        })
+
+                        },
+                    minDate: 0,
+                    changeMonth: true,
+                    changeYear: true,
+                });
+                $('#txtToDate').datepicker({
+                    maxDate: 0,
+                    changeMonth: true,
+                    changeYear: true,
+                });
+                $('#effectiveDate').datepicker({
+                    //maxDate : 0,
+                    changeMonth: true,
+                    changeYear: true,
+                    autocomplete: "off"
+
+                });
+                //$('#lkdeffectiveDate').datepicker({
+
+                //    changeMonth: true,
+                //    changeYear: true,
+                //    enableOnReadonly: false
+                //});
+            });
+
+
+
+            function preventDocumentSelection(checkBox) {
+                if (chkFaxDocuments.checked) {
+                    $(".disableUpload").click(function (e) {
+                        e.preventDefault();
+                    });
+                    $(".disableUpload").prop('disabled', true);
+                    $(".disableUpload").val('');
+                }
+                else {
+                    $('.disableUpload').unbind('click');
+                    $(".disableUpload").prop('disabled', false);
+                }
+            }
+
+            function readCaretakerImage(input) {
+                var ext = $("#myPic").val().split('.').pop();
+                var size = parseFloat($("#myPic")[0].files[0].size / 1024).toFixed(2);
+                if (ext == "jpg" ||ext=="JPG"|| ext == "png"||ext=="PNG") {
+
+                    if (size > 100) {
+                        alert("Image size should be maximum 100KB!")
+                        return;
+                    }
+                    else {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                $('#imgCaretaker')
+                                    .attr('src', e.target.result);
+                                //.width(150)
+                                //.height(200);
+                                $('#ProfilePicByte').val(e.target.result.split(',')[1]);
+                            };
+
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                }
+                else {
+                    alert("You have uploaded an invalid image file type")
+                }
+
+
+            }
+
+            var changeDateFormat = function (dateToConvert) {
+                var date = new Date(Number(dateToConvert.match(/\d+/)[0]));
+                var day = date.getDate();
+                day = day = (day < 10) ? ("0" + day) : day;
+                var month = date.getMonth() + 1;
+                month = (month < 10) ? ("0" + month) : month;
+                var dateStr = month + "/" + day + "/" + date.getFullYear();
+                return dateStr;
+            }
+
+            function showDocument(content, filename) {
+                debugger;
+                if ($('#ConsentForm').val() != '') {
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.style = "display: none";
+                    var modelConsentValue = content;
+                    var byteCharacters = atob(modelConsentValue);
+                    var byteNumbers = new Array(byteCharacters.length);
+                    for (var i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+                    var byteArray = new Uint8Array(byteNumbers);
+                    var blob = new Blob([byteArray], { type: 'octet/stream' });
+                    var objectURL = URL.createObjectURL(blob);
+                    a.href = objectURL;
+                    a.download = filename;
+                    a.click();
+                    window.URL.revokeObjectURL(objectURL);
+                }
+    }
+            function AddPayRise(caretakerName, CaretakerId, ServiceId) {
+                debugger;
+                        $('#clientNametitle').text(' PayRise :  ' + caretakerName);
+                        $('#caretakerName').val(caretakerName);
+                        $('#CaretakerId').val(CaretakerId);
+                        $('#ServiceId').val(ServiceId);
+                     $.ajax({
+                         url: "../Caretaker/GetCaretakerPayRiseRates/",
+                            type: "POST",
+                         data: { CareTakerId: CaretakerId},
+                         success: function (data) {
+                             debugger;
+                             var data1 = $.parseJSON(data);
+                             var timedata=data1[1].EffectiveFrom;
+                             var date = moment(timedata).format("MM/DD/YYYY");
+
+                             $('#txtDateFrom').val(date);
+                            $('#workmodeList').html('');
+                            if (data == "[]") {
+                                $('#workmodeList').html("<tr>" + "<td>No Services found.</td>" + "</tr>");
+                            }
+                            else if (data1.length > 0) {
+                                var strQual = "";
+
+                                $.each((data1), function (i, care) {
+                                    strQual = strQual + "<tr>" + "<td>" + care.ServiceName + "</td>" +
+                                    "<td>@ViewData["CurrencySymbol"] " + "<input class='qty disrate1-table-txt' type = 'text' id ='" + care.ServiceId + "' value='" + care.PayingRate + "'  maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" +
+                                    "<td>@ViewData["CurrencySymbol"] " + "<input class='qty disrate-table-txt' type = 'text' id ='" + care.ServiceId + "' value='" + care.DisplayRate + "'  maxlength=7 onkeypress = 'return isNumberKey(this, event)' /> /hr </td>" +
+                                    "</tr>";
+                                });
+
+                                $('#workmodeList2').html(strQual);
+                            }
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while Map Caretaker. Function: mapCaretaker(clientId). Page: ClientDetails.cshtml');
+                            alert("Some network error has occurred. Please try again after some time.");
+                }
+            });
+    }
+    function clearFields() {
+
+        $('.qty').val('');
+    }
+
+
+        function SavePayRise(data) {
+            $.ajax({
+                type: "POST",
+                url: '/CareTaker/SavePayRise',
+                data: { data:data },
+                dataType: "json",
+                success: function (data) {
+
+                    if (data.status == true) {
+                        location.reload();
+                        localStorage.setItem('EditMode', 'Edit')
+                        $('.qty').val("");
+                        $('.chcktax').prop("checked", false)
+                    }
+
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while Mapping a Caregiver to a Client. Function: MapCaretaker(data). Page: ClientDetails.cshtml');
+                    alert('Failed Mapping!');
+                }
+            })
+        }
+
+
+
+        $(document).ready(function () {
+            var effdate = $('#EffDate').val();
+            $('#effectiveDate').val(effdate);
+            $('#lkdeffectiveDate').val(effdate);
+
+            $('#btnSavePayRise').click(function () {
+                debugger;
+                var mapRates = [];
+                var mapRateCount = 0;
+                $('#workmodeList2 tr').each(function () {
+                    var caretakerId = $('#UserId').val();
+                    var effdate = $('#txtDateFrom').val();
+                    var payingrate = $('.disrate1-table-txt', this).val();
+                    var displayrate = $('.disrate-table-txt', this).val();
+                    var serviceId = $('.disrate1-table-txt', this).attr('id');
+                    var servicename = "";
+
+                    if (payingrate != "" && payingrate != undefined && payingrate && displayrate != "" && displayrate != undefined ) {
+                        mapRates.push({
+                            ServiceId: serviceId,
+                            PayingRate: payingrate,
+                            DisplayRate: displayrate,
+                            EffectiveFrom: effdate,
+                            CaretakerId: caretakerId,
+                            ServiceName:servicename
+
+                        });
+                        mapRateCount = mapRateCount + 1;
+                    }
+                });
+                if (mapRateCount <= 0) {
+                    alert("Please provide atleast one rate.");
+                    return false;
+                };
+
+                if  ($('#txtDateFrom').val() != '') {
+                    SavePayRise(mapRates);
+                }
+                else {
+                    alert("Please enter effective from date!");
+                    return false;
+                }
+            });
+
+                $('#showerror').hide();
+                $("form").validate().settings.ignore = "";
+                $('#Edit').hide();
+                $('#editPage').click(function () {
+                    debugger;
+                    localStorage.setItem('CaretakerEditMode', 'Edit');
+                    $('#editPage').hide();
+                    $('#View').hide();
+                    $('#Edit').show();
+                    $('#EmailVerification').hide();
+                });
+                $('#ApprovePage').click(function () {
+                    $('#Edit').hide();
+                    $('#View').show();
+                    $('#editPage').show();
+                });
+
+                $('#CancelUpdate').click(function () {
+                    window.location.reload();
+                });
+
+                $('#ddlQualification').change(function () {
+                    if ($('#ddlQualification').val() === "999") {
+                        $('#otherquali').show();
+                    }
+                    else {
+                        $('#otherquali').val('');
+                        $('#otherquali').hide();
+                    }
+                });
+
+                $('#TermsPopup').on('show.bs.modal', function (e) {
+                    debugger;
+                   var docPath = $('#ConsentDocPath').val();
+                   if (docPath != '') {
+                        $("#policyContent").html('<iframe type="application/pdf" style="width: 100%; height: 600px" src=' + docPath + '></iframe>');
+                    }
+                    else {
+                        $("#policyContent").html('<div>Consent Form is not uploaded.</div>');
+                    }
+                });
+
+                $('#ConsentDocument').on('change', function (e) {
+                    var file = e.target.files[0];
+                    if (file.name.split('.')[1] == 'pdf') {
+
+                    }
+                    else {
+                        e.target.value = '';
+                        alert("Only PDF files are supported.");
+                    }
+                });
+
+                $("input[name='UpdateCaregiver']").on("click", function () {
+                   debugger;
+                    $('#FirstName').val($('#FirstName').val().trim());
+                    if ($('#FirstName').val() == "") {
+                        alert("First name should not be empty.");
+                        return false;
+                    }
+                    $('#LastName').val($('#LastName').val().trim());
+                    if ($('#LastName').val() == "") {
+                        alert("Last name should not be empty.");
+                        return false;
+                    }
+
+                    if ($('#GenderId').val() == 0) {
+                        alert("Gender should not be empty.");
+                        return false;
+                    }
+                    $('#SSID').val($('#SSID').val().trim());
+                    if ($('#HouseName').val() == "") {
+                        alert("@Resource.StreetName should not be empty.");
+                        return false;
+                    }
+                    $('#Location').val($('#Location').val().trim());
+                    if ($('#CountryId').val() == 0) {
+                        alert("Country should not be empty.");
+                        return false;
+                    }
+                    if ($('#StateId').val() == 0) {
+                        alert("@Resource.State should not be empty.");
+                        return false;
+                    }
+                    if ($('#CityId').val() == 0) {
+                        alert("City should not be empty.");
+                        return false;
+                    }
+                    $('#ZipCode').val($('#ZipCode').val().trim());
+                    $('#PrimaryPhoneNo').val($('#PrimaryPhoneNo').val().trim());
+                    if ($('#EmailId').val() == "") {
+                        alert("Login name should not be empty.");
+                        return false;
+                    }
+                    if ($('#EmailId-error').length) {
+                        alert("Invalid Email Id");
+                        return false;
+                    }
+                    var emailRegex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/
+
+                    //if (!(emailRegex.test($('#EmailId').val()))) {
+                    //    alert("Invalid email address");
+                    //    return false;
+                    //}
+                    $('#AboutMe').val($('#AboutMe').val().trim());
+                    $('#KeySkills').val($('#KeySkills').val().trim());
+                    if ($('#TotalExperience').val() == "") {
+                        $("#TotalExperience").val('0');
+                    }
+                    var experienceRegex = /^\d{0,2}(\.\d{1,2})?$/
+                    if (!(experienceRegex.test($('#TotalExperience').val()))) {
+                        alert("Invalid Experience");
+                        return false;
+                    }
+                    if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() != '--Select--') {
+                        $('#ddlQualification').focus();
+                        $('#btnSaveQualification').addClass('required-border');
+                        alert("Please click the '+' button to add the selected Qualification.");
+                        return false;
+                    }
+                    else {
+                        $('#btnSaveQualification').removeClass('required-border');
+                    }
+
+                    if ($('#txtOrganisation').val() != '' || $('#txtFromDate').val() != '' || $('#txtToDate').val() != '') {
+
+                        $('#txtOrganisation').focus();
+                        $('#btnSaveOrganisation').addClass('required-border');
+                        alert("Please click the '+' button to add the selected Organisation details.");
+                        return false;
+                    }
+                    else {
+
+                        $('#btnSaveOrganisation').removeClass('required-border');
+                    }
+
+                    if ($('#CategoryId').val() == 0) {
+                        alert("Category should not be empty.");
+                        return false;
+                    }
+
+                    if ($('#ddlService option:selected').text() != '' && $('#ddlService option:selected').text() != '--Select--') {
+                        $('#ddlService').focus();
+                        $('#btnSaveService').addClass('required-border');
+                        alert("Please click the '+' button to add the selected Service.");
+                        return false;
+                    }
+                    else {
+                        $('#btnSaveService').removeClass('required-border');
+                    }
+
+                    if ($("#tblServices td").closest("tr").length <= 0) {
+                        alert("Atleast one service is required.");
+                        return false;
+                    }
+
+                    var fromDate = $('#txtAvailableFrom').val();
+                    var toDate = $('#txtAvailableTo').val();
+                    if (fromDate != "") {
+                        if (toDate != "") {
+                            if (Date.parse(fromDate) > Date.parse(toDate)) {
+                                alert("To date should be greater than From date in availability.");
+                                return false;
+                            }
+                        }
+                    }
+                });
+
+                //////////////// Start Dynamic Organisation //////////////////////////////
+
+                $('#btnSaveOrganisation').click(function () {
+                    if ($('#txtOrganisation').val() != '') {
+                        var fromDate = $('#txtFromDate').val();
+                        var toDate = $('#txtToDate').val();
+                        if (fromDate == "" || toDate == "") {
+                            alert("Add Experience Dates");
+                        }
+                        if (fromDate != "") {
+                            if (toDate != "") {
+                                if (Date.parse(fromDate) > Date.parse(toDate)) {
+                                    alert("To date should be greater than From date in experience details.");
+                                    //$('#<%= lblErrorMsg.ClientID %>').text('To date should be greater than From date.');
+                                    return false;
+                                }
+                            }
+                        }
+                        $('#txtOrganisation').removeClass('required-border');
+                        if ($('#txtFromDate').val() == '') {
+                            $('#txtFromDate').addClass('required-border');
+                            return false;
+                        } else {
+                            $('#txtFromDate').removeClass('required-border');
+                        }
+
+                        if ($('#txtToDate').val() == '') {
+                            $('#txtToDate').addClass('required-border');
+                            return false;
+                        } else {
+                            $('#txtToDate').removeClass('required-border');
+                        }
+                        $.ajax({
+                            url: "/CareTaker/AddExperienceDetails",
+                            type: "POST",
+                            data: { dateFrom: $('#txtFromDate').val(), dateTo: $('#txtToDate').val(), company: $('#txtOrganisation').val() },
+                            success: function (data) {
+                                $('#btnSaveOrganisation').removeClass('required-border');
+                                $('#txtOrganisation').removeClass('required-border');
+                                $('#txtFromDate').removeClass('required-border');
+                                $('#txtToDate').removeClass('required-border');
+                                var strOrg = "";
+                                console.log(data);
+                                $('#organisationContent').html('');
+                                for (var i = 0; i < data.length; i++) {
+                                    var fromDate = changeDateFormat(data[i].DateFrom);
+                                    var toDate = changeDateFormat(data[i].DateTo);
+                                    var company = "'" + data[i].Company + "'";
+                                    console.log(company);
+                                    strOrg = strOrg + "<tr>" + "<td class='col-md-5'>" + data[i].Company + "</td>" + "<td class='col-md-3'>" + fromDate + "</td>" + "<td class='col-md-3'>" + toDate + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger remove-btn' onclick = RemoveExperience(" + company + "); title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                                }
+                                $('#organisationContent').html(strOrg);
+
+                                $('#tblOrganisations').show();
+                                $('#txtOrganisation').val('');
+                                $('#txtFromDate').val('');
+                                $('#txtToDate').val('');
+                            },
+                            error: function (data) {
+                                logError(data.statusText + ' - Error occurred while Adding Caregiver Experience. Function: $("#btnSaveOrganisation").click(). Page: ApproveNewCaretaker.cshtml');
+                                //alert('Some network error has occurred. Please try again after some time.');
+                            }
+                        });
+
+                    }
+                    else {
+                        alert("Please provide Organisation Details");
+                    }
+                });
+
+
+                if ($("#tblOrganisations td").closest("tr").length > 0) {
+                    $('#tblOrganisations').show();
+                }
+                else {
+                    $('#tblOrganisations').hide();
+                }
+
+                $('#btnSaveQualification').click(function () {
+                    if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() != '--Select--') {
+                        if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() == 'Others' && $('#otherquali').val().trim() != '') {
+                            $.ajax({
+                                url: "/CareTaker/AddQualificationDetails",
+                                type: "POST",
+                                data: { qualificationId: $('#ddlQualification').val(), qualification: $('#otherquali').val().trim() },
+                                //, qualificationDate: null, university: null
+                                success: function (data) {
+                                    $('#btnSaveQualification').removeClass('required-border');
+                                    $('#ddlQualification').removeClass('required-border');
+                                    if (data.length > 0) {
+                                        var strQual = "";
+                                        $('#qualificationContent').html('');
+                                        for (var i = 0; i < data.length; i++) {
+                                            strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].QualificationName + "</td>" + "<td class='btn-in-td'>" + "<label class='btn btn-danger remove-btn' onclick = " + "RemoveQualification(" + data[i].QualificationId + "," + data[i].CareTakerQualificationId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                                        }
+                                        $('#otherquali').val('');
+                                        $('#otherquali').hide();
+                                        $('#qualificationContent').html(strQual);
+                                        //$('#qualificationContent').append("<tr>" + "<td class='col-md-11'>" + data[i].Qualification + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = 'removeQualification(" + data[i].QualificationId + ")' title='Delete' ><span class='fa fa-close'></span></label>" + "</td>" + "</tr>");
+                                        $('#tblQualifications').show();
+                                        $("select#ddlQualification").val('0');
+                                    }
+                                },
+                                error: function (data) {
+                                    logError(data.statusText + ' - Error occurred while Adding Caregiver Qaulification. Function: $("#btnSaveQualification").click(). Page: ApproveNewCaretaker.cshtml');
+                                    //alert('Some network error has occurred. Please try again after some time.');
+                                }
+                            });
+                        }
+                        else if( $('#ddlQualification option:selected').text() != 'Others'){
+                            $.ajax({
+                                url: "/CareTaker/AddQualificationDetails",
+                                type: "POST",
+                                data: { qualificationId: $('#ddlQualification').val(), qualification: $('#ddlQualification option:selected').text() },
+                                //, qualificationDate: null, university: null
+                                success: function (data) {
+                                    $('#btnSaveQualification').removeClass('required-border');
+                                    $('#ddlQualification').removeClass('required-border');
+                                    if (data.length > 0) {
+                                        var strQual = "";
+                                        $('#qualificationContent').html('');
+                                        for (var i = 0; i < data.length; i++) {
+                                            strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].QualificationName + "</td>" + "<td class='btn-in-td'>" + "<label class='btn btn-danger remove-btn' onclick = " + "RemoveQualification(" + data[i].QualificationId + "," + data[i].CareTakerQualificationId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                                        }
+                                        $('#qualificationContent').html(strQual);
+                                        //$('#qualificationContent').append("<tr>" + "<td class='col-md-11'>" + data[i].Qualification + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = 'removeQualification(" + data[i].QualificationId + ")' title='Delete' ><span class='fa fa-close'></span></label>" + "</td>" + "</tr>");
+                                        $('#tblQualifications').show();
+                                        $("select#ddlQualification").val('0');
+                                    }
+                                },
+                                error: function (data) {
+                                    logError(data.statusText + ' - Error occurred while Adding Caregiver Qaulification. Function: $("#btnSaveQualification").click(). Page: ApproveNewCaretaker.cshtml');
+                                    //alert('Some network error has occurred. Please try again after some time.');
+                                }
+                            });
+                        }
+                    }
+                });
+
+                if ($("#tblQualifications td").closest("tr").length > 0) {
+                    $('#tblQualifications').show();
+                }
+                else {
+                    $('#tblQualifications').hide();
+                }
+                //////////////// End of Dynamic Qualification types //////////////////////////////
+
+
+                //////////////// Start Dynamic Service types //////////////////////////////
+
+                $('#btnSaveService').click(function () {
+                    debugger;
+                    if ($('#ddlService option:selected').text() != '' && $('#ddlService option:selected').text() != '--Select--' && $('#effectiveDate').val() != '') {
+                        $.ajax({
+                            url: "/CareTaker/AddServiceDetails",
+                            type: "POST",
+                            data: { serviceId: $('#ddlService').val(), serviceName: $('#ddlService option:selected').text(), expectedRate: ($('#displayRate').val() == '') ? '0' : $('#displayRate').val(), approvedRate: ($('#payRate').val() == '') ? '0' : $('#payRate').val(), effdate: $('#effectiveDate').val(), caretakerId: $('#UserId').val() },
+                            success: function (data) {
+
+
+                                $('#btnSaveService').removeClass('required-border');
+                                $('#ddlService').removeClass('required-border');
+                                var strService = "";
+                                $('#serviceContent').html('');
+                                for (var i = 0; i < data.length; i++) {
+                                    strService = strService + "<tr>" + "<td class='col-md-4' onclick = 'EditService(" + data[i].ServiceId + "," + data[i].PayingRate + "," + data[i].DisplayRate + ");'>" + data[i].ServiceName + "</td>"
+                                        + "<td class='col-md-3' onclick = 'EditService(" + data[i].ServiceId + "," + data[i].PayingRate + "," + data[i].DisplayRate + ");'>" + parseFloat(data[i].PayingRate).toFixed(2) + '</td>'
+                                        + "<td class='col-md-3' onclick = 'EditService(" + data[i].ServiceId + "," + data[i].PayingRate + "," + data[i].DisplayRate + ");'>" + parseFloat(data[i].DisplayRate).toFixed(2) + '</td>'
+                                        + '<td class="btn-in-td">'
+                                        + "<label class='btn btn-primary add-btn' onclick = 'EditService(" + data[i].ServiceId + "," + data[i].PayingRate + "," + data[i].DisplayRate + ");' title='Edit' ><span class='fa fa-edit'></span></label>&nbsp;"
+                                        + "<label class='btn btn-danger remove-btn' onclick = 'RemoveService(" + data[i].ServiceId + ");' title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                                }
+                                $('#serviceContent').html(strService);
+
+                                $('#tblServices').show();
+                                $("select#ddlService").val('');
+                                $('#payRate').val('')
+                                $('#displayRate').val('')
+                            },
+                            error: function (data) {
+                                logError(data.statusText + ' - Error occurred while Adding Caregiver Service. Function: $("#btnSaveService").click(). Page: ApproveNewCaretaker.cshtml');
+                                //alert('Some network error has occurred. Please try again after some time.');
+                            }
+                        });
+                    }
+                    else if ($('#effectiveDate').val() == '') {
+                        alert("Please choose an Effective date!");
+                    }
+                });
+
+
+
+                if ($("#tblServices td").closest("tr").length > 0) {
+                    $('#tblServices').show();
+                }
+                else {
+                    $('#tblServices').hide();
+                }
+                //////////////// End of Dynamic Service types //////////////////////////////
+
+                $('#btnApprove').click(function () {
+                    var isPrivate = $('#IsPrivate').val();
+                    var caretakerId = $('#UserId').val();
+                    var serviceRates = [];
+                    var isvalid = true;
+                    var serviceCount = 0;
+                    $('#serviceTable tr').each(function () {
+                        var payingRate = $('.paying-rate', this).val();
+                        var displayRate = $('.display-rate', this).val();
+                        serviceCount = serviceCount + 1;
+                        if (payingRate != "" && payingRate != undefined && displayRate != "" && displayRate != undefined ) {
+                            var serviceId = ($('.serviceId', this).val());
+                            serviceRates.push({
+                                ServiceId: serviceId,
+                                PayingRate: payingRate,
+                                DisplayRate: displayRate
+                            });
+
+                        }
+                        else {
+                            serviceRates = null;
+                            isvalid = false;
+                            return false;
+                        }
+
+                    });
+
+                    if (serviceCount <= 0) {
+                        alert("Please add atleast a service to approve.");
+                        return false;
+                    }
+
+                    if (!isvalid) {
+                        alert("Please provide valid Paying Rates and Display Rates.");
+                        return false;
+                    }
+
+                    $.ajax({
+                        url: '/Admin/NewCaretakerApprove',
+                        type: "POST",
+                        data: { careTakerId: caretakerId, isPrivate: isPrivate, services: serviceRates },
+                        success: function (data) {
+                            window.location.href= '/Admin/AppliedCaretakers';
+                            window.scrollTo(0,0);
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while Approving a new Caregiver. Function: $("#btnApprove").click(). Page: ApproveNewCaretaker.cshtml');
+                                //alert('Some network error has occurred. Please try again after some time.');
+                        }
+                    });
+
+                });
+
+                $('#btnReject').click(function () {
+                    var caretakerId = $('#UserId').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: "/Admin/RejectCaretakerApplication",
+                        data: { Userid: caretakerId,SiteURL:'' },
+                        success: function (data) {
+                            if(data != 'LoginFailed' && data ==''){
+                                window.location.href= '/Admin/AppliedCaretakers';
+                                window.scrollTo(0, 0);
+                            }else{
+                                window.location.href = '/Account/Login';
+                            }
+
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while Rejecting a new Caregiver. Function: $("#btnReject").click(). Page: ApproveNewCaretaker.cshtml');
+                                //alert('Some network error has occurred. Please try again after some time.');
+                        }
+                    });
+                });
+            });
+
+            function RemoveExperience(companyName) {
+                var comName = companyName;
+                if (confirm('Are you sure to remove this Experience ?'))
+                $.ajax({
+                    url: "/CareTaker/RemoveExperienceDetails",
+                    type: "POST",
+                    data: { company: companyName },
+                    //, qualificationDate: null, university: null
+                    success: function (data) {
+                        $('#organisationContent').html('');
+                        var strOrg = "";
+                        if (data.length > 0) {
+
+                            for (var i = 0; i < data.length; i++) {
+                                var fromDate = changeDateFormat(data[i].DateFrom);
+                                var toDate = changeDateFormat(data[i].DateTo);
+                                var company = "'" + data[i].Company + "'";
+                                console.log(company);
+                                strOrg = strOrg + "<tr>" + "<td class='col-md-5'>" + data[i].Company + "</td>" + "<td class='col-md-3'>" + fromDate + "</td>" + "<td class='col-md-3'>" + toDate + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger remove-btn' onclick = RemoveExperience(" + company + "); title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                            }
+
+                        }
+                        $('#organisationContent').html(strOrg);
+                        if ($("#tblOrganisations td").closest("tr").length > 0) {
+                            $('#tblOrganisations').show();
+                        }
+                        else {
+                            $('#tblOrganisations').hide();
+                        }
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while Removing a Caregiver Experience. Function: RemoveExperience(companyName). Page: ApproveNewCaretaker.cshtml');
+                                //alert('Some network error has occurred. Please try again after some time.');
+                    }
+                });
+            };
+
+            function RemoveQualification(qualificationId, caretakerQualificationId) {
+                if (confirm(' Are you sure to remove this Qualification ?'))
+                $.ajax({
+                    url: "/CareTaker/RemoveQualificationDetails",
+                    type: "POST",
+                    data: { qualificationId: qualificationId, caretakerQualificationId: caretakerQualificationId },
+                    //, qualificationDate: null, university: null
+                    success: function (data) {
+                        $('#qualificationContent').html('');
+                        var strQual = "";
+                        if (data.length > 0) {
+
+                            for (var i = 0; i < data.length; i++) {
+                                strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].QualificationName + "</td>" + "<td class='btn-in-td'>" + "<label class='btn btn-danger remove-btn' onclick = " + "RemoveQualification(" + data[i].QualificationId + "," + data[i].CareTakerQualificationId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                            }
+
+                        }
+                        $('#qualificationContent').html(strQual);
+                        if ($("#tblQualifications td").closest("tr").length > 0) {
+                            $('#tblQualifications').show();
+                        }
+                        else {
+                            $('#tblQualifications').hide();
+                        }
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while Removing a Caregiver Qualification. Function: RemoveQualification(qualificationId, caretakerQualificationId). Page: ApproveNewCaretaker.cshtml');
+                                //alert('Some network error has occurred. Please try again after some time.');
+                    }
+                });
+            };
+            function EditService(ServiceId, PayingRate, DisplayRate){
+                $('#ddlService').val(ServiceId);
+                $('#payRate').val(PayingRate);
+                $('#displayRate').val(DisplayRate);
+            }
+            function RemoveService(servId) {
+                if (confirm(' Are you sure to remove this Service ?'))
+                $.ajax({
+                    url: "/CareTaker/RemoveServiceDetails",
+                    type: "POST",
+                    data: { serviceId: servId },
+                    //, qualificationDate: null, university: null
+                    success: function (data) {
+                        var strService = "";
+                        $('#serviceContent').html('');
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                //strService = strService + "<tr>" + "<td class='col-md-11'>" + data[i].ServiceName + "</td>" + "<td class='col-md-1'>"
+                                //    + "<label class='btn btn-danger remove-btn' onclick = 'RemoveService(" + data[i].ServiceId + ");' title='Delete' ><span class='fa fa-close'></span></label>" + "</td>" + "</tr>";
+                                strService = strService + "<tr>" + "<td class='col-md-4'>" + data[i].ServiceName + "</td>"
+                                        + '<td class="col-md-3">' +  parseFloat(data[i].PayingRate).toFixed(2) + '</td>'
+                                        + '<td class="col-md-3"  >' + parseFloat(data[i].DisplayRate).toFixed(2) + '</td>'
+                                        + '<td class="btn-in-td">'
+                                        + "<label class='btn btn-primary add-btn' onclick = 'EditService(" + data[i].ServiceId + "," + data[i].PayingRate + "," + data[i].DisplayRate+ ");' title='Edit' ><span class='fa fa-edit'></span></label>&nbsp;"
+                                    + "<label class='btn btn-danger remove-btn' onclick = 'RemoveService(" + data[i].ServiceId + ");' title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                            }
+
+                        }
+                        $('#serviceContent').html(strService);
+                        if ($("#tblServices td").closest("tr").length > 0) {
+                            $('#tblServices').show();
+                        }
+                        else {
+                            $('#tblServices').hide();
+                        }
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while Removing a Caregiver Qualification. Function: RemoveService(servId). Page: ApproveNewCaretaker.cshtml');
+                                //alert('Some network error has occurred. Please try again after some time.');
+                    }
+                });
+            };
+
+
+            function DownloadFile(caretakerDocumentId, documentContent) {
+                $.ajax({
+                    url: "/CareTaker/Download_Document_Click",
+                    type: "POST",
+                    data: { caretakerDocumentId: caretakerDocumentId, documentContent: documentContent },
+                    //, qualificationDate: null, university: null
+                    success: function (data) {
+
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while downloading Caregiver Documents. Function: DownloadFile(caretakerDocumentId, documentContent). Page: ApproveNewCaretaker.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+                    }
+                });
+            }
+
+    function nextTabPersonal() {
+        if ($('#EmailId-error').length) {
+            alert("Invalid Email Id");
+            return false;
+        }
+        $('#liCareTakerPersonal').removeClass('active');
+        $('#careTakerPersonal').removeClass('active in');
+        $('#liCareTakerService').removeClass('active');
+        $('#careTakerService').removeClass('active in');
+        $('#liCareTakerProfessional').addClass('active');
+        $('#careTakerProfessional').addClass('active in');
+    }
+            function nextTabProfessional() {
+                $('#liCareTakerPersonal').removeClass('active');
+                $('#careTakerPersonal').removeClass('active in');
+                $('#liCareTakerService').addClass('active');
+                $('#careTakerService').addClass('active in');
+                $('#liCareTakerProfessional').removeClass('active');
+                $('#careTakerProfessional').removeClass('active in');
+            }
+            function previousTabProfessional() {
+                $('#liCareTakerPersonal').addClass('active');
+                $('#careTakerPersonal').addClass('active in');
+                $('#liCareTakerService').removeClass('active');
+                $('#careTakerService').removeClass('active in');
+                $('#liCareTakerProfessional').removeClass('active');
+                $('#careTakerProfessional').removeClass('active in');
+            }
+            function previousTabService() {
+                $('#liCareTakerPersonal').removeClass('active');
+                $('#careTakerPersonal').removeClass('active in');
+                $('#liCareTakerService').removeClass('active');
+                $('#careTakerService').removeClass('active in');
+                $('#liCareTakerProfessional').addClass('active');
+                $('#careTakerProfessional').addClass('active in');
+            }
+
+</script>
+@Styles.Render("~/css/CustomStyles.css")
+@if (ViewBag.Unauthorized == null)
+{
+    if (ViewBag.Error != null)
+    {
+        <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+    }
+    else
+    {
+        <style>
+            .td-padding-zero {
+                padding-left: 0px;
+            }
+
+            .btn-bs-file {
+                position: relative;
+            }
+
+                .btn-bs-file input[type="file"] {
+                    position: absolute;
+                    top: -9999999;
+                    filter: alpha(opacity=0);
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                    outline: none;
+                    cursor: inherit;
+                }
+        </style>
+
+
+
+        <div id="spinner"></div>
+        <div class="row">
+            <div class="col-lg-7 col-md-6 col-sm-6">
+                <h3 class="h4-label linewrapStyle">
+
+                    @(Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Applied ? "Approve Caregiver" : "Manage Caregiver") - @Model.FirstName @Model.LastName
+                </h3>
+            </div>
+            @if (ViewBag.AllowEdit)
+            {
+                <div class="col-lg-5 col-md-6 col-sm-6" style="padding-right:15px;">
+
+
+                    <button id="editPage" type="button" class="btn btn-primary pull-right" style="margin-bottom:10px;">Edit</button>
+                    <input type="submit" data-toggle="modal" data-target="#TermsPopup" class="btn btn-primary pull-right" value="View Consent Form">
+                    @if (Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Applied)
+                    {
+                        <button type="button" class="btn btn-primary pull-right" style="margin-bottom:10px;" onclick="NewCaretakerNavigation()">Back</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary pull-right" onclick="Navigation()" style="margin-bottom:10px;">Back</button>
+                    }
+
+                    @*<i class="fa fa-edit "  onclick="" style="float:right; cursor:pointer;"></i>*@
+                </div>
+            }
+        </div>
+        @*@Html.HiddenFor(model => model.IsPrivate)*@
+        <div id="View">
+            <div class="container">
+                <div class="main-content">
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid" style="margin-top:10px;">
+                            <div class="row profile-details" style="padding-top:10px;">
+                                <div class="equal-height-panels">
+                                    @if (TempData["Userupdate"] != null)
+                                    {
+                                        <p class="alert alert-success statusmessage" id="successMessage">@TempData["Userupdate"]</p>
+                                    }
+
+                                    <div class="panel">
+                                        <div class="panel-body">
+                                            <div class="col-lg-6 col-md-6 col-sm-6 ">
+
+                                                <div class="panel panel-default caretaker-div-admin">
+                                                    <div class="panel-heading">
+                                                        <h4>
+                                                            Personal Details
+                                                        </h4>
+                                                        <input type="hidden" id="hdnCTId" />
+                                                    </div>
+                                                    <div class="panel-body">
+
+                                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 no-padding">
+                                                                <div class="panel-body text-center name-heading linewrapStyle">
+                                                                    @{
+                                                                        string careTakername = Model.FirstName + " " + Model.LastName;
+                                                                    }
+                                                                    @careTakername
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                @Html.HiddenFor(model => model.ProfilePicPath)
+                                                                <div class="newsright profile-pic" style="height: fit-content;margin-bottom: 4px;">
+                                                                    @if (Model != null)
+                                                                    {
+                                                                        if (Model.ProfilePicPath != null)
+                                                                        {
+                                                                            <img src="@Model.ProfilePicPath" style="max-height: 200px;" class=" img-responsive" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img src="~/images/NOImage.jpg" style="max-height: 200px;" class="image-style image_height" />
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img src="~/images/NOImage.jpg" style="max-height: 200px;" class="image-style image_height" />
+                                                                    }
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12" style="margin-top:14px;">
+                                                                <div class="form-group">
+                                                                    <label class=" label-style">Country</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@Model.Country</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label class=" label-style">@Resource.State</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@Model.State</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label class=" label-style">City</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@Model.City</label>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Location</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@(Model.Location == null || Model.Location == string.Empty ? "NA" : Model.Location)</label>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-6 no-padding">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Profile ID </label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@Model.CaretakerProfileId</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Email</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@(Model.EmailAddress == null || Model.EmailAddress == string.Empty ? "NA" : Model.EmailAddress)</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Gender </label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@Model.Gender</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Social ID </label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@Model.SSID</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label class=" label-style">@Resource.StreetName</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@Model.HouseName</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">@Resource.ZIPCode</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@(Model.ZipCode == null || Model.ZipCode == string.Empty ? "NA" : Model.ZipCode)</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Phone #1</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@(Model.PrimaryPhoneNo == null || Model.PrimaryPhoneNo == string.Empty ? "NA" : Model.PrimaryPhoneNo)</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Phone #2</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@(Model.SecondaryPhoneNo == null || Model.SecondaryPhoneNo == string.Empty ? "NA" : Model.SecondaryPhoneNo)</label>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+
+                                                                <label class=" col-md-12 label-style">About Me</label>
+                                                                <div class="col-md-12" style="padding-right:0px;">
+                                                                    <textarea disabled style="resize:none;" class="col-md-12 view-mode-labels textArea">@(Model.AboutMe == null || Model.AboutMe == string.Empty ? "NA" : Model.AboutMe )</textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 ">
+                                                <div class="panel panel-default caretaker-div-admin" style="overflow-x: auto;">
+                                                    <div class="panel-heading">
+                                                        <h4>Professional Details</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Category</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@(Model.CategoryName == null || Model.CategoryName == string.Empty ? "NA" : Model.CategoryName)</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Total Experience (in Years)</label>
+                                                                    <label class="col-md-6 view-mode-labels labelStyle">@Model.TotalExperience</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Qualification</label>
+                                                                    @if (Model != null && Model.CareTakerQualifications != null)
+                                                                    {
+                                                                        if (Model.CareTakerQualifications.Count() > 0)
+                                                                        {
+                                                                            foreach (var qualification in Model.CareTakerQualifications)
+                                                                            {
+                                                                                <label class="col-md-6 view-mode-labels labelStyle">@(qualification.QualificationName == null || qualification.QualificationName == string.Empty ? "NA" : qualification.QualificationName)</label>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <label class="col-md-6 view-mode-labels labelStyle">NA</label>
+
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <label class="col-md-6 view-mode-labels labelStyle">NA</label>
+
+                                                                    }
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Key Skills</label>
+                                                                    <textarea style="resize:none;" class="col-md-6 view-mode-labels textArea " disabled>@(Model.KeySkills == null || Model.KeySkills == string.Empty ? "NA" : Model.KeySkills)</textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Company</label>
+                                                                    @if (Model != null && Model.CareTakerExperiences != null)
+                                                                    {
+                                                                        if (Model.CareTakerExperiences.Count() > 0)
+                                                                        {
+                                                                            foreach (var experience in Model.CareTakerExperiences)
+                                                                            {
+                                                                                <label class="col-md-6 view-mode-labels labelStyle"><b>@experience.Company</b> - From  <b>@experience.DateFrom.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString())</b> to  <b>@experience.DateTo.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString())</b></label>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <label class="col-md-6 view-mode-labels labelStyle">NA</label>
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <label class="col-md-6 view-mode-labels labelStyle">NA</label>
+                                                                    }
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Certificates</label>
+                                                                    @if (Model != null && Model.CareTakerDocuments.Count() > 0)
+                                                                    {
+                                                                        <table cellpadding="0" cellspacing="0">
+                                                                            @foreach (var documents in Model.CareTakerDocuments)
+                                                                            {
+                                                                                if (documents.DocumentTypeId == 1)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td class="col-md-9 no-padding">
+                                                                                            @documents.DocumentName
+                                                                                        </td>
+                                                                                        <td class="col-md-3">
+
+                                                                                            <a class="cursor-ponter" onclick="showDocument('@documents.DocumentPath','@documents.DocumentName')">  Download</a>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </table>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <table cellpadding="0" cellspacing="0">
+                                                                            <tr>
+                                                                                <td colspan="3">NA</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">SIN Files</label>
+                                                                    @if (Model != null && Model.CareTakerDocuments.Count() > 0)
+                                                                    {
+                                                                        <table cellpadding="0" cellspacing="0">
+                                                                            @foreach (var documents in Model.CareTakerDocuments)
+                                                                            {
+                                                                                if (documents.DocumentTypeId == 2)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td class="col-md-9 no-padding">
+                                                                                            @documents.DocumentName
+                                                                                        </td>
+                                                                                        <td class="col-md-3">
+
+                                                                                            <a class="cursor-ponter" onclick="showDocument('@documents.DocumentPath','@documents.DocumentName')">  Download</a>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </table>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <table cellpadding="0" cellspacing="0">
+                                                                            <tr>
+                                                                                <td colspan="3">NA</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+
+                                                                    <label class=" label-style">Other Documents</label>
+                                                                    @if (Model != null && Model.CareTakerDocuments.Count() > 0)
+                                                                    {
+                                                                        <table cellpadding="0" cellspacing="0">
+                                                                            @foreach (var documents in Model.CareTakerDocuments)
+                                                                            {
+                                                                                if (documents.DocumentTypeId == 3)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td class="col-md-9 no-padding">
+                                                                                            @documents.DocumentName
+                                                                                        </td>
+                                                                                        <td class="col-md-3">
+
+                                                                                            <a class="cursor-ponter" onclick="showDocument('@documents.DocumentPath','@documents.DocumentName')">  Download</a>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </table>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <table cellpadding="0" cellspacing="0">
+                                                                            <tr>
+                                                                                <td colspan="3">NA</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    }
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div class=" labelStyle">
+                                                                    <label class="label-style" for="Key_Skills">Caregiver Listing Mode</label>
+                                                                </div>
+                                                                <div class="checkbox">
+                                                                    <label class="no-padding not-allowed">
+                                                                        @*<input id="chkIsPrivateUpdate" type="checkbox" value="" checked="@Model.IsPrivate" onchange="isPrivate();">
+                                                                            <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>*@
+                                                                        @if (Model.AccountStatus != Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved && Model.AccountStatus != Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected)
+                                                                        {
+                                                                            <label class="padding-r0-l10 ">
+                                                                                <input type="radio" name="IsPrivateCTApprove" id="privateNo" onchange="isPrivatePrivate()" value="No" checked />
+                                                                                <i class="normal-font-style">Default</i>
+                                                                            </label>
+                                                                            <label class="padding-r0-l10">
+                                                                                <input type="radio" name="IsPrivateCTApprove" id="privateYes" onchange="isPrivateApprove()" value="Yes" />
+                                                                                <i class="normal-font-style">Scheduling Only</i>
+                                                                            </label>
+
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (Model.IsPrivate)
+                                                                            {
+                                                                                <label class="padding-r0-l10 not-allowed">
+                                                                                    <input type="radio" value="No" disabled />
+                                                                                    <i class="normal-font-style">Default</i>
+                                                                                </label>
+                                                                                <label class="padding-r0-l10 not-allowed">
+                                                                                    <input type="radio" value="Yes" checked disabled />
+                                                                                    <i class="normal-font-style">Scheduling Only</i>
+                                                                                </label>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <label class="padding-r0-l10 not-allowed">
+                                                                                    <input type="radio" value="No" checked disabled />
+                                                                                    <i class="normal-font-style">Default</i>
+                                                                                </label>
+                                                                                <label class="padding-r0-l10 not-allowed">
+                                                                                    <input type="radio" value="Yes" disabled />
+                                                                                    <i class="normal-font-style">Scheduling Only</i>
+                                                                                </label>
+                                                                            }
+                                                                        }
+
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix p-b-10"></div>
+
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <label>Effective From</label>
+                                                            @Html.TextBox("Date From", "", new { @id = "lkdeffectiveDate", @class = "datetimepicker form-control", @placeholder = "FromDate", @readonly = "readonly" })
+                                                        </div>
+                                                        <div class="col-md-12 no-padding table-responsive">
+                                                            <table class="table  bordered-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="custom-table-header label-style col-md-7 linewrapStyle"><strong>Service</strong></th>
+                                                                        <th class="custom-table-header label-style"><strong>Paying Rate (@Model.CurrencySymbol/Hr.)</strong></th>
+                                                                        <th class="label-style custom-table-header"><strong>Display Rate (@Model.CurrencySymbol/Hr.)</strong></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="serviceTable">
+                                                                    @if (Model != null && Model.CareTakerServices != null)
+                                                                    {
+                                                                        foreach (var service in Model.CareTakerServices)
+                                                                        {
+
+                                                                            <tr>
+                                                                                <td class=" ">@service.ServiceName </td>
+                                                                                <td>
+                                                                                    <input type="hidden" class="serviceId" value="@service.ServiceId" />
+                                                                                    @if (Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved || Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected)
+                                                                                    {
+                                                                                        <label>@service.PayingRate.ToString("0.00")</label>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <input class="form-control paying-rate" type="number" ondrop="return false" onpaste="return false" onkeypress="return isNumberKey1(this, event)" placeholder="Paying Rate/hr" min="0" value="@service.PayingRate.ToString("0.00")" step=".01" />
+                                                                                    }
+                                                                                </td>
+                                                                                <td>
+                                                                                    @if (Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved || Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected)
+                                                                                    {
+                                                                                        <label>@service.DisplayRate.ToString("0.00")</label>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <input class="form-control display-rate" type="number" ondrop="return false" onpaste="return false" onkeypress="return isNumberKey1(this, event)" placeholder="Display Rate/hr" min="0" value="@service.DisplayRate.ToString("0.00")" step=".01" />
+                                                                                    }
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+
+                                                        </div>
+                                                        @*<div class="col-md-6">
+                                                                @if (Model.AccountStatus != Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved && Model.AccountStatus != Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected)
+                                                                {
+                                                                    <div class="checkbox">
+                                                                        <label>
+
+                                                                            @{ bool isPrivate = Model.IsPrivate;}
+                                                                            <input id="chkIsPrivate" type="checkbox" style="margin-top: 10px;" value="" checked="@isPrivate">
+                                                                            <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                                                                            Make Private
+                                                                        </label>
+                                                                    </div>
+                                                                }
+                                                            </div>*@
+
+
+
+                                                        <div class="modal fade" id="modal-approve" role="dialog">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                                                                        <h4 class="modal-title">Approve Caregiver</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        Do you want to approve caregiver?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button id="btnApprove" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                                                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /.modal-content -->
+                                                            </div>
+                                                            <!-- /.modal-dialog -->
+                                                        </div>
+                                                        <div class="modal fade" id="modal-reject" role="dialog">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                                                                        <h4 class="modal-title">Reject Caregiver</h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        Do you want to reject selected caregiver?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button id="btnReject" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                                                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /.modal-content -->
+                                                            </div>
+                                                            <!-- /.modal-dialog -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 pad15" style="text-align:center">
+                                                @if (Model.AccountStatus != Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved && Model.AccountStatus != Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected)
+                                                {
+                                                    if (Model.CareTakerServices.Count > 0)
+                                                    {
+                                                        <button type="button" class="btn btn-success" data-toggle="modal" onclick="setCaretakerId(@Model.UserId)" data-target="#modal-approve" @((Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved || Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected) ? "disabled" : "")>Approve</button>
+                                                        <button type="button" class="btn btn-danger" data-toggle="modal" onclick="setCaretakerId(@Model.UserId)" data-target="#modal-reject" @((Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved || Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected) ? "disabled" : "")>Reject</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="button" class="btn btn-success" data-toggle="modal"  disabled="disabled" onclick="setCaretakerId(@Model.UserId)" data-target="#modal-approve" @((Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved || Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected) ? "disabled" : "")>Approve</button>
+                                                        <button type="button" class="btn btn-danger" data-toggle="modal" onclick="setCaretakerId(@Model.UserId)" data-target="#modal-reject" @((Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved || Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected) ? "disabled" : "")>Reject</button>
+                                                    }
+
+                                                    @*<button type="button" class="btn btn-primary buttonRight" @((Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Approved || Model.AccountStatus == Nirast.Pcms.Web.Models.Enums.CaretakerStatus.Rejected) ? "disabled" : "")>Approve</button>*@
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        if (ViewBag.AllowEdit)
+        {
+            <div id="Edit">
+                @using (Html.BeginForm("UpdateCaretaker", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                {
+                    { Html.EnableClientValidation(true); }
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="container">
+                        <div class="main-content">
+                            <div class="section__content section__content--p30">
+                                <div class="container-fluid" style="margin-top:10px;">
+                                    <p class="alert alert-success statusmessage" id="EmailVerification" style="padding:7px;">Email verification link has been sent to your registered email:@Model.EmailAddress</p>
+                                    <div class="bootstrap-tab animated wow slideInUp animated " data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: slideInUp;">
+                                        <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                                            <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
+                                                <li id="liCareTakerPersonal" role="presentation" class="active"><a href="#careTakerPersonal" id="home-tab" role="tab" style="border: 1px solid #28a745;" data-toggle="tab" aria-controls="home" aria-expanded="true" class="no-padding "><h4>Personal Details</h4></a></li>
+                                                <li id="liCareTakerProfessional" role="presentation"><a href="#careTakerProfessional" role="tab" id="profile-tab" data-toggle="tab" style="border: 1px solid #28a745;" aria-controls="profile" class="no-padding"><h4>Professional Details</h4></a></li>
+                                                @*<li id="liCareTakerService" role="presentation" class=""><a href="#careTakerService" role="tab" id="profile2-tab" data-toggle="tab" aria-controls="profile">Service Details</a></li>*@
+                                            </ul>
+                                            <div id="myTabContent" class="tab-content panel panel-default">
+                                                <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body active in" id="careTakerPersonal" aria-labelledby="home-tab">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                            <div class="col-xs-12 col-sm-4 col-md-5 col-lg-3">
+                                                                <div class="row">
+                                                                    <div class="newsright profile-pic image_size">
+                                                                        <div>
+                                                                            @if (Model != null)
+                                                                            {
+                                                                                if (Model.ProfilePicPath != null)
+                                                                                {
+                                                                                    <img id="imgCaretaker" src="@Model.ProfilePicPath" class="image-style" />
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <img id="imgCaretaker" src="~/images/NOImage.jpg" class="image-style" />
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <img src="~/images/NOImage.jpg" class="image-style" />
+                                                                            }
+                                                                        </div>
+                                                                        @Html.HiddenFor(model => model.UserTypeId)
+                                                                        @Html.HiddenFor(model => model.ProfilePicByte)
+                                                                        @Html.HiddenFor(model => model.CaretakerProfileId)
+                                                                        @Html.HiddenFor(model => model.UserId)
+                                                                        @Html.HiddenFor(model => model.ProfilePicPath)
+                                                                        <div class="p-b-10 clearfix">
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="newsright outer-border" style="width: 200px;">
+                                                                        <div style="text-align:center;" class="profile-btn-padding">
+                                                                            <div class="col-sm-12 no-padding">
+                                                                                <label class="btn-bs-file btn btn-sm btn-warning btn-profilepic no-margin">
+                                                                                    Change
+                                                                                    <input type="file" id="myPic" accept="image/png,image/jpg,image/jpeg" onchange="readCaretakerImage(this);" />
+                                                                                </label>
+                                                                                <label class="btn btn-sm btn-warning btn-profilepic no-margin" onclick="removeImage();">
+                                                                                    Remove
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-8 col-md-7 col-lg-9">
+
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="First_Name">First Name</label><span class="mandatoryField">*</span>
+                                                                            @Html.TextBoxFor(model => model.FirstName, "", new { @class = "form-control", @placeholder = "First Name", @maxLength = "50" })
+
+
+                                                                        </div>
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="Last_Name">Last Name</label><span class="mandatoryField">*</span>
+                                                                            @Html.TextBoxFor(model => model.LastName, "", new { @class = "form-control", @placeholder = "Last Name", @maxLength = "50" })
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="Gender">Gender</label><span class="mandatoryField">*</span>
+                                                                            @Html.DropDownListFor(model => model.GenderId, ViewData["GenderList"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+
+
+                                                                        </div>
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="SocialID">Social ID</label>
+                                                                            @Html.TextBoxFor(model => model.SSID, "", new { @class = "form-control", @placeholder = "Social ID" })
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="Country">Country</label>
+                                                                            @if (ViewData["CountryList"] != null)
+                                                                            {
+                                                                                @Html.DropDownListFor(model => model.CountryId, ViewData["CountryList"] as SelectList, "--Select--", new { @class = "form-control labelStyle", @onchange = "LoadStates()" })
+                                                                            }
+
+
+
+
+                                                                        </div>
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="State">@Resource.State</label><span class="mandatoryField">*</span>
+                                                                            @Html.DropDownListFor(model => model.StateId, ViewData["StateList"] as SelectList, "--Select--", new { @class = "form-control labelStyle", @onchange = "LoadCities(this.value)" })
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="City">City</label><span class="mandatoryField">*</span>
+                                                                            @Html.DropDownListFor(model => model.CityId, ViewData["ListCity"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+
+
+
+                                                                        </div>
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="Location">Location</label>
+                                                                            @Html.TextBoxFor(model => model.Location, "", new { @class = "form-control", @placeholder = "Location", @maxLength = "50" })
+
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="HouseName">@Resource.StreetName</label><span class="mandatoryField">*</span>
+                                                                            @Html.TextBoxFor(model => model.HouseName, new { @class = "form-control", @placeholder = Resource.StreetName, @cols = "20", @rows = "2", @maxLength = "50" })
+
+                                                                        </div>
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="Postal_Code">@Resource.ZIPCode</label>
+                                                                            @Html.TextBoxFor(model => model.ZipCode, "", new { @class = "form-control", @placeholder = Resource.ZIPCode })
+                                                                            @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "col-md-12 no-padding required" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="Phone_Number">Phone #1</label>
+                                                                            @Html.TextBoxFor(model => model.PrimaryPhoneNo, "", new { @class = "form-control", @placeholder = "Phone #1", @maxLength = "20" })
+
+
+                                                                        </div>
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="Phone_Number">Phone #2</label>
+                                                                            @Html.TextBoxFor(model => model.SecondaryPhoneNo, "", new { @class = "form-control", @placeholder = "Phone #2", @maxLength = "50" })
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="col-md-5">
+                                                                            <label class="label-style" for="Email">Email</label><span class="mandatoryField">*</span>
+                                                                            @Html.TextBoxFor(model => model.EmailAddress, "", new { @class = "form-control", @id = "EmailId", @placeholder = "Email Address", @maxLength = "100" })
+                                                                            @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "col-md-12 no-padding required" })
+
+                                                                        </div>
+                                                                        <div class="col-md-1">
+                                                                            <label class="btn btn-primary margin" data-toggle="modal" title="Verify" data-target="#verifyEmail" style="float:right"><i class="fa fa-check"></i></label>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+
+                                                                            <label class="label-style" for="About">About Me</label>
+                                                                            @Html.TextAreaFor(model => model.AboutMe, new { @class = "form-control labelStyle", @placeholder = "Description about yourself", @cols = "20", @rows = "2", @maxLength = "500" })
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Multiple Radios (inline) -->
+                                                            </div>
+
+                                                            <div style="text-align:center">
+                                                                <div class="form-group">
+                                                                    @*<label id="ApprovePage" class="btn btn-primary">Back</label>*@
+                                                                    <label onclick="nextTabPersonal()" class=" btn btn-primary" style="margin-left:10px;">Next</label>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body" id="careTakerProfessional" aria-labelledby="profile-tab">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+
+                                                                <label class="label-style" for="Type_of_Service">Category</label><span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.CategoryId, ViewData["ListCategory"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+
+
+                                                                @Html.Label("Qualification", new { @class = "label-style" })
+                                                                <div class="input-group">
+                                                                    <div>
+                                                                        @Html.DropDownList("ddlQualification", ViewData["ListQualification"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                        <input type="text" id="otherquali" class="form-control" style="display:none;margin-top:10px" maxlength="50" />
+                                                                    </div>
+                                                                    <span class="input-group-btn input-group-outer">
+                                                                        <label class="btn btn-primary add-btn" id="btnSaveQualification" title="Add"><span class="fa fa-plus"></span></label>
+                                                                    </span>
+
+                                                                </div>
+
+
+                                                                <div class="col-md-12 labelStyle no-padding table-responsive">
+                                                                    <table class="table table-bordered" id="tblQualifications">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="custom-table-header">Qualification</th>
+                                                                                <th class="custom-table-header">Action</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="qualificationContent">
+                                                                            @foreach (var item in Model.CareTakerQualifications)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td class='col-md-11'>
+                                                                                        @item.QualificationName
+                                                                                    </td>
+                                                                                    <td class="btn-in-td">
+                                                                                        <label class='btn btn-danger remove-btn' onclick='RemoveQualification(@item.QualificationId,@item.CareTakerQualificationId)' title='Delete'><span class='fa fa-minus'></span></label>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+
+
+                                                                </div>
+
+
+                                                                @Html.Label("Service", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                <div class="input-group col-md-6" style="width:44%">
+                                                                    <label class="col-md-6 no-padding">Effective Date</label>
+                                                                    @Html.TextBox("Date From", "", new { @id = "effectiveDate", @class = "datetimepicker form-control", @placeholder = "FromDate", @autocomplete = "off" })
+                                                                </div>
+                                                                <div class="input-group">
+
+
+                                                                    <div class="col-md-6 no-padding">
+                                                                        @Html.DropDownList("ddlService", ViewData["ServiceList"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                    </div>
+                                                                    <div class="col-md-3 no-padding">
+                                                                        <input id="payRate" class="form-control paying-rate" type="number" ondrop="return false" onpaste="return false" , onkeypress="return isNumberKey1(this, event)" placeholder="Paying Rate ($/hr)" min="0" step=".01" />
+                                                                    </div>
+                                                                    <div class="col-md-3 no-padding">
+                                                                        <input id="displayRate" class="form-control display-rate" type="number" ondrop="return false" onpaste="return false" onkeypress="return isNumberKey1(this, event)" placeholder="Display Rate($/hr)" min="0" step=".01" />
+                                                                    </div>
+                                                                    <span class="input-group-btn input-group-outer">
+                                                                        <label class="btn btn-primary add-btn" id="btnSaveService" title="Add"><span class="fa fa-plus"></span></label>
+                                                                    </span>
+                                                                    @if (Model.CareTakerServices.Count > 0)
+                                                                    {
+                                                                        <span class="input-group-btn input-group-outer">
+                                                                            <label class="btn btn-primary" title="PayRise" data-toggle="modal" onclick="AddPayRise('@Model.CareTakerFullName',@Model.UserId,@Model.ServiceId)" data-target="#modal-mapCaretaker"><span class="fa fa-dollar"></span></label>
+                                                                        </span>
+                                                                    }
+                                                                </div>
+
+                                                                <div class="col-md-12 no-padding no-padding table-responsive">
+                                                                    <table class="table table-bordered table-striped table-earning padding-top-10 dataTable no-footer" id="tblServices">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="custom-table-header col-md-6">Service</th>
+                                                                                <th class="custom-table-header">Pay Rate (@Model.CurrencySymbol/hr.)</th>
+                                                                                <th class="custom-table-header">Display Rate (@Model.CurrencySymbol/hr.)</th>
+                                                                                <th class="custom-table-header col-md-2">Action</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="serviceContent">
+                                                                            @foreach (var item in Model.CareTakerServices)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td class='' onclick="EditService('@item.ServiceId','@item.PayingRate','@item.DisplayRate')">
+                                                                                        @item.ServiceName
+                                                                                        <input type="text" class="hidden" id="EffDate" value=@item.EffectiveFrom>
+                                                                                    </td>
+                                                                                    <td class='' onclick="EditService('@item.ServiceId','@item.PayingRate','@item.DisplayRate')">
+                                                                                        @item.PayingRate.ToString("0.00")
+                                                                                    </td>
+                                                                                    <td class='' onclick="EditService('@item.ServiceId','@item.PayingRate','@item.DisplayRate')">
+                                                                                        @item.DisplayRate.ToString("0.00")
+                                                                                    </td>
+                                                                                    <td class='two-btn-in-td'>
+                                                                                        <label class='btn btn-primary add-btn' onclick="EditService('@item.ServiceId','@item.PayingRate','@item.DisplayRate')" title='Edit'><span class='fa fa-edit'></span></label>
+                                                                                        <label class='btn btn-danger remove-btn' onclick='RemoveService(@item.ServiceId)' title='Delete '><span class='fa fa-minus'></span></label>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                @*<h5 style="color:#2359a7">EXPERIENCE DETAILS</h5>*@
+                                                                <div class=" labelStyle">
+                                                                    <label class="label-style" for="Key_Skills">Key Skills</label>
+                                                                </div>
+
+                                                                @Html.TextAreaFor(model => model.KeySkills, new { @class = "form-control", @placeholder = "Key Skills", @maxLength = "500", style = "resize:none;" })
+
+                                                                <div class="labelStyle">
+                                                                    <label class="label-style" for="Tot_Exp">Total Experience</label>
+                                                                </div>
+
+                                                                @Html.TextBoxFor(model => model.TotalExperience, "", new { @class = "form-control", @type = "number", @placeholder = "Total Experience in Years" })
+                                                                @Html.ValidationMessageFor(model => model.TotalExperience, "", new { @class = " required" })
+
+                                                                <label class="label-style" for="txtFromDate">Experience Range</label>
+                                                                <div class="input-group">
+                                                                    <div class="col-md-6 no-padding">
+                                                                        @Html.TextBox("Organisation", "", new { @id = "txtOrganisation", @class = "form-control", @placeholder = "Organisation", @maxLength = "100" })
+                                                                    </div>
+                                                                    <div class="col-md-3 no-padding ">
+                                                                        @Html.TextBox("Date From", "", new { @id = "txtFromDate", @class = "datetimepicker form-control", @placeholder = "FromDate", @readonly = "readonly" })
+                                                                    </div>
+                                                                    <div class="col-md-3 no-padding experienceRange">
+                                                                        @Html.TextBox("Date To", "", new { @id = "txtToDate", @class = "datetimepicker form-control experienceDate", @placeholder = "ToDate", @readonly = "readonly" })
+                                                                    </div>
+                                                                    <span class="input-group-btn input-group-outer">
+                                                                        <label class="btn btn-primary add-btn" id="btnSaveOrganisation" title="Add"><span class="fa fa-plus"></span></label>
+                                                                    </span>
+                                                                </div>
+
+
+
+
+
+                                                                <div class="col-md-12 no-padding table-responsive">
+                                                                    <div class="col-md-3"></div>
+                                                                    <table class="table table-bordered" id="tblOrganisations">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="custom-table-header">Organisation</th>
+                                                                                <th class="custom-table-header">From Date</th>
+                                                                                <th class="custom-table-header">To Date</th>
+                                                                                <th class="custom-table-header col-md-2">Action</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="organisationContent">
+                                                                            @foreach (var item in Model.CareTakerExperiences)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td class='col-md-5 '>
+                                                                                        @item.Company
+                                                                                    </td>
+                                                                                    <td class='col-md-3'>
+                                                                                        @item.DateFrom.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString())
+
+                                                                                    </td>
+                                                                                    <td class='col-md-3'>
+                                                                                        @item.DateTo.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString())
+                                                                                    </td>
+                                                                                    <td class='btn-in-td'>
+                                                                                        <label class='btn btn-danger remove-btn' onclick="RemoveExperience('@item.Company')" title='Delete'><span class='fa fa-minus'></span></label>
+                                                                                    </td>
+
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+
+                                                                <div class="col-md-12 no-padding">
+                                                                    <div class=" labelStyle">
+                                                                        <label class="label-style" for="Key_Skills">Caregiver Listing Mode</label>
+                                                                    </div>
+                                                                    <div class="checkbox">
+                                                                        <label class="no-padding">
+                                                                            @Html.HiddenFor(model => model.IsPrivate)
+                                                                            @*<input id="chkIsPrivateUpdate" type="checkbox" value="" checked="@Model.IsPrivate" onchange="isPrivate();">
+                                                                                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>*@
+                                                                            @if (Model.IsPrivate)
+                                                                            {
+                                                                                <label class="padding-r0-l10">
+                                                                                    <input type="radio" name="IsPrivateCT" id="privateNo" value="No" onchange="isPrivate()" />
+                                                                                    <i class="normal-font-style">Default</i>
+                                                                                </label>
+                                                                                <label class="padding-r0-l10">
+                                                                                    <input type="radio" name="IsPrivateCT" id="privateYes" value="Yes" onchange="isPrivate()" checked />
+                                                                                    <i class="normal-font-style">Scheduling Only</i>
+                                                                                </label>
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <label class="padding-r0-l10">
+                                                                                    <input type="radio" name="IsPrivateCT" id="privateNo" value="No" onchange="isPrivate()" checked />
+                                                                                    <i class="normal-font-style">Default</i>
+                                                                                </label>
+                                                                                <label class="padding-r0-l10">
+                                                                                    <input type="radio" name="IsPrivateCT" id="privateYes" value="Yes" onchange="isPrivate()" />
+                                                                                    <i class="normal-font-style">Scheduling Only</i>
+                                                                                </label>
+                                                                            }
+
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-12 no-padding">
+                                                                    <div class=" labelStyle">
+                                                                        <label class="label-style" for="Key_Skills">Upload Consent Form</label>
+                                                                    </div>
+                                                                    <div>
+                                                                        @Html.HiddenFor(model => model.ConsentForm)
+                                                                        @Html.HiddenFor(model => model.ConsentDocPath)
+                                                                        @Html.TextBoxFor(model => model.ConsentDocument, "", new { @type = "file", @accept = "application/pdf", @class = "disableUpload" })
+                                                                        @if (Model.ConsentDocPath!=null)
+                                                                        {
+                                                                            <div style="margin-top:5px;"><span> Consent Document.pdf </span></div>
+                                                                        }
+                                                                        </div>
+                                                                </div>
+
+                                                                <div class="form-group hidden">
+                                                                    <div class="col-md-3 labelStyle">
+                                                                        <label class="label-style" for="Upload_Documents">Upload Certificates</label>
+                                                                    </div>
+                                                                    <div class="col-md-9">
+                                                                        @*<input type="file" multiple="multiple" name="CerificateFile" id="CerificateFile">*@
+                                                                        @*<input type="file" multiple="multiple">*@
+                                                                        @Html.TextBoxFor(model => model.CertificateFiles, "", new { @type = "file", @multiple = "multiple", @class = "disableUpload" })
+                                                                        @*@Html.ValidationMessageFor(model => model.CerificateFiles, "", new { @class = "text-danger" })*@
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group hidden">
+                                                                    <div class="col-md-3 labelStyle">
+                                                                        <label class="label-style" for="Upload_Documents">Upload SIN</label>
+                                                                    </div>
+                                                                    <div class="col-md-9">
+                                                                        @*<input type="file" multiple="multiple">*@
+                                                                        @Html.TextBoxFor(model => model.SINFile, "", new { @type = "file", @multiple = "multiple", @class = "disableUpload" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group hidden">
+                                                                    <div class="col-md-3 labelStyle">
+                                                                        <label class="label-style" for="Upload_Documents">Other documents</label>&nbsp;
+                                                                        <span class="fa fa-info-circle" title="CPR and First Aid, Police Clearance Report, Vaccination details, Void Cheque/Direct Deposit Slip and References"></span>
+                                                                    </div>
+                                                                    <div class="col-md-9">
+                                                                        @*<input type="file" multiple="multiple">*@
+                                                                        @Html.TextBoxFor(model => model.OtherDocuments, "", new { @type = "file", @multiple = "multiple", @class = "disableUpload" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group hidden">
+                                                                    <div class="col-md-9 labelStyle">
+                                                                        @Html.CheckBox("chkFaxDocuments", false, new { @class = "", onclick = "preventDocumentSelection(this)" }) Send documents through FAX
+                                                                    </div>
+                                                                    <div class="col-md-3">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix p-b-10"></div>
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 caretakerProfile">
+                                                                <div class="row ">
+
+                                                                    <label onclick="previousTabProfessional()" class="btn btn-primary ">Prev</label>
+
+
+                                                                    <input type="submit" class="btn btn-primary" value="Update" name="UpdateCaregiver" style="margin-left:5px;">
+
+
+                                                                    <label id="" onclick="window.location.reload();" class="btn btn-primary " style="margin-left:5px;">Cancel</label>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+
+        }
+
+        <div class="modal fade bootstrap-tab-text" id="TermsPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <label type="button" class="close" data-dismiss="modal">&times;</label>
+                        <h4 class="modal-title" style="color:orange;text-align:center">Consent Form</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="policyContent" class="policyContent" type="text" readonly="readonly"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <label class="btn btn-default newsrightModel" data-dismiss="modal">Ok</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bootstrap-tab-text" id="documentPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <label type="button" class="close" data-dismiss="modal">&times;</label>
+                        <h4 class="modal-title" style="color:orange;text-align:center">Doucument Viewer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="documentContent" class="policyContent" type="text" readonly="readonly"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <label class="btn btn-default newsrightModel" data-dismiss="modal">Ok</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="verifyEmail" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="border-bottom: 1px solid #e5e5e5;">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Email Modification</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>New mail id will be replaced with the existing one. User can login with their new mail id only after verification.</p>
+                        <p>Are you sure to continue?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="UpdateEmail()">OK</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p class="alert alert-danger">@ViewBag.Unauthorized</p>
+}
+<div class="modal fade" id="modal-mapCaretaker">
+    <div class="modal-dialog">
+        <div class="panel panel-group panel-success" style="width:730px">
+            <div class="panel-heading" style="padding:10px 15px">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 id="clientNametitle" class="modal-title"><span class="fa fa-close float-right" data-dismiss="modal"></span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="col-md-12 labelStyle table-responsive" style="margin-bottom:18px">
+                        <div class="col-md-3 ">
+                            <label id="lblfrmdate" class="label-style">
+                                @Html.Label(" Effective From :", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                            </label>
+                        </div>
+
+                        <div class="col-md-9" style="margin-bottom:10px;">
+                            @Html.TextBox("From Date", "", new { @id = "txtDateFrom", @class = "datetimepicker form-control", @placeholder = "From Date", @autocomplete = "off" })
+                            @*@Html.TextBox("FromDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtFromDate", @placeholder = "From Date", @onchange = "dateRangeValidation(this.value)" })*@
+                            @*@Html.TextBox("FromDate", "", new { @autocomplete = "off", @class = "datePickerControlStyle datetimepicker form-control labelStyle", @type = "date", @id = "txtFromDate", @placeholder = "From Date" })*@
+                        </div>
+                        @Html.Hidden("CaretakerDetailId")
+                        @Html.Hidden("ServiceId")
+                        <table class="table table-bordered table-striped table-earning dynamic-table" id="tblServices">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th class="col-xs-2">Paying Rate</th>
+                                    <th class="col-xs-2">Display Rate</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="workmodeList2"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer mapping-style" style="border-top:unset">
+                <button id="btnSavePayRise" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-primary" onclick="clearFields()">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+        <!-- /.modal-content -->
+    </div>
+
+    <!-- /.modal-dialog -->
+</div>
+<style>
+    .input-group .form-control:last-child{
+        font-size:13px!important
+    }
+    .linewrapStyle {
+        word-break: break-all;
+    }
+
+    .label-style {
+        color: #777;
+        font-weight: bold;
+    }
+
+    .h4-label {
+        color: #777 !important;
+        font-size: 22px;
+        margin-left: 15px;
+        margin-bottom: 5px;
+    }
+
+    .outer-border {
+        border: 1px solid #ddd;
+        /*width: 59%;*/
+        border-radius: 12px;
+        padding: 5px;
+        /* margin-left: 25px; */
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .buttonRight {
+        float: right;
+    }
+
+    #tblServices {
+        min-width: 340px;
+    }
+
+    .buttonStyle {
+        color: #fff;
+        background: #28a745;
+        border: none;
+        padding: 10px 10px 10px !important;
+        font-size: 14px !important;
+        outline: none;
+        text-transform: uppercase;
+        margin: 0 0 0 -4px;
+    }
+
+    .marginHeadingStyles {
+        margin-top: unset;
+    }
+
+    .image_size {
+        min-height: 232px;
+        width: 200px;
+    }
+
+    .image_height {
+        min-height: 150px;
+    }
+
+    .caretakerProfile {
+        text-align: center;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    @@media (max-width:991px) {
+        .experienceRange {
+            margin-top: 10px;
+            /*width:110%;*/
+        }
+
+        .userProfile-style {
+            width: 50%;
+        }
+
+        .profileHeading {
+            font-size: 10px;
+        }
+        /*#liCareTakerPersonal {
+                        margin-top: 60px;
+                    }*/
+        .image_height {
+            min-height: 150px;
+        }
+
+        .box-footer {
+            text-align: center;
+        }
+
+        textarea.labelStyle.textArea {
+            min-height: 50px;
+        }
+
+
+        @@media (max-width:991px) {
+            .experienceRange {
+                margin-top: 10px;
+                /*width:110%;*/
+            }
+
+            .experienceFromDate {
+                width: 92%;
+            }
+
+            .caretaker-div-admin {
+                overflow-x: auto;
+            }
+        }
+    }
+
+    .profile-btn-padding {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+
+    @@media (max-width:767px) {
+        .profile-btn-padding {
+            text-align: center;
+            padding: 0px 5px;
+        }
+    }
+
+    .margin {
+        margin-top: 36px;
+    }
+
+    .display-rate, .paying-rate {
+        min-width: 60px;
+    }
+
+    label.padding-r0-l10 {
+        padding-left: 0px;
+        padding-right: 10px;
+    }
+    /*@@media(max-width:1366px) {
+                    .margin {
+                        margin-top: 4px !important;
+                    }
+                }*/
+</style>
+
+

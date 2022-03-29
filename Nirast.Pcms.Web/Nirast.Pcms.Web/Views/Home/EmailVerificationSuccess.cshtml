@@ -1,0 +1,105 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div class="limiter">
+        <div class="container-login100">
+
+            <div class="wrap-login100">
+                <div class="login100-form validate-form p-55">
+                    @if (TempData["ErrorMessage"] == null)
+                    {<div align="center">
+                            <h4>Email Verification Completed Successfully !!!</h4>
+                        </div>
+                        <br /><br />
+                    }
+                    <strong>
+                        Dear @if (TempData["VerifiedUser"] != null)
+                        {@TempData["VerifiedUser"].ToString()},
+                    </strong><br /><br />
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        @Html.Raw(TempData["ErrorMessage"].ToString());
+                    }
+                    else
+                    {
+                        if (TempData["UserMessage"] != null)
+                        {
+                            @Html.Raw(TempData["UserMessage"].ToString());
+
+                        }
+                        <br /><br />
+                        <div style="float:right;">
+                            <a href="/Account/Login" class="btn btn-primary">Sign In</a>
+                            @*<button class="btn btn-primary">Sign In</button>*@
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style type="text/css">
+        .limiter {
+            width: 100%;
+            margin: 0 auto;
+        }
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        .login100-form {
+            width: 100%;
+            position: relative;
+        }
+        .container-login100 {
+            width: 100%;
+            min-height: 60vh;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+            background-color: #fff;
+        }
+        .wrap-login100 {
+            width: 500px;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+            -moz-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+            -webkit-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+            -o-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+            -ms-box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .p-55 {
+            padding: 55px;
+        }
+
+        .p-l-55 {
+            padding-left: 55px;
+        }
+
+        .p-50-50 {
+            padding: 50% 50% 12.5% 12.5%;
+        }
+    </style>
+</body>
+</html>

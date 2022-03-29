@@ -1,0 +1,113 @@
+﻿
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+<style>
+    textarea {
+        resize: none;
+    }
+</style>
+
+@{
+    if (ViewBag.Error != null)
+    {
+        <div class="padT25"><p class="alert custom-alert-danger col-md-6 col-md-offset-3">@ViewBag.Error</p></div>
+    }
+    else
+    {
+
+        <div class="x_panel">
+
+            <div class="x_title">
+                <h2>Scheduling Calender View<small></small></h2>
+
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                @*<ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <select id="ddlClient" class="form-control"></select>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            Client:
+                        </li>
+                    </ul>*@
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="panel panel-default">
+                @*<div class="panel-heading">
+                        <h4>Search</h4>
+                    </div>*@
+                <div class="panel-body">
+
+                    <div class="col-md-8">
+
+                        <div class="col-md-8">
+                            <label class="label-style">Client Name:</label>
+                            <select id="ddlClient" class="form-control"></select>
+                        </div>
+                        <div class="col-md-4" style="margin-top:31px;">
+                            <button type="button" onclick="ButtonClick();" id="btnSearch" class="btn btn-primary " style="padding:10px 10px;">GO TO SCHEDULING</button>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4" style="display:inline-flex;margin-top: 40px;" id="legends">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="x_content">
+
+                <div id="calender"></div>
+                <div class="clearfix "></div>
+            </div>
+        </div>
+
+        <style>
+            #calendar-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+        </style>
+
+        <script>
+            $(document).ready(function () {
+                CaretaketType();
+            });
+            function CaretaketType() {
+                var colorLegends = '';
+                $.ajax({
+                    url: '/Admin/GetCaretakerType',
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (data) {
+                        $.each($.parseJSON(data), function (i, color) {
+                            if (color.Color != null)
+                                colorLegends += '<div><input type="button" class="legend-style" style="background-color:' + color.Color + '" /> <label class="label-style" style="padding-right: 10px;">' + color.TypeName + '</label> </div>';
+                        });
+                        $('#legends').html(colorLegends);
+                    },
+                });
+            }
+
+            function ButtonClick() {
+
+                //var clientId = $("#ddlClient").val();
+                var clientId = ($('#ddlClient').val() == null || $('#ddlClient').val() == 'null' || $('#ddlClient').val() == ''|| $('#ddlClient').val() == NaN) ? 0 : parseInt($('#ddlClient').val());
+                localStorage.setItem("clientId", clientId);
+                //location.href = '/Client/ScheduledCalenderView?clientId=' + clientId;
+                location.href = '/Client/ScheduledCalenderView';
+            }
+
+        </script>
+
+    }
+}

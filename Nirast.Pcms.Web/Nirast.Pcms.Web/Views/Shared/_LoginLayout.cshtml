@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <script type="text/javascript" src="~/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/CustomScript.js"></script>
+    <link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+
+    <!--===============================================================================================-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <!--===============================================================================================-->
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/css/CustomStyles.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="~/css/Login_Css/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/css/Login_Css/css/main.css">
+    <!--===============================================================================================-->
+</head>
+<body>
+    <div>
+        <div class="header-bot">
+            <div class="container col-sm-10 col-md-10">
+                <div class="row">
+                    <div class="col-sm-12 col-md-3 col-lg-3 header-left">
+                        <img class="submit" onclick="location.href ='/'" src="~/images/logo.jpg">
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-9 header-middle"><h1 class="title_phonenumber">1-800-892-6066</h1></div>
+                </div>
+            </div>
+
+        </div>
+        @RenderBody()
+    </div>
+    <!--===============================================================================================-->
+    <script type="text/javascript" src="~/js/bootstrap-3.1.1.min.js"></script>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+    @RenderSection("scripts", required: false)
+</body>
+</html>

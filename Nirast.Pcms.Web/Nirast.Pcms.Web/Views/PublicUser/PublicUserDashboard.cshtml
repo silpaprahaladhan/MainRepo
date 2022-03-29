@@ -1,0 +1,279 @@
+﻿@{
+    ViewBag.Title = "PublicUserDashboard";
+}
+<head>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link href="~/build/css/Dashboard.css" rel="stylesheet">
+    <style>
+        .heading-style {
+            margin-bottom: 10px;
+            font-size:14px;
+        }
+
+        .container.container {
+            width: 80%;
+        }
+
+        .register {
+            color: lightslategrey;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<script type="text/javascript">
+    $(document).ready(function ($) {
+        //for scrolling from other page
+        if ($(window.location.hash).length) {
+            $('html,body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            });
+            window.location.hash = '';
+        }
+        $('li').removeClass('menu__item--current');
+        $('#liDashboard').addClass('menu__item--current');
+    });
+
+</script>
+<div class="container container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            <div class="col-lg-12 col-md-12 col-sm-12 ">
+                <!-- PAGE CONTAINER-->
+
+                <div class="main-content">
+
+                    <div class="section__content section__content--p30 row">
+
+                        <div class="container-fluid">
+                            <h3 class="register h4-label">Public User Dashboard</h3>
+                            <div class="panel panel-default">
+
+                                <div class="panel-heading">
+                                    <h4>Booking Calendar View</h4>
+                                </div>
+                                <div class="panel-body">
+                                    @{Html.RenderAction("PublicUserCalendarView");}
+                                </div>
+                                <div class="panel-heading">
+                                    <h4>Notifications</h4>
+                                </div>
+                                <div class="panel-body">
+                                    @{Html.RenderAction("PublicUserNotification");}
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                </div>
+                <div class="row">
+
+
+
+                    <div class="col-lg-12" style="margin-top:30px;">
+                        <h6 class="heading-style">Booking History</h6>
+                        @*<div class="col-md-6 col-lg-4">*@
+                        @{Html.RenderAction("PublicUserBookingHistoryinPublicUserDashboard");}
+                    </div>
+                    <div class="col-lg-12" style="margin-top:30px;">
+                        <h6 class="heading-style">Invoice History</h6>
+                        @*<div class="col-md-6 col-lg-4">*@
+                        @{Html.RenderAction("PublicUserInvoiceHistoryinPublicUserDashboard");}
+                    </div>
+                    <div class="col-lg-12" style="margin-top:30px;">
+                        <h6 class="heading-style">Payment History</h6>
+                        @{Html.RenderAction("PublicUserPaymentHistory");}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    @*<script src="~/js/fullcalendar.min.js"></script>*@
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+
+        $(function () {
+            //$('#tblTimeShift').hide();
+            var holidays = [];
+            $(document).ready(function () {
+                debugger
+                var id = @Session["loggedInUserId"];
+                var data = { publicuserid: id }
+                SearchEvent(data)
+            });
+
+
+
+            $.ajax({
+                url: "/Client/GetHolidays",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (result) {
+                    $.each($.parseJSON(result), function (i, care) {
+                        var holidaydate = new Date(care.HolidayDate);
+                        holidaydate = new Date(holidaydate.getTime() + (holidaydate.getTimezoneOffset() * 60000));
+                        holidays.push({
+                            'dates': holidaydate
+                        });
+
+                    })
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while loading Admin dashboard - Holidays. Function: "/Client/GetHolidays". Page: AdminDashboard.cshtml');
+                    //alert('Some network error has occurred. Please try again after some time.');
+                }
+            });
+
+
+            function SearchEvent(data) {
+                events = [];
+                $.ajax({
+                    type: "POST",
+                    url: '/PublicUser/GetBookingForPublicUser',
+                    data: data,
+                    success: function (data) {
+                        debugger
+                        $.each(data, function (i, v) {
+                            events.push({
+
+                                title: v.BookedUser,                                
+                                start: (v.Start),
+                                end: moment(v.EndDate).add(1,"days"),                                                                                                
+                                caretaker: v.BookedUser,
+                                caretakername: v.BookedUser,
+                                fromtime: moment(v.FromDateTime).format('DD/MMM/YYYY hh:mm A'),
+                                endtime: moment(v.ToDateTime).format('DD/MMM/YYYY hh:mm A'),
+                                allDay: false,
+                                service: v.Service,
+                                enddate: moment(v.EndDate),
+                                bookingdate: moment(v.BookingDate).local().format('DD/MMM/YYYY hh:mm A')
+                            });
+                        })
+                        console.log(events)
+                        debugger
+                        GenerateCalender(events);
+                    },
+                    error: function (feed) {
+                        logError(feed.statusText + ' - Error occurred while loading Admin dashboard - Clients. Function: SearchEvent(data). Page: AdminDashboard.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+                    }
+                })
+            }
+           
+            //function to generate calendar
+            function GenerateCalender(events) {
+                $('#calender').fullCalendar('destroy');
+                $('#calender').fullCalendar({
+                    contentheight: 'auto',
+                    //height: 650,
+                    height: 'auto',
+                    defaultDate: new Date(),
+                    //timeFormat: 'hh(:mm)a',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay'
+                    },
+                    eventDrop: false,
+                    dayClick: function (date, jsEvent, view) {
+                        $('#hdStartDate').val(date.format());
+                    },
+
+                    slotminutes: 15,
+                    eventLimit: true,
+                    views: {
+                        month: {
+                            eventLimit: 11
+                        },
+                        day: {
+                            eventLimit: 11
+                        },
+                        week: {
+                            eventLimit: 11
+                        }
+                    },
+                    displayEventTime: false,
+                    timezone: 'utc',
+                    dayRender: function (date, cell, $el) {
+                        var check = $.fullCalendar.formatDate(date, 'DD/MM/YYYY');
+                        $.each(holidays, function (index, value) {
+
+                            var Month;
+                            var daterec;
+                            var montStr = value.dates.getMonth().toString();
+
+                            if (value.dates.getMonth() + 1 < 9) {
+                                Month = '0' + (value.dates.getMonth() + 1);
+                            }
+                            else {
+                                Month = (value.dates.getMonth() + 1);
+                            }
+
+                            if (value.dates.getDate() < 9) {
+                                daterec = '0' + (value.dates.getDate());
+                            }
+                            else {
+                                daterec = (value.dates.getDate());
+                            }
+
+                            var HolidayDate = daterec + "/" + Month + "/" + value.dates.getFullYear();
+                            if (HolidayDate == check) {
+                                cell.css("background-color", "yellow");
+                            }
+                        });
+                    },
+                    eventRender: function (calEvent, $el) {
+                    },
+                    eventMouseover: function (data, events, jsEvent, view) {
+                        debugger
+                        $.each(events, function (index, value) {
+                            tooltip = '<div class="tooltiptopicevent" style="border-radius: 25px;border: 2px solid ;-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);box-shadow:7px 7px 5px 0px rgba(50, 50, 50, 0.75);width:auto;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + '<b>Service : </b>' + data.service + '</br>' + '<b>Caregiver : </b>' + data.caretakername + '</br>'  + '<b>Booking Date : </b>' + data.bookingdate + '</br>' + '<b>Booking From : </b>' +  data.fromtime + '</br>' + '<b>Booking To : </b>' + data.endtime + '</br>'+  '</div>';
+                        });
+                        $("body").append(tooltip);
+                        $(this).mouseover(function (e) {
+                            $(this).css('z-index', 10000);
+                            $('.tooltiptopicevent').fadeIn('500');
+                            $('.tooltiptopicevent').fadeTo('10', 1.9);
+                        }).mousemove(function (e) {
+                            $('.tooltiptopicevent').css('top', e.pageY + 10);
+                            $('.tooltiptopicevent').css('left', e.pageX + 20);
+                        });
+
+                    },
+                    eventMouseout: function (data, jsEvent, view) {
+                        $(this).css('z-index', 8);
+
+                        $('.tooltiptopicevent').remove();
+                    },
+                    events: events,
+                    selectable: true
+                })
+            }
+        })
+
+</script>
+<style>
+    #calendar-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+</style>
+
+    }
+
+

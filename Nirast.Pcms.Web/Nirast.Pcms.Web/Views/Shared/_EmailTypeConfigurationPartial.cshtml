@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.EmailTypeConfiguration>
+@using Nirast.Pcms.Web.Models
+<div class="table-responsive">
+    @*@using (Html.BeginForm("DeleteCity", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {*@
+    <input type="hidden" id="hiddenConfigID" />
+    <table id="ConfigurationList" class="table table-borderless table-striped table-earning padding-top-10">
+        <thead>
+            <tr>
+                <th style="width:20%">Email Type</th>
+                <th style="width:30%">From Email ID</th>
+                <th style="width:30%">password</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td onclick="editEmailTypeDetails(@item.ConfigId,@item.EmailtypeId,'@item.FromEmail','@item.Password')">@((Enums.EmailType)item.EmailtypeId)</td>
+                        <td onclick="editEmailTypeDetails(@item.ConfigId,@item.EmailtypeId,'@item.FromEmail','@item.Password')">@item.FromEmail</td>
+                        <td onclick="editEmailTypeDetails(@item.ConfigId,@item.EmailtypeId,'@item.FromEmail','@item.Password')">@string.Format("*******")</td>
+
+                        <td>
+                            <button class="btn btn-xs btn-primary" title="Modify" onclick="editEmailTypeDetails(@item.ConfigId,@item.EmailtypeId,'@item.FromEmail','@item.Password')"><span class="fa fa-edit"></span></button>
+                            @if (ViewBag.AllowDelete)
+                            {
+                                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" onclick="deleteEmailTypeDetails(@item.ConfigId)" value="deleteEmailTypeconfig" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                                </div>
+                            }
+
+                        </td>
+
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+
+</div>
+<div class="modal fade" id="modal-delete" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Delete Config Details</h4>
+            </div>
+            <div class="modal-body">
+                Record will be deleted from the system. Are you sure you want to delete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteConfig()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function deleteEmailTypeDetails(configId) {
+
+        $('#hiddenConfigID').val(configId)
+    }
+    function deleteConfig() {
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/DeleteEmailTypeConfig",
+            data: { configId: $('#hiddenConfigID').val() },
+            success: function (data) {
+                alert(data)
+                window.location.reload();
+
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Deletingcountry. Function: deleteUser(). Page: Country.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+</script>
+
+
+
+
+
+

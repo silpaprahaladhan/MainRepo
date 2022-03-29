@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container animsition" style="padding-bottom: 15px;">
+  
+    <div class="row profile_Style">
+        <h3 class="register h4-label" style="margin-bottom:10px">Upload Policy</h3>
+        <div class="equal-height-panels">
+            <div class="ui segment">
+                <div id="dvMain" name="dvMain">
+                    <div class="clr"></div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-5 col-lg-5">
+                                <input type="file" id="uploadPolicyContent" name="FileUpload" accept=".txt" />
+                            </div>
+                            <div class="col-md-2 uploadPolicy">
+                                <input type="submit" class="btn btn-sm login-btn" name="Submit" id="Submit" value="Upload" disabled="disabled" />
+                            </div>
+                        </div>
+                        <div id="policyContent" class="policyContent" style="display:none;"></div>
+                        <div class="col-md-5 col-lg-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    #Submit {
+        margin-top: -5px;
+    }
+
+    .policyContent {
+        height: auto;
+        max-height: 600px;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        padding: 10px;
+        text-align: justify;
+    }
+
+    .btn-disable {
+        cursor: not-allowed;
+        pointer-events: none;
+        /*Button disabled - CSS color class*/
+        color: #c0c0c0;
+        background-color: #ffffff;
+    }
+
+    .register {
+        color: lightslategrey;
+        margin-bottom: 5px;
+    }
+
+</style>
+<script type="text/javascript">
+    $(function () {
+        if (window.FileReader) {
+            $('#uploadPolicyContent').on('change', function (e) {
+                var file = e.target.files[0];
+                if (file.name.split('.')[1] == 'txt')
+                {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var csv = reader.result.split(',');
+                        $('#policyContent').text(reader.result);
+                    }
+                    $("#Submit").prop("disabled", false);
+                    reader.readAsText(file);
+                }
+                else {
+                    e.target.value = '';
+                    $("#Submit").prop("disabled", true);
+                    alert("Only text files are supported.");
+                }
+            });
+        } else {
+            console.log("no support");
+        }
+
+        $('#Submit').on('click', function (e) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Upload", "Admin")',
+                data: { fileContent: $('#policyContent').text() },
+                success: function () { alert("Document uploaded successfully");},
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while uploading Policy Files. Function: $("#Submit").on("click", function (e)). Page: UploadPolicy.cshtml');
+                    //alert('Some network error has occurres. Please try again after some time.');
+                }
+            });
+        });
+    });
+</script>

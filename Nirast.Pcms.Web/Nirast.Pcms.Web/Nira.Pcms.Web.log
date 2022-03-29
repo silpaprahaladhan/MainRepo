@@ -1,0 +1,1188 @@
+[ERR] 2018-12-17 06:00:18.906 Error occured in PublicUser Controller-InvoicePayments
+System.FormatException: Invalid length for a Base-64 char array or string.
+   at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at Nirast.Pcms.Web.Helpers.StringCipher.DecryptCipherTextToPlainText(String CipherText) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\StringCipher.cs:line 112
+   at Nirast.Pcms.Web.Controllers.PublicUserController.InvoicePayments(String invoice, Boolean isSearch, UserPaymentInvoiceModel invModel) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\PublicUserController.cs:line 888
+[ERR] 2018-12-17 06:05:55.659 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:55.659 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:55.659 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:55.659 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:55.659 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:55.659 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:56.299 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:56.299 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:56.424 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:56.440 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:56.581 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:56.596 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:56.706 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:56.721 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:05:56.754 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:20:58.776 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:20:58.776 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:20:58.776 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:20:58.776 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:20:58.776 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:20:58.776 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:20:59.963 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:00.260 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:00.370 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:00.401 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:00.417 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:00.432 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:00.432 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:00.557 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:00.667 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:00.729 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:21:13.682 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:26:57.310 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:26:57.326 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 06:26:57.326 Error occured in Client Controller-AddCareTakerList
+System.FormatException: Input string was not in a correct format.
+   at System.Number.ParseSingle(String value, NumberStyles options, NumberFormatInfo numfmt)
+   at Nirast.Pcms.Web.Controllers.ClientController.AddCategoryandRateList(String categoryTypeId, String serviceRate, String taxApplicable, String categoryName) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 352
+[ERR] 2018-12-17 08:59:45.741 Error occured in PublicUser Controller-UserProfile
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Nirast.Pcms.Web.Controllers.PublicUserController.UserProfile(Int32 id) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\PublicUserController.cs:line 550
+[ERR] 2018-12-17 09:00:03.444 Error occured in PublicUser Controller-UserProfile
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Nirast.Pcms.Web.Controllers.PublicUserController.UserProfile(Int32 id) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\PublicUserController.cs:line 550
+[ERR] 2018-12-17 09:01:21.882 Error occured in PublicUser Controller-UserProfile
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Nirast.Pcms.Web.Controllers.PublicUserController.UserProfile(Int32 id) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\PublicUserController.cs:line 550
+[ERR] 2018-12-17 09:02:45.836 Error occured in PublicUser Controller-UserProfile
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Nirast.Pcms.Web.Controllers.PublicUserController.UserProfile(Int32 id) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\PublicUserController.cs:line 550
+[ERR] 2018-12-17 09:05:07.431 Error occured in PublicUser Controller-UserProfile
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Nirast.Pcms.Web.Controllers.PublicUserController.UserProfile(Int32 id) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\PublicUserController.cs:line 550
+[ERR] 2018-12-18 06:09:29.633 Error occured in Admin Controller-CreateCity
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Nirast.Pcms.Web.Controllers.AdminController.CreateCity(Cities City) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 4011
+[ERR] 2018-12-26 10:45:37.748 Error occured in Admin Controller-CreateCity
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Nirast.Pcms.Web.Controllers.AdminController.CreateCity(Cities City) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 4049
+[ERR] 2019-01-07 05:39:44.411 Error occured in Client Controller-GetHolidays
+System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.GetHolidays() in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 1356
+[ERR] 2019-01-07 09:08:25.177 Error occured in Caretaker Controller-CareTakerDetailPage
+System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.CareTakerController.CareTakerDetailPage(Int32 id) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\CareTakerController.cs:line 900
+[ERR] 2019-01-07 11:25:30.326 Error occured in Client Controller-GetHolidays
+System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.GetHolidays() in D:\NiraSVN\nira_pcms\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 1356
+[ERR] 2019-01-07 16:23:26.928 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-07 16:23:58.881 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 04:33:05.450 Error occured in Home Controller-Index
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api)
+   at Nirast.Pcms.Web.Controllers.HomeController.Index()
+[ERR] 2019-01-08 04:33:49.966 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 04:34:09.014 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 04:34:35.670 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 04:35:14.263 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 04:40:05.812 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 05:39:14.187 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 05:41:57.329 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 05:43:43.751 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 05:47:05.909 Error occured in Home Controller-Index
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api)
+   at Nirast.Pcms.Web.Controllers.HomeController.Index()
+[ERR] 2019-01-08 05:47:05.909 Error occured in Home Controller-Index
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api)
+   at Nirast.Pcms.Web.Controllers.HomeController.Index()
+[ERR] 2019-01-08 05:48:47.754 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 05:49:15.004 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 05:49:20.207 Error occured in Home Controller-Index
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api)
+   at Nirast.Pcms.Web.Controllers.HomeController.Index()
+[ERR] 2019-01-08 06:13:45.813 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 06:15:46.283 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword)
+[ERR] 2019-01-08 06:33:54.729 Error occured in Client Controller-GetHolidays
+System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api)
+   at Nirast.Pcms.Web.Controllers.ClientController.GetHolidays()
+[ERR] 2019-01-08 06:33:54.932 Error occured in Client Controller-GetHolidays
+System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api)
+   at Nirast.Pcms.Web.Controllers.ClientController.GetHolidays()
+[ERR] 2019-01-08 06:34:02.323 Error occured in Client Controller-GetHolidays
+System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api)
+   at Nirast.Pcms.Web.Controllers.ClientController.GetHolidays()
+[ERR] 2019-01-08 06:39:34.185 Error occured in Client Controller-GetHolidays
+System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api)
+   at Nirast.Pcms.Web.Controllers.ClientController.GetHolidays()
+[ERR] 2019-01-08 07:02:07.916 Error occured in Client Controller-GetHolidays
+System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.GetHolidays() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 1356
+[ERR] 2019-01-09 05:06:05.288 Error occured in PublicUser Controller-UpdateUserDetails
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Nirast.Pcms.Web.Controllers.PublicUserController.UpdateUserDetails(PublicUserRegistration publicUserDetails) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\PublicUserController.cs:line 302
+[ERR] 2019-01-21 05:03:33.303 Error occured in aspx client Invoice Report!
+System.Threading.ThreadAbortException: Thread was being aborted.
+   at System.Threading.Thread.AbortInternal()
+   at System.Threading.Thread.Abort(Object stateInfo)
+   at System.Web.HttpResponse.AbortCurrentThread()
+   at System.Web.HttpResponse.End()
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Button2_Click(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 349
+[ERR] 2019-01-21 05:03:35.693 Error occured in aspx client Invoice Report!
+System.Threading.ThreadAbortException: Thread was being aborted.
+   at System.Threading.Thread.AbortInternal()
+   at System.Threading.Thread.Abort(Object stateInfo)
+   at System.Web.HttpResponse.AbortCurrentThread()
+   at System.Web.HttpResponse.End()
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Button2_Click(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 349
+[ERR] 2019-01-21 05:20:35.471 Error occured in Client Controller-GetEventsByClientId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.GetEventsByClientId(Int32 clientId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 1334
+[ERR] 2019-01-21 05:21:53.781 Error occured in Client Controller-ClientSearch
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.ClientSearch() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 814
+[ERR] 2019-01-21 05:22:15.264 Error occured in Client Controller-ClientSearch
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.ClientSearch() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 814
+[ERR] 2019-01-21 05:22:17.905 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:22:22.155 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:22:23.154 Error occured in Client Controller-ClientSearch
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.ClientSearch() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 814
+[ERR] 2019-01-21 05:22:23.890 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:22:42.544 Error occured in Home Controller-Index
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 134
+[ERR] 2019-01-21 05:23:04.294 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:23:07.137 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:23:16.887 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:23:30.059 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:24:07.995 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:24:07.995 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:24:51.369 Error occured in Home Controller-Index
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 134
+[ERR] 2019-01-21 05:25:10.963 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:25:20.041 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:25:47.196 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:26:34.102 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:27:29.335 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:27:36.241 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:28:54.740 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:30:49.396 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:31:08.974 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:33:05.411 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-21 05:35:46.880 Error occured in Home Controller-CheckCredential
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Nirast.Pcms.Web.Controllers.HomeController.CheckCredential(String loginName, String loginPassword) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 76
+[ERR] 2019-01-24 08:05:48.848 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 83
+[ERR] 2019-01-24 08:05:53.551 Error occured in aspx client Invoice Report!
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at System.Collections.ObjectModel.Collection`1.get_Item(Int32 index)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Button2_Click(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 213
+[ERR] 2019-01-24 08:06:05.895 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 83
+[ERR] 2019-01-24 08:06:07.645 Error occured in aspx client Invoice Report!
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at System.Collections.ObjectModel.Collection`1.get_Item(Int32 index)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Button2_Click(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 213
+[ERR] 2019-01-24 08:06:09.036 Error occured in aspx client Invoice Report!
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at System.Collections.ObjectModel.Collection`1.get_Item(Int32 index)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Button2_Click(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 213
+[ERR] 2019-01-24 08:06:15.551 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 83
+[ERR] 2019-01-24 09:50:19.227 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Nirast.Pcms.Web.Reports.CaretakerPayHoursSummary.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\CaretakerPayHoursSummary.aspx.cs:line 89
+[ERR] 2019-01-24 09:59:24.917 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 83
+[ERR] 2019-01-24 09:59:45.277 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Nirast.Pcms.Web.Reports.CaretakerPayHoursSummary.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\CaretakerPayHoursSummary.aspx.cs:line 89
+[ERR] 2019-01-24 10:43:32.505 Error occured in Admin Controller-Interview
+System.FormatException: Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Convert.ToInt32(String value)
+   at Nirast.Pcms.Web.Reports.CaretakerReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\CaretakerReport.aspx.cs:line 34
+[ERR] 2019-01-24 13:17:43.137 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 79
+[ERR] 2019-01-24 13:18:07.231 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 79
+[ERR] 2019-01-24 13:18:28.137 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 79
+[ERR] 2019-01-24 13:19:12.388 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:19:26.606 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:20:19.482 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:21:08.982 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:21:31.811 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:22:17.186 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:25:07.640 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:27:04.657 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:28:55.955 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Nirast.Pcms.Web.Reports.CaretakerPayHoursSummary.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\CaretakerPayHoursSummary.aspx.cs:line 91
+[ERR] 2019-01-24 13:32:51.832 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:33:01.332 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:33:04.707 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 13:36:30.756 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 14:05:11.246 Error occured in Admin Controller-Interview
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Nirast.Pcms.Web.Reports.ClientInvoiceReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\ClientInvoiceReport.aspx.cs:line 85
+[ERR] 2019-01-24 14:06:40.684 Error occured in aspx client Invoice Report!
+System.FormatException: Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Convert.ToInt32(String value)
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.GenerateInvoice() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 570
+[ERR] 2019-01-25 05:23:23.303 Error occured in Client Controller-ClientDetails
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.ClientDetails(Int32 clientId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 608
+[ERR] 2019-01-25 05:24:20.225 Error occured in Client Controller-ClientDetails
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.ClientDetails(Int32 clientId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 608
+[ERR] 2019-01-25 05:24:52.022 Error occured in Client Controller-ClientDetails
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.ClientDetails(Int32 clientId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 608
+[ERR] 2019-01-25 05:27:53.256 Error occured in Client Controller-ClientDetails
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.ClientDetails(Int32 clientId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 608
+[ERR] 2019-01-25 06:42:04.680 Error occured in Client Controller-ClientDetails
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.ClientController.ClientDetails(Int32 clientId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 608
+[ERR] 2019-01-25 08:11:26.506 Error occured in PublicUser Controller-UserProfile
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Nirast.Pcms.Web.Controllers.PublicUserController.UserProfile(Int32 id) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\PublicUserController.cs:line 476
+[ERR] 2019-01-28 06:24:59.726 Error occured in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5189
+[ERR] 2019-01-28 06:25:22.351 Error occured in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5189
+[ERR] 2019-01-28 06:25:36.039 Error occured in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5189
+[ERR] 2019-01-28 06:25:46.649 Error occured in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5189
+[ERR] 2019-01-31 07:16:02.969 Error occured in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5189
+[ERR] 2019-01-31 07:16:19.562 Error occured in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5189
+[ERR] 2019-01-31 11:15:15.748 Error occured in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5189
+[ERR] 2019-01-31 11:20:50.123 Error occured in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS_26-01-19\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5189
+[ERR] 2019-02-06 08:28:56.021 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-06 08:30:40.787 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-06 08:53:48.740 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-06 08:54:57.068 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-06 09:41:04.841 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-06 09:41:11.934 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-07 11:41:26.341 Error occurred in PublicUser Controller-UpdateUserDetails
+System.ArgumentNullException: Value cannot be null.
+Parameter name: inArray
+   at System.Convert.ToBase64String(Byte[] inArray)
+   at Nirast.Pcms.Web.Controllers.AdminController.UpdateAdminProfile(UsersDetails adminDetails) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 6457
+[ERR] 2019-02-11 07:43:15.949 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-11 09:33:40.143 ModSecurity Action - Error occurred while sorting caretakers. Function: SortData(sortBy, sortField). Page: SearchPageScript.jsundefined
+[ERR] 2019-02-11 09:33:42.768 ModSecurity Action - Error occurred while sorting caretakers. Function: SortData(sortBy, sortField). Page: SearchPageScript.jsundefined
+[ERR] 2019-02-12 05:26:42.317 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-12 05:28:49.440 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-12 05:40:02.048 Internal Server Error - Error occurred while loading States for CountryID: . Function: loadStatesforCountry(roleId). Page: States.cshtmlundefined
+[ERR] 2019-02-12 05:40:11.251 Internal Server Error - Error occurred while loading States for CountryID: . Function: loadStatesforCountry(roleId). Page: States.cshtmlundefined
+[ERR] 2019-02-12 05:40:30.704 Internal Server Error - Error occurred while loading States for CountryID: . Function: loadStatesforCountry(roleId). Page: States.cshtmlundefined
+[ERR] 2019-02-12 06:23:13.673 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-12 06:31:49.531 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-12 09:17:03.514 Error occurred in aspx client Invoice Report!
+System.IO.IOException: The document has no pages.
+   at iTextSharp.text.pdf.PdfPages.WritePageTree()
+   at iTextSharp.text.pdf.PdfWriter.Close()
+   at iTextSharp.text.pdf.PdfDocument.Close()
+   at iTextSharp.text.Document.Close()
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.MergePDFs(String outPutFilePath, List`1 filesPath) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 692
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.GenerateInvoice() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 591
+[ERR] 2019-02-12 09:21:38.435 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-12 09:21:45.138 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-12 09:23:20.434 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-12 09:30:11.108 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-12 09:33:12.905 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-13 05:29:08.697 Error occurred in aspx client Invoice Report!
+System.IO.IOException: The document has no pages.
+   at iTextSharp.text.pdf.PdfPages.WritePageTree()
+   at iTextSharp.text.pdf.PdfWriter.Close()
+   at iTextSharp.text.pdf.PdfDocument.Close()
+   at iTextSharp.text.Document.Close()
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.MergePDFs(String outPutFilePath, List`1 filesPath) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 692
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.GenerateInvoice() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 591
+[ERR] 2019-02-13 05:30:08.355 Error occurred in aspx client Invoice Report!
+System.IO.IOException: The document has no pages.
+   at iTextSharp.text.pdf.PdfPages.WritePageTree()
+   at iTextSharp.text.pdf.PdfWriter.Close()
+   at iTextSharp.text.pdf.PdfDocument.Close()
+   at iTextSharp.text.Document.Close()
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.MergePDFs(String outPutFilePath, List`1 filesPath) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 692
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.GenerateInvoice() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 591
+[ERR] 2019-02-13 11:22:20.108 Error occurred in Admin Controller-Interview
+System.FormatException: Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Convert.ToInt32(String value)
+   at Nirast.Pcms.Web.Reports.CaretakerWiseBookingReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\CaretakerWiseBookingReport.aspx.cs:line 30
+[ERR] 2019-02-13 11:22:36.390 Error occurred in Admin Controller-Interview
+System.FormatException: Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Convert.ToInt32(String value)
+   at Nirast.Pcms.Web.Reports.CaretakerWiseBookingReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\CaretakerWiseBookingReport.aspx.cs:line 30
+[ERR] 2019-02-13 11:23:16.297 Error occurred in Admin Controller-Interview
+System.FormatException: Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Convert.ToInt32(String value)
+   at Nirast.Pcms.Web.Reports.CaretakerWiseBookingReport.Page_Load(Object sender, EventArgs e) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\CaretakerWiseBookingReport.aspx.cs:line 30
+[ERR] 2019-02-14 04:40:42.764 Error occurred in aspx client Invoice Report!
+System.IO.IOException: The document has no pages.
+   at iTextSharp.text.pdf.PdfPages.WritePageTree()
+   at iTextSharp.text.pdf.PdfWriter.Close()
+   at iTextSharp.text.pdf.PdfDocument.Close()
+   at iTextSharp.text.Document.Close()
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.MergePDFs(String outPutFilePath, List`1 filesPath) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 692
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.GenerateInvoice() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 591
+[ERR] 2019-02-14 05:02:19.060 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5245
+[ERR] 2019-02-14 05:33:04.147 Error occurred in Admin Controller-ApproveNewCaretaker
+System.ArgumentNullException: Value cannot be null.
+Parameter name: inArray
+   at System.Convert.ToBase64String(Byte[] inArray)
+   at Nirast.Pcms.Web.Controllers.AdminController.ApproveNewCaretaker(Int32 caretakerId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5964
+[ERR] 2019-02-14 05:33:10.412 Error occurred in Admin Controller-ApproveNewCaretaker
+System.ArgumentNullException: Value cannot be null.
+Parameter name: inArray
+   at System.Convert.ToBase64String(Byte[] inArray)
+   at Nirast.Pcms.Web.Controllers.AdminController.ApproveNewCaretaker(Int32 caretakerId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5964
+[ERR] 2019-02-14 05:33:16.693 Error occurred in Admin Controller-ApproveNewCaretaker
+System.ArgumentNullException: Value cannot be null.
+Parameter name: inArray
+   at System.Convert.ToBase64String(Byte[] inArray)
+   at Nirast.Pcms.Web.Controllers.AdminController.ApproveNewCaretaker(Int32 caretakerId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5964
+[ERR] 2019-02-14 06:55:36.044 Error occurred in aspx client Invoice Report!
+System.IO.IOException: The document has no pages.
+   at iTextSharp.text.pdf.PdfPages.WritePageTree()
+   at iTextSharp.text.pdf.PdfWriter.Close()
+   at iTextSharp.text.pdf.PdfDocument.Close()
+   at iTextSharp.text.Document.Close()
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.MergePDFs(String outPutFilePath, List`1 filesPath) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 745
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.GenerateInvoice() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 644
+[ERR] 2019-02-14 08:49:33.098 Error occurred in aspx client Invoice Report!
+System.IO.IOException: The document has no pages.
+   at iTextSharp.text.pdf.PdfPages.WritePageTree()
+   at iTextSharp.text.pdf.PdfWriter.Close()
+   at iTextSharp.text.pdf.PdfDocument.Close()
+   at iTextSharp.text.Document.Close()
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.MergePDFs(String outPutFilePath, List`1 filesPath) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 745
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.GenerateInvoice() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 644
+[ERR] 2019-02-14 09:10:54.073 Error occurred in Admin Controller-ApproveNewCaretaker
+System.ArgumentNullException: Value cannot be null.
+Parameter name: inArray
+   at System.Convert.ToBase64String(Byte[] inArray)
+   at Nirast.Pcms.Web.Controllers.AdminController.ApproveNewCaretaker(Int32 caretakerId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5964
+[ERR] 2019-02-14 09:43:06.060 Error occurred in Admin Controller-ApproveNewCaretaker
+System.ArgumentNullException: Value cannot be null.
+Parameter name: inArray
+   at System.Convert.ToBase64String(Byte[] inArray)
+   at Nirast.Pcms.Web.Controllers.AdminController.ApproveNewCaretaker(Int32 caretakerId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5964
+[ERR] 2019-02-14 10:39:30.938 Error occurred in aspx client Invoice Report!
+System.IO.IOException: The document has no pages.
+   at iTextSharp.text.pdf.PdfPages.WritePageTree()
+   at iTextSharp.text.pdf.PdfWriter.Close()
+   at iTextSharp.text.pdf.PdfDocument.Close()
+   at iTextSharp.text.Document.Close()
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.MergePDFs(String outPutFilePath, List`1 filesPath) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 745
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.GenerateInvoice() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 644
+[ERR] 2019-02-14 13:14:20.768 ModSecurity Action - Error occurred while sorting caretakers. Function: SortData(sortBy, sortField). Page: SearchPageScript.jsundefined
+[ERR] 2019-02-15 04:20:37.751 Internal Server Error - Error occurred while sorting caretakers. Function: SortData(sortBy, sortField). Page: SearchPageScript.jsundefined
+[ERR] 2019-02-15 05:57:52.547 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-15 07:08:21.724 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5260
+[ERR] 2019-02-15 07:08:47.724 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5260
+[ERR] 2019-02-15 07:34:07.319 Error occurred in Caretaker Controller-AddExperienceDetails
+System.FormatException: String was not recognized as a valid DateTime.
+   at System.DateTimeParse.ParseExact(String s, String format, DateTimeFormatInfo dtfi, DateTimeStyles style)
+   at System.DateTime.ParseExact(String s, String format, IFormatProvider provider, DateTimeStyles style)
+   at Nirast.Pcms.Web.Controllers.CareTakerController.AddExperienceDetails(String dateFrom, String dateTo, String company) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\CareTakerController.cs:line 530
+[ERR] 2019-02-15 08:37:32.359 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5260
+[ERR] 2019-02-15 08:39:04.827 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5260
+[ERR] 2019-02-15 08:40:07.359 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5260
+[ERR] 2019-02-15 08:41:47.547 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 5260
+[ERR] 2019-02-15 09:30:34.641 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-15 09:30:48.781 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-15 09:32:03.187 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-15 09:41:14.704 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-15 09:42:23.359 Internal Server Error - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtmlundefined
+[ERR] 2019-02-19 04:47:18.248 Internal Server Error - Error occurred while sorting caretakers. Function: SortData(sortBy, sortField). Page: SearchPageScript.jsundefined
+[ERR] 2019-02-19 05:01:59.078 Error occurred in aspx client Invoice Report!
+System.IO.IOException: The document has no pages.
+   at iTextSharp.text.pdf.PdfPages.WritePageTree()
+   at iTextSharp.text.pdf.PdfWriter.Close()
+   at iTextSharp.text.pdf.PdfDocument.Close()
+   at iTextSharp.text.Document.Close()
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.MergePDFs(String outPutFilePath, List`1 filesPath) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 745
+   at Nirast.Pcms.Web.Reports.SaveClientInvoiceReport.GenerateInvoice() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Reports\SaveClientInvoiceReport.aspx.cs:line 644
+[ERR] 2019-02-22 07:08:59.084 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 4875
+[ERR] 2019-02-22 07:09:23.130 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 4875
+[ERR] 2019-02-22 07:17:36.225 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 4875
+[ERR] 2019-02-22 07:18:28.897 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 4875
+[ERR] 2019-02-22 07:18:43.006 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 4875
+[ERR] 2019-02-22 11:52:21.431 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 4875
+[ERR] 2019-02-25 05:03:29.296 Error occurred in Client Controller-SaveClientDetails
+System.FormatException: Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Convert.ToInt32(String value)
+   at Nirast.Pcms.Web.Controllers.ClientController.SaveClientDetails(ClientModel objClient) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\ClientController.cs:line 468
+[ERR] 2019-02-25 05:17:14.970 Error occurred in Admin Controller-LoadStatesByCountryId
+System.Net.WebException: The remote server returned an error: (500) Internal Server Error.
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.AdminController.LoadPhoneCodeByCountryId(Int32 CountryId) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\AdminController.cs:line 4875
+[ERR] 2019-03-27 11:26:09.727 Internal Server Error - Error occurred while loading TimeShift for Client. Function: populateTimeShiftByClientId(). Page: ScheduledCalenderView.cshtmlundefined
+[ERR] 2019-03-27 11:26:25.945 Internal Server Error - Error occurred while loading TimeShift for Client. Function: populateTimeShiftByClientId(). Page: ScheduledCalenderView.cshtmlundefined
+[ERR] 2019-06-01 04:20:25.332 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135
+[ERR] 2019-06-11 03:15:09.237 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135
+[ERR] 2019-06-11 03:15:09.237 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135
+[ERR] 2019-06-12 04:57:17.248 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135
+[ERR] 2019-06-12 04:57:17.248 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135
+[ERR] 2019-06-12 05:18:31.439 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135
+[ERR] 2019-06-12 10:59:18.577 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135
+[ERR] 2019-06-13 06:10:34.358 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135
+[ERR] 2019-06-13 06:10:34.358 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135
+[ERR] 2020-01-01 07:01:30.050 Error occurred in Home Controller-Index
+System.Net.WebException: The remote name could not be resolved: 'pcms-api.qa.nirasystems.com'
+   at System.Net.HttpWebRequest.GetResponse()
+   at Nirast.Pcms.Web.Helpers.Service.GetAPI(String api) in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Helpers\Service.cs:line 86
+   at Nirast.Pcms.Web.Controllers.HomeController.Index() in E:\PCMS\trunk\source\Nirast.Pcms.Web\Nirast.Pcms.Web\Controllers\HomeController.cs:line 135

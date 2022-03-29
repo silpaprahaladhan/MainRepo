@@ -1,0 +1,89 @@
+﻿@model IList<Nirast.Pcms.Web.Models.UsersDetails>
+@using Nirast.Pcms.Web.Models
+
+<table class="table table-striped padding-top-10 table-earning" id="userList">
+    <thead>
+        <tr class="non-filter-header">
+            <th>Name</th>
+            <th>Email ID</th>
+            <th>Phone</th>
+            <th>StreetName</th>
+            <th>City</th>
+
+            <th>Login Status</th>
+            <th>Email Verification</th>
+            <th class="text-right">Action</th>
+        </tr>
+    </thead>
+    <tbody id="publicuser_id">
+        @foreach (var item in Model)
+        {
+            var verified = @item.UserVerified == true ? "Verified" : "Pending";
+            var status = @item.UserStatus == Enums.UserStatus.Active ? "Active" : "Disabled";
+            <tr>
+                <td style="width:20%" onclick="location.href ='@(Url.Action("UserProfile", "PublicUser", new {@id = item.UserRegnId }))'">@item.FirstName @item.LastName</td>
+                <td style="width:15%" onclick="location.href ='@(Url.Action("UserProfile", "PublicUser", new {@id = item.UserRegnId }))'">@item.EmailAddress</td>
+                <td style="width:10%" onclick="location.href ='@(Url.Action("UserProfile", "PublicUser", new {@id = item.UserRegnId }))'">@item.PrimaryPhoneNo</td>
+                <td style="width:15%" onclick="location.href ='@(Url.Action("UserProfile", "PublicUser", new {@id = item.UserRegnId }))'">@item.HouseName</td>
+                <td style="width:15%" onclick="location.href ='@(Url.Action("UserProfile", "PublicUser", new {@id = item.UserRegnId }))'">@item.City</td>
+                <td style="width:8%" onclick="location.href ='@(Url.Action("UserProfile", "PublicUser", new {@id = item.UserRegnId }))'">@status</td>
+
+                <td style="width:8%" onclick="location.href ='@(Url.Action("UserProfile", "PublicUser", new {@id = item.UserRegnId }))'">@verified</td>
+                <td class="text-right">
+                    @if (ViewBag.AllowEdit)
+                    {
+                        <a class="btn btn-xs btn-primary" title="View" href="@Url.Action("UserProfile", "PublicUser", new { @id = item.UserRegnId })"><span class="fa fa-eye"></span></a>
+                        <button href="#" class="btn btn-xs theme-button fa fa-key" title="Reset password" onclick="showBookingDetails('@item.UserRegnId')"></button>
+                        if (item.UserStatus == Enums.UserStatus.Active)
+                        {
+                            <button class="btn btn-xs btn-warning" title="Make Inactive" onclick="changeStatus(@item.UserRegnId,@((int)Enums.UserStatus.InActive))"><span class="fa fa-toggle-on"></span></button>
+                        }
+                        else if (item.UserStatus == Enums.UserStatus.InActive)
+                        {
+                            <button class="btn btn-xs btn-warning" title="Make Active" onclick="changeStatus(@item.UserRegnId,@((int)Enums.UserStatus.Active))"><span class="fa fa-toggle-off"></span></button>
+                        }
+                    }
+                    else
+                    {
+                        <div class="wrapper">
+                            <a class="btn btn-xs btn-primary" title="Modify"><span class="fa fa-edit" disabled></span></a>
+                            @{
+                                if (item.UserStatus == Enums.UserStatus.Active)
+                                {
+                                    <button class="btn btn-xs btn-warning" title="Make Inactive" disabled><span class="fa fa-toggle-on"></span></button>
+                                }
+                                else if (item.UserStatus == Enums.UserStatus.InActive)
+                                {
+                                    <button class="btn btn-xs btn-warning" title="Make Active" disabled><span class="fa fa-toggle-off"></span></button>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (ViewBag.AllowDelete)
+                    {
+                        <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" data-target="#modal-delete" onclick="setCaretakerId('@item.UserRegnId')"><span class="fa fa-minus-circle"></span></button>
+                    }
+                    else
+                    {
+                        <div class="wrapper">
+                            <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                        </div>
+                    }
+                    @if (item.UserVerified == true)
+                    {
+
+                        <button class="btn btn-xs btn btn-success" title="VerifyEmail" onclick="verifyEmail('@item.UserRegnId')" disabled="disabled"><span class="fa fa-check"></span></button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-xs btn btn-success" title="VerifyEmail" onclick="verifyEmail('@item.UserRegnId')"><span class="fa fa-check"></span></button>
+
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

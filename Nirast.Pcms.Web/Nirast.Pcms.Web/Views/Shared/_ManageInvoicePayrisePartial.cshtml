@@ -1,0 +1,104 @@
+﻿
+@model IEnumerable<Nirast.Pcms.Web.Models.InvoicePayriseModel>
+
+<div class="table-responsive">
+    <input type="hidden" id="hiddenInvoicePayrise" />
+    <table id="ManageInvoicePayriseTable" class="table table-borderless table-striped table-earning padding-top-10">
+        <thead>
+            <tr>
+                <th style="width:20%">Client Name</th>
+                <th style="width:30%">Effective From Date</th>
+                <th style="width:30%">Category</th>
+                <th style="width:20%">Rate</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model != null)
+                {
+                    List<int> payRiseIds = Model.Select(x => x.InvoicePayriseId).Distinct().ToList();
+                    foreach (var payriseId in payRiseIds)
+                    {
+                        var data = Model.ToList().Where(x => x.InvoicePayriseId == payriseId).ToList();
+                        string clientName = data[0].ClientName;
+                        DateTime date = data[0].EffectiveFromDate;
+                        <tr>
+                            <td>@clientName</td>
+                            <td>@date.ToString(string.Format("MM/dd/yyyy"))</td>
+                            <td>
+                                <table>
+                                    @foreach (var item in data)
+                                    {
+                                        <tr><td>@item.CategoryName</td></tr>
+                                    }
+                                </table>
+                            </td>
+                            <td>
+                                <table>
+                                    @foreach (var item in data)
+                                    {
+                                        <tr><td>@item.CurrencySymbol @item.Rate</td></tr>
+                                    }
+                                </table>
+                            </td>
+
+                            <td>
+                                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" data-target="#modal-delete" onclick="getID(@payriseId)"><span class="fa fa-minus-circle"></span></button>
+                            </td>
+                        </tr>
+
+                    }
+
+                }
+            }
+
+
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="modal-delete" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Delete Invoice Payrise</h4>
+            </div>
+            <div class="modal-body">
+                Entire services related to this payrise will be deleted from the system. Are you sure you want to delete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteInvoicePayrise()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function getID(payriseId) {
+        debugger;
+        $('#hiddenInvoicePayrise').val(payriseId)
+    }
+    function deleteInvoicePayrise() {
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/DeleteInvoicePayrise",
+            data: { invoicePayriseId: $('#hiddenInvoicePayrise').val() },
+            success: function (data) {
+                alert(data)
+                window.location.reload();
+
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Deleting payrise. Function: deleteInvoicePayrise(). Page: Country.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+</script>
+
+

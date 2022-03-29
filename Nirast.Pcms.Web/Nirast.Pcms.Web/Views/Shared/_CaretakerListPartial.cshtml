@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel>
+<div class="x_panel">
+    <div class="x_title">
+        <h2>New Caregiver<small></small></h2>
+        <ul class="nav navbar-right panel_toolbox">
+            <li>
+                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="x_content">
+        <div class="table-responsive">
+            <input type="hidden" id="hdnCTId" />
+            <table class="table table-striped jambo_table bulk_action" id="CareTakerList">
+                <thead>
+                    <tr class="headings">
+                        <th class="column-title" style="display: table-cell;width:20%">Caregiver</th>
+                        <th class="column-title" style="display: table-cell;width:20%">State</th>
+                        <th class="column-title" style="display: table-cell;width:20%">StreetName</th>
+                        <th class="column-title" style="display: table-cell;width:10%">Category</th>
+                        <th class="column-title" style="display: table-cell;width:15%">Email Address</th>
+                        <th class="column-title" style="display: table-cell;width:12%">Phone Number</th>
+                        <th class="column-title" style="display: table-cell;">Experience</th>
+                        <th >Action</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var care in Model)
+                        {
+                    <tr class="even pointer" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId =  care.UserId }))'" style="cursor:pointer;">
+
+                        @*<td class="col-md-1 ">@care.RegistrationDateString</td>*@
+                        <td class=" " style="width:20%">@care.FirstName @care.LastName</td>
+                        <td class="col-md-2" style="width:20%">@care.State</td>
+                        <td class=" " style="width:20%">@care.HouseName</td>
+                        <td class=" " style="width:10%">@care.CategoryName</td>
+                        <td class=" " style="width:15%">@care.EmailAddress</td>
+                        <td class=" " style="width:15%">@care.PrimaryPhoneNo</td>
+                        <td class=" " style="width:12%">@care.TotalExperience yrs</td>
+                        <td ><button class="btn btn-xs btn-primary" title="View Profile" onclick="location.href ='@(Url.Action("ApproveNewCaretaker", "Admin", new { @caretakerId =  care.UserId }))'"><span class="fa fa-eye"></span></button></td>
+                    </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+<script>
+    $('#CareTakerList').DataTable({
+     
+        "pagingType": "full_numbers",
+           "destroy": true,
+        "searching": false,
+    });
+    var table = $('#CareTakerList').DataTable();
+    var info = table.page.info();
+</script>

@@ -1,0 +1,102 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.StateViewModel>
+<div class="table--no-card table-responsive ">
+    <input type="hidden" id="hiddenStateID" />
+    <table id="StateList" class="table table-borderless table-striped table-earning dataTable padding-top-10">
+        <thead>
+            <tr>
+                <th style="width:25%">Country</th>
+                <th style="width:10%">State Code</th>
+                <th style="width:25%">State</th>
+                <th style="width:30%">Tax Percentage</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    @*@Html.HiddenFor(item.CountryId)*@
+                    <tr>
+
+                        <td onclick="editStateDetails(@item.StateId,'@item.Code','@item.Name', '@item.CountryId','@item.TaxPercent')">@item.CountryName</td>
+                        <td onclick="editStateDetails(@item.StateId,'@item.Code','@item.Name', '@item.CountryId','@item.TaxPercent')">@item.Code</td>
+                        <td onclick="editStateDetails(@item.StateId,'@item.Code','@item.Name', '@item.CountryId','@item.TaxPercent')">@item.Name</td>
+                        <td onclick="editStateDetails(@item.StateId,'@item.Code','@item.Name', '@item.CountryId','@item.TaxPercent')">@item.TaxPercent</td>
+                        <td>
+                            @if (ViewBag.AllowEdit)
+                            {
+                                <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" data-target="#modal-default"
+                                        onclick="editStateDetails(@item.StateId,'@item.Code','@item.Name', '@item.CountryId','@item.TaxPercent')">
+                                    <span class="fa fa-edit"></span>
+                                </button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" disabled>
+                                        <span class="fa fa-edit"></span>
+                                    </button>
+                                </div>
+                            }
+
+                            @if (ViewBag.AllowDelete)
+                            {
+                                <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#modal-delete" title="Delete" onclick="getID(@item.StateId)"><span class="fa fa-minus-circle"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="modal-delete" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Delete State</h4>
+            </div>
+            <div class="modal-body">
+                Record will be deleted from the system. Are you sure you want to delete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteState()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function getID(stateId) {
+      
+        $('#hiddenStateID').val(stateId)
+    }
+    function deleteState() {
+       
+       $.ajax({
+            type: 'POST',
+            url: "../Admin/DeleteState",
+            data: { stateId: $('#hiddenStateID').val() },
+           success: function (data) {
+                alert(data)
+                window.location.reload();
+              
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Deletingcountry. Function: deleteUser(). Page: Country.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+</script>

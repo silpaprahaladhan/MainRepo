@@ -1,0 +1,171 @@
+﻿@model Nirast.Pcms.Web.Models.StateViewModel
+@{
+    ViewBag.Title = "States";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<head>
+    <script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+</head>
+
+
+<div class="container animsition">
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["Success"] != null)
+                    {
+                        <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                    }
+                    @if (TempData["Failure"] != null)
+                    {
+                        <p class="alert custom-alert-danger statusmessage">@TempData["Failure"]</p>
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Manage States</h4>
+                            @*<i class="fa fa-edit " onclick="" style="float:right; cursor:pointer;"></i>*@
+                        </div>
+                        <div class="panel-body">
+
+                            @using (Html.BeginForm("CreateState", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.TextBoxFor(Model => Model.StateId, "", new { @class = "hidden" })
+                                @Html.HiddenFor(Model => Model.CountryId)
+                                <div class="col-md-12 col-lg-12 form-group">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            @Html.Label("Country", new { @class = "control-label label-style marginTopStyle" })
+                                            @Html.DropDownListFor(model => model.CountryId, ViewData["listCountry"] as SelectList, "--Select--", new { @Id = "ddlCountry", @class = " form-control labelStyle", @onchange = "loadStatesforCountry()" })
+                                            @Html.TextBoxFor(Model => Model.CountryName, "", new {@style="display:none", @class = "form-control labelStyle " ,@id= "CountryName"})
+                                            @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "required" })
+                                        </div>
+                                        <div class="col-md-3">
+
+                                            @Html.Label("Code", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(Model => Model.Code, "", new { @class = "form-control labelStyle " })
+                                            @Html.ValidationMessageFor(model => model.Code, "", new { @class = "  required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.Label("State", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(Model => Model.Name, "", new { @class = "form-control labelStyle" })
+                                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.Label("Tax %", new { @class = "control-label label-style marginTopStyle" })
+                                            @Html.TextBoxFor(Model => Model.TaxPercent, "", new { @class = "form-control labelStyle", max = "100", ondrop = "return false", onpaste = "return false", onkeypress = "return isNumberKey(this, event)" })
+                                            @Html.ValidationMessageFor(model => model.TaxPercent, "", new { @class = "required" })
+                                        </div>
+
+                                    </div>
+                                    <div class="text-center form-group states">
+                                        @if (ViewBag.AllowEdit)
+                                        {
+                                            <input type="submit" class="btn btn-primary m-t-10" value="Save">
+                                            <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                        }
+                                        else
+                                        {
+                                            <div class="wrapper">
+                                                <input type="submit" class="btn btn-primary m-t-10" value="Save" disabled>
+                                                <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                            </div>
+                                        }
+                                    </div>
+
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div id="stateResult" class="col-lg-12 col-md-12 col-sm-12 ">
+                        @*@{Html.RenderAction("StateList");}*@
+                    </div>
+
+                </div>
+            }
+        </div>
+
+
+    </div>
+</div>
+<div id="spinner">
+
+</div>
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        
+
+        loadStatesforCountry();
+
+        $('.decimal').keypress(function (e) {
+            var character = String.fromCharCode(e.keyCode)
+            var newValue = this.value + character;
+            if (isNaN(newValue) || parseFloat(newValue) * 100 % 1 > 0) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+
+    });
+
+    function SelectedCountry() {
+        $('#CountryId').val($('#ddlCountry').val());
+    }
+
+    function loadStatesforCountry() {
+        SelectedCountry();
+        var countryId = $('#ddlCountry').val();
+        var nm = $("#ddlCountry option:selected").text();
+       // var cname = document.getElementById("ddlCountry").val();
+        document.getElementById("CountryName").value = nm;
+        showProgress();
+        $.ajax({
+            url: '/Admin/StateList',
+            type: "POST",
+            data: { countryId: countryId },
+            success: function (data) {
+                $("#stateResult").html(""); // clear before appending new list
+                $("#stateResult").html(data);
+                $('#StateList').DataTable({
+                    "pagingType": "full_numbers"
+                });
+                spinnerVisible = true;
+                hideProgress();
+            },
+            error: function (data) {
+                spinnerVisible = true;
+                hideProgress();
+                        logError(data.statusText + ' - Error occurred while loading States for CountryID: ' + countryId + '. Function: loadStatesforCountry(roleId). Page: States.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+    
+    function editStateDetails(stateId, code, name, countryId, taxAmount) {
+        +$('#Code').val(code);
+        +$('#Name').val(name);
+        +$('#StateId').val(stateId);
+        +$('#ddlCountry').val(countryId);
+        +$('#CountryId').val(countryId);
+        +$('#TaxPercent').val(taxAmount);
+    }
+
+</script>
+
+<style>
+    .label_width {
+        width: 50%;
+    }
+</style>

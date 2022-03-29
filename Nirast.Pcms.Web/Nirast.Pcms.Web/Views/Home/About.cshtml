@@ -1,0 +1,152 @@
+﻿<script type="text/javascript">
+    $(document).ready(function ($) {
+        //for scrolling from other page
+        if ($(window.location.hash).length) {
+            $('html,body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            });
+            window.location.hash = '';
+        }
+        $('li').removeClass('menu__item--current');
+        $('#liAboutUs').addClass('menu__item--current');
+    });
+
+@*<link href="~/css/framework.css" rel="stylesheet" type="text/css" />*@
+</script>
+<link href="~/css/about-us.css" rel="stylesheet" type="text/css" />
+
+<div class="container">
+    <div class="row profile_Style">
+        <div class="row aboutus-intro">
+            <div class="col-md-9">
+                <div class="panel-heading">
+                    <h2 class="titleMain">Tranquil Care</h2>
+                 </div>
+                <div class="contentAlign">
+                    <p>
+                        We are a leading North American Heath Care service provider with well experienced multi- ethnic and multi lingual professionals to cater to every care requirement.
+                        Our services vary from supplying qualified nurses and health care support Workers to care homes, hospitals, private homes and secure units; to provide palliative care, specialist care, personal and domestic care.
+                    </p>
+                </div>
+                </div>
+            <div class="col-md-3">
+                <img src="~/images/aboutus.jpg" alt="">
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-md-6 menu">
+                        <div>
+                            <div class="mycontainer" style="vertical-align:bottom;">
+                                <span>
+                                    <img style="max-width:50px;" src="~/images/mission.png" alt="">
+                                </span>
+                                <span class="small-text"><h4 class="titleMain">Mission</h4></span>
+                            </div>
+                            
+                            <div class="col-md-12 contentAlign">
+                                <p>Through a commitment to service excellence and innovation, Tranquil Care Services will provide high quality care and support to the frail aged and people with a disability..</p>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="mycontainer">
+                                <span>
+                                    <img style="max-width: 50px;" src="~/images/vision.png" alt="">
+                                </span>
+                                <span class="small-text">
+                                    <h4 class="titleMain">Vision</h4>
+                                </span>
+                                </div>
+
+                            <div class="col-md-12 contentAlign" >
+                                <p>To ensure that Tranquil Care Services is the customer’s first choice, through the delivery of a superior care support experience.</p>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="mycontainer">
+                                <span>
+                                    <img style="max-width:50px;" src="~/images/value2.png" alt="">
+                                </span>
+                                <span class="small-text">
+                                    <h4 class="titleMain">Values</h4>
+                                </span>
+                                </div>
+                            <div class="col-md-12">
+                                <ul>
+                                    <li>Encourages innovation</li>
+                                    <li>Empowers Independent Contractors</li>
+                                    <li>Promotes a culture of care</li>
+                                    <li>Fosters service excellence and continuous improvement</li>
+                                    <li>Fosters communication and collaboration</li>
+                                    <li>Encourages personal responsibility</li>
+                                    <li>Celebrates success.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    @*</ul>*@
+                </div>
+                <div class="col-md-6">
+                    <h2 class="bars">Policies</h2>
+                    <div class="">
+                        <h4 class="titleMain">Occupational Health & Safety</h4>
+                        <div class="contentAlign">
+                            <p>
+                                At Tranquil Care Occupational Health and Safety Policy
+                                outlines our commitment to prevent illness and injury through the provision and maintenance of a healthy and safe working environment.
+                            </p>
+                        </div>
+                        <h4 class="titleMain"> Client Rights & Responsibilities</h4>
+                        <div class="contentAlign">
+                            <p>
+                                At Tranquil Care we clearly outline our Care Recipients' rights, so you know what to expect from our Support Worker. We also ask our Care Recipients to abide by a series of responsibilities.
+                            </p>
+                            </div>
+                            <h4 class="titleMain">Privacy</h4>
+                        <div class="contentAlign">
+                            <p>
+                                Our Privacy Policy outlines our commitment
+                                to respect the confidentiality of personal information.
+                            </p>
+                            </div>
+                            <h4 class="titleMain">Complaints and Grievances </h4>
+                        <div class="contentAlign">
+                            <p>
+                                Our Complaints and Grievances Policy ensures that feedback from Care Recipients, family members and case managers is listened to and acted upon. In accordance with Ontario ministry of health Standards,
+                                all Care Recipients and their representatives have the right to have complaints investigated objectively, without fear of retribution
+                            </p>
+                            </div>
+                        </div>
+                </div>               
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .mycontainer {
+        padding: 10px;
+        box-sizing: border-box;
+        /*width: 50%;*/
+        /*text-align: center;*/
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        /*justify-content: center;*/
+    }
+
+    .big-icon {
+        font-size: 40px;
+        flex-shrink: 0;
+    }
+
+    .small-text {
+        /*font-size: 12px;*/
+        position: relative;
+        flex: 0 1 40%;
+    }
+</style>

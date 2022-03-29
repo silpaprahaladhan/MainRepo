@@ -1,0 +1,70 @@
+﻿
+@model IEnumerable<Nirast.Pcms.Web.Models.PublicUserPaymentHistory>
+
+@*<h6>Client Schedulings</h6>*@
+<div class=" table--no-card table-responsive  m-b-40">
+    <table class="table table-borderless table-striped table-earning padding-top-10 table-font dataTable" id="PaymentHistory">
+        <thead>
+            <tr>
+                <th class="label_width">Booking Date</th>
+               
+                <th class="label_width">Service</th>
+                <th class="label_width">Payment Date</th>
+                <th class="label_width">Paid Amount</th>
+                <th class="label_width">Payment Status</th>
+                @*<th>Booking Status</th>*@
+            </tr>
+        </thead>
+        <tbody class="table-font">
+
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        @{
+                            DateTime date = DateTime.ParseExact(item.BookingDate, "dd/MM/yyyy", null);
+                            <td class="label_width">
+                                @date.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString())
+                            </td>
+                        }
+                       
+                        <td class="label_width">@item.Service</td>
+                        @{
+                            DateTime pDate = DateTime.ParseExact(item.PaymentDate, "dd/MM/yyyy", null);
+                            <td class="label_width">
+                                @pDate.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString())
+                            </td>
+                        }
+                        @*<td>@item.PaymentDate</td>*@
+                        <td class="label_width">@item.Symbol @item.PaymentAmount.ToString("0.00")</td>
+                        <td class="label_width">@(item.PaymentStatus.ToString().ToLower() == "true" ? "Success" : "Fail")</td>
+                        @*<td>@item.BookingStatus</td>*@
+                        @*<td>
+                                <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" data-target="#modal-default"><span class="fa fa-edit"></span></button>
+
+                                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                            </td>*@
+                    </tr>
+                                }
+                            }
+        </tbody>
+
+
+    </table>
+</div>
+<style>
+    .table-font {
+        font-size: 16px;
+    }
+    .label_width{
+        width:20%;  
+    }
+</style>
+<script type="text/javascript">
+    $('#PaymentHistory').DataTable({
+        "pagingType": "full_numbers"
+    });
+</script>
+
+

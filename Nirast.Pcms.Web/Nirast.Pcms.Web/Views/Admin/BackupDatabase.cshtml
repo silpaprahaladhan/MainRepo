@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<head>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link href="~/css/AdminDashboard/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+</head>
+<!DOCTYPE html>
+
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 ">
+                @if (TempData["Success"] != null)
+                {
+                    <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                }
+                @if (TempData["Failure"] != null)
+                {
+                    <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                }
+                @if (ViewBag.Error != null)
+                {
+                    if (ViewBag.Error != null)
+                    {
+                        <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+                    }
+                }
+                else
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Backup Database</h4>
+                        </div>
+                        <div class="panel-body">
+
+                            @using (Html.BeginForm("DownloadDbBackup", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="col-md-12 innerDiv">
+                                    
+
+
+                                    <div class="col-md-2">
+                                     
+                                            <div class="wrapper">
+                                                <input type="submit" id="btnDownload" class="float-right btn btn-primary" value="Download Databse backup">
+                                            </div>
+                                        
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                            }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#btnDownload').click(function () {
+        showProgress();
+        setTimeout(function () {
+
+            hideProgress();
+
+        }, 2000);
+
+    });
+</script>

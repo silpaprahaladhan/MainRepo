@@ -1,0 +1,104 @@
+﻿@model Nirast.Pcms.Web.Models.EmailConfiguration
+
+@{
+    ViewBag.Title = "EmailConfiguration";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<head>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+    @*<script type="text/javascript">
+
+        </script>*@
+
+</head>
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["Success"] != null && TempData["Success"] != "")
+                    {
+                        <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                    }
+                    @if (TempData["Failure"] != null && TempData["Failure"] != "")
+                    {
+                        <p class="alert custom-alert-danger statusmessage">@TempData["Failure"]</p>
+                    }
+                    @using (Html.BeginForm("AddEmailConfiguration", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>SMTP Configuration</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-12 col-lg-12 form-group">
+                                    <div class="row">
+                                        <div class="col-md-3 col-lg-3">
+                                            @Html.HiddenFor(m => m.ConfigId)
+                                            @Html.Label("Configuration Name", new { @class = "control-label label-style marginTopStyle" })
+                                            @Html.TextBoxFor(Model => Model.ConfigName, "", new { @class = "form-control labelStyle", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.ConfigName, "", new { @class = "text-danger required" })
+                                        </div>
+                                        <div class="col-md-3 col-lg-3">
+                                         
+                                            @Html.Label("Mail Host", new { @class = "control-label label-style marginTopStyle" })
+                                            @Html.TextBoxFor(model => model.MailHost, "", new { @class = "form-control labelStyle", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.MailHost, "", new { @class = "text-danger required" })
+                                        </div>
+                                        <div class="col-md-3 col-lg-3">
+                                            @Html.Label("Port Number", new { @class = "control-label label-style marginTopStyle" })
+                                            @Html.TextBoxFor(model => model.MailPort, "", new { @class = "form-control labelStyle", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.MailPort, "", new { @class = "text-danger required" })
+
+                                        </div>
+                                        <div class="col-md-3 col-lg-3">
+                                            <label class="label-style">Security</label>
+                                            <div class="form-group">
+                                                @Html.CheckBoxFor(model => model.SSL, new { @id = "IsSSL", }) <label class=" label-style" style="font-weight:bold">Enable SSL</label>
+                                                @Html.ValidationMessageFor(model => model.SSL, "", new { @class = "text-danger required" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center form-group city">
+                                    <input type="submit" class="btn btn-primary m-t-10" value="Save">
+                                        <label class="btn btn-primary  m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                  
+                                
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-lg-12 col-md-12 col-sm-12 no-padding" id="CityResult">
+                        @{Html.RenderAction("GetConfigurationList");}
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div id="spinner"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            $('#ConfigurationList').DataTable({
+                "pagingType": "full_numbers"
+            });          
+            });
+        });
+</script>
+
+

@@ -1,0 +1,96 @@
+﻿@model Nirast.Pcms.Web.Models.ContactModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Contact";
+}
+<script>
+    $(document).ready(function ($) {
+        //for scrolling from other page
+        if ($(window.location.hash).length) {
+            $('html,body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            });
+            window.location.hash = '';
+        }
+        $('li').removeClass('menu__item--current');
+        $('#liContact').addClass('menu__item--current');
+    });
+</script>
+@using (Html.BeginForm("ContactForm", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="container">
+
+        <div class="row profile_Style">
+            <div class="equal-height-panels">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Contact Us</h4>
+
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <h3 class="h4-label"><strong>Tranquil Care Inc.</strong></h3>
+                                </div>
+                                <div style="color: rgb(124, 123, 123); line-height: 22px; font-weight: 300;" class="form-group">
+                                    240 Duncan Mill Rd , Ste 501
+                                </div>
+                                <div style="color: rgb(124, 123, 123); line-height: 22px; font-weight: 300;" class="form-group">
+                                    Toronto, ON-M3B 3S6, Canada
+                                </div>
+                                <div class="form-group">
+                                    <div style="margin-top: 1em;"><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i>Email : <a href="mailto:Info@tranquilcare.ca">Info@tranquilcare.ca</a></div>
+                                </div>
+                                <div class="form-group">
+                                    <div style="margin-top: 1em;"><i class="fa fa-fax" aria-hidden="true"></i>Fax : 1 416 960 1042</div>
+                                </div>
+                                <div class="form-group">
+                                    <div style="margin-top: 1em;"><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>Toll Free : +1 800 892 6066</div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                @if (TempData["ContactSuccess"] != null)
+                                {
+                                    <p class="alert alert-success statusmessage">@TempData["ContactSuccess"] </p>
+                                }
+                                @if (TempData["ContactFailure"] != null)
+                                {
+                                    <p class="alert alert-danger statusmessage">@TempData["ContactFailure"] </p>
+                                }
+                                <div class="form-group">
+                                    <h3 class="h4-label"><strong>Contact Form</strong></h3>
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.Name, "", new { @class = "form-control", @placeholder = "Name - Max 100 characters.", onpaste = "return false", id = "txtName", maxlength = "100", onkeypress = "return onlyAlphabets(event,this);" })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = " no-padding required" })
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.Phone, "", new { @class = "form-control pad", @placeholder = "Phone Number", ondrop = "return false", @id = "txtPhone", maxlength = "12", onkeypress = "return PhoneValidation(event)", onpaste = "return false" })
+                                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = " no-padding required" })
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.Email, "", new { @class = "form-control", @placeholder = "Email", type = "email", @id = "txtEmail", onkeypress = "return EmailValidation(event)" })
+                                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = " no-padding required" })
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control labelStyle", @placeholder = "Type Your Text Here - Max 1000 characters.", @id = "txtComment", @cols = "20", @rows = "2", @maxLength = "1000", onkeypress = "return DescriptionValidation(event)" })
+                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = " no-padding required" })
+                                </div>
+                                <div class="form-group" style="float:right">
+                                    <input type="submit" id="sendToMail" value="Submit" class="buttonStyle">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

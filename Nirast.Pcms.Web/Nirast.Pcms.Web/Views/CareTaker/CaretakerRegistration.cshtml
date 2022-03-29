@@ -1,0 +1,1504 @@
+﻿@model Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="clearfix"> </div>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<script>
+ 
+
+    $(function () {
+        $('#txtFromDate').datepicker({
+            maxDate: 0,
+            changeMonth: true,
+            changeYear: true, });
+        $('#txtToDate').datepicker({
+            maxDate: 0,
+            changeMonth: true,
+            changeYear: true,
+        });
+    });
+
+    function LoadStatesforCountry(selectedCountry) {
+        $.ajax({
+            url: '/Admin/LoadStatesByCountryId',
+            type: "GET",
+            dataType: "JSON",
+            data: { countryId: selectedCountry.value },
+            success: function (data) {
+
+                $("#StateId").html(""); // clear before appending new list
+                $("#StateId").append(
+                    $('<option></option>').val(0).html("--Select--"));
+                $("#CityId").html(""); // clear before appending new list
+                $("#CityId").append(
+                    $('<option></option>').val(0).html("--Select--"));
+                $.each($.parseJSON(data), function (i, state) {
+
+                    $("#StateId").append(
+                        $('<option></option>').val(state.StateId).html(state.Name));
+                });
+                //$('#lblPhoneCodePrimary').text($.parseJSON(data)[0] == undefined ? '+1' : $.parseJSON(data)[0].PhoneCode);
+                //$('#lblPhoneCodeSecondary').text($.parseJSON(data)[0] == undefined ? '+1' : $.parseJSON(data)[0].PhoneCode);
+            },
+        });
+    }
+
+
+    function LoadCTRegnCities(selectedState) {
+        $.ajax({
+            url: '/Admin/LoadCitiesbyStateId',
+            type: "GET",
+            dataType: "JSON",
+            data: { StateId: selectedState },
+            success: function (data) {
+                $("#CityId").html(""); // clear before appending new list
+                $("#CityId").append(
+                    $('<option></option>').val(0).html("--Select--"));
+                $.each($.parseJSON(data), function (i, city) {
+                    $("#CityId").append(
+                        $('<option></option>').val(city.CityId).html(city.CityName));
+                });
+            },
+        });
+    }
+
+    function preventDocumentSelection(checkBox) {
+        if (chkFaxDocuments.checked) {
+            $(".disableUpload").click(function (e) {
+                e.preventDefault();
+            });
+            $(".disableUpload").attr('disabled', 'disabled');
+            $('#selectedCertificateFiles').html('');
+            $('#selectedSinFiles').html('');
+            $('#selectedOtherFiles').html('');
+            certificateFiles = [];
+            SinFiles = [];
+            OtherFiles = [];
+        }
+        else {
+            $('.disableUpload').unbind('click');
+            $(".disableUpload").removeAttr('disabled');
+        }
+    }
+
+    function SelectedCategoryId(selectedIndex) {
+        $('#CategoryId').val(selectedIndex);
+    }
+
+    function readCaretakerImage(input) {
+        var ext = $("#myPic").val().split('.').pop();
+        var size = parseFloat($("#myPic")[0].files[0].size / 1024).toFixed(2);
+        if (ext == "jpg" || ext == "png" || ext == "JPG" || ext == "PNG") {
+
+            if (size > 100) {
+                alert("Image size should be maximum 100KB!")
+                return;
+            }
+            else {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imgCaretaker')
+                            .attr('src', e.target.result);
+                        //.width(150)
+                        //.height(200);
+                        $('#ProfilePicByte').val(e.target.result.split(',')[1]);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        }
+        else {
+            alert("You have uploaded an invalid image file type")
+        }
+
+    }
+    function validateForm() {
+        if (validateAllFields()) {
+            $('#consentform').modal('show');
+            $.ajax({
+                url: '/Admin/ShowFileDocument',
+                type: "GET",
+                data: { FilePath: "ConsentForm.pdf" },
+                success: function (data) {
+                    $("#policyContent").html('<iframe src="@Url.Action("ShowFileDocument", "Admin", new { FilePath = "ConsentForm.pdf" }) "' + ' style="width: 98%; height: 600px" ></iframe>');
+                },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while showing Consent Form. Function: validateForm(). Page: CaretakerRegistration.cshtml');
+                    //alert('Some network error has occurres. Please try again after some time.');
+             $("#policyContent").html('Consent Form not available. Please contact the Administrator.');
+
+                }
+            });
+             //$("#policyContent").html('<iframe src="@Url.Action("ShowFileDocument", "Admin", new { FilePath = "ConsentForm.pdf" }) "' + ' style="width: 98%; height: 600px" ></iframe>');
+        }
+    }
+
+    function validateAllFields() {
+        $('#FirstName').val($('#FirstName').val().trim());
+        if ($('#FirstName').val() == "") {
+            alert("First name should not be empty.");
+            return false;
+        }
+        $('#LastName').val($('#LastName').val().trim());
+        if ($('#LastName').val() == "") {
+            alert("Last name should not be empty.");
+            return false;
+        }
+        if ($('#GenderId').val() == 0) {
+            alert("Gender should not be empty.");
+            return false;
+        }
+        $('#SSID').val($('#SSID').val().trim());
+        if ($('#SSID').val() == "") {
+            alert("Social ID should not be empty.");
+            return false;
+        }
+
+        if ($('#CountryId').val() == 0) {
+            alert("Country should not be empty.");
+            return false;
+        }
+        if ($('#StateId').val() == 0) {
+            alert("@Resource.State should not be empty.");
+            return false;
+        }
+        if ($('#CityId').val() == 0) {
+            alert("City should not be empty.");
+            return false;
+        }
+        $('#Location').val($('#Location').val().trim());
+      
+      
+        $('#HouseName').val($('#HouseName').val().trim());
+        if ($('#HouseName').val() == "") {
+            alert("@Resource.StreetName should not be empty.");
+            return false;
+        }
+        $('#ZipCode').val($('#ZipCode').val().trim());
+        $('#PrimaryPhoneNo').val($('#PrimaryPhoneNo').val().trim());
+        $('#SecondaryPhoneNo').val($('#SecondaryPhoneNo').val().trim());
+        $('#EmailAddress').val($('#EmailAddress').val().trim());
+        if ($('#EmailAddress').val() == "") {
+            alert("Email Id should not be empty.");
+            return false;
+        }
+
+        if ($('#Password').val() == "") {
+            alert("Password should not be empty.");
+            return false;
+        }
+        if ($('#RetypePassword').val() == "") {
+            alert("Confirm password should not be empty");
+            return false;
+        }
+        if ($('#RetypePassword').val() != $('#Password').val()) {
+            alert("'Password' and 'Confirm Password' doesn't match.");
+            return false;
+        }
+
+        //if ($('#result span').text() != "Available") {
+        //    alert("Invalid MailId");
+        //    return false;
+        //}
+        if ($('#TotalExperience').val() == "") {
+            $("#TotalExperience").val('0');
+            return false;
+        }
+        var experienceRegex = /^\d{0,2}(\.\d{1,2})?$/
+        if (!(experienceRegex.test($('#TotalExperience').val()))) {
+            alert("Invalid Experience");
+            return false;
+        }
+        $('#KeySkills').val($('#KeySkills').val().trim());
+        if ($('#KeySkills').val().length > 500) {
+            alert('Key Skills text is restricted to maximum 500 characters')
+            return false;
+        }
+        $('#AboutMe').val($('#AboutMe').val().trim());
+        if ($('#AboutMe').val().length > 500) {
+            alert('About Me text is restricted to maximum 500 characters')
+            return false;
+        }
+
+
+        if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() != '--Select--') {
+            $('#ddlQualification').focus();
+            $('#btnSaveQualification').addClass('required-border');
+            $('#ddlQualification').addClass('required-border');
+            alert("Please click the '+' button to add the selected Qualification.");
+            return false;
+        }
+        else {
+            $('#btnSaveQualification').removeClass('required-border');
+            $('#ddlQualification').removeClass('required-border');
+        }
+
+        if ($('#txtOrganisation').val() != '' || $('#txtFromDate').val() != '' || $('#txtToDate').val() != '') {
+
+            $('#txtOrganisation').focus();
+            $('#btnSaveOrganisation').addClass('required-border');
+            if ($('#txtOrganisation').val() == '')
+                $('#txtOrganisation').addClass('required-border');
+            if ($('#txtFromDate').val() == '')
+                $('#txtFromDate').addClass('required-border');
+            if ($('#txtToDate').val() == '')
+                $('#txtToDate').addClass('required-border');
+            alert("Please click the '+' button to add the selected Organisation details.");
+            return false;
+        }
+        else {
+
+            $('#btnSaveOrganisation').removeClass('required-border');
+            $('#txtOrganisation').removeClass('required-border');
+            $('#txtFromDate').removeClass('required-border');
+            $('#txtToDate').removeClass('required-border');
+        }
+
+        if ($('#CategoryId').val() == 0) {
+            alert("Category should not be empty.");
+            return false;
+        }
+
+        if ($('#ddlService option:selected').text() != '' && $('#ddlService option:selected').text() != '--Select--') {
+            $('#ddlService').focus();
+            $('#btnSaveService').addClass('required-border');
+            $('#ddlService').addClass('required-border');
+            alert("Please click the '+' button to add the selected Service.");
+            return false;
+        }
+        else {
+            $('#btnSaveService').removeClass('required-border');
+            $('#ddlService').removeClass('required-border');
+        }
+
+        if ($('#ddlService option:selected').text() != '' && $('#ddlService option:selected').text() != '--Select--') {
+            $('#ddlService').focus();
+            $('#btnSaveService').addClass('required-border');
+            $('#ddlService').addClass('required-border');
+            alert("Please click the '+' button to add the selected Service.");
+            return false;
+        }
+        else {
+            $('#btnSaveService').removeClass('required-border');
+            $('#ddlService').removeClass('required-border');
+        }
+
+        if ($("#tblServices td").closest("tr").length <= 0) {
+            alert("Atleast one service is required.");
+            return false;
+        }
+
+        if ($('#chkFaxDocuments').is(':checked') == false && (certificateFiles.length == 0 && SinFiles.length == 0 && OtherFiles.length == 0)) {
+            alert('Either upload the required document or check the option "Send documents through FAX", if you wish to send documents through FAX.')
+            return false;
+        }
+
+        var totalsize = 0;
+        $.each(certificateFiles, function (index, value) {
+            totalsize += value["file"].size;
+        });
+        $.each(SinFiles, function (index, value) {
+            totalsize += value["file"].size;
+        });
+        $.each(OtherFiles, function (index, value) {
+            totalsize += value["file"].size;
+        });
+        if ((((totalsize) / 1024) / 1024) >= 8) {
+            alert('Document file size should not exceed 8 Mb.');
+            return false;
+        }
+        var $captcha = $('#recaptcha'),
+            response = grecaptcha.getResponse();
+
+        if (response.length === 0) {
+            $('.msg-error').text("* Required");
+            if (!$captcha.hasClass("error")) {
+                $captcha.addClass("error");
+                return false;
+            }
+        } else {
+            $('.msg-error').text('');
+            $captcha.removeClass("error");
+
+        }
+
+        return true;
+    }
+
+    function resetAllFields() {
+        window.location.reload();
+        @*$('#FirstName').val('');
+        $('#LastName').val('');
+        $('#GenderId').val('');
+        $('#SSID').val('');
+        $('#HouseName').val('');
+        $('#Location').val('');
+        $('#CountryId').val('1');
+        $('#StateId').val('0');
+        $('#CityId').val('0');
+        $('#EmailAddress').val('');
+        $('#Password').val('');
+        $('#RetypePassword').val('');
+        $('#result span').text('');
+        $('#TotalExperience').val('0');
+        $('#CategoryId').val('0');
+        $('#ddlService').val('0');
+        $('#tblServices').hide();
+        $('#serviceContent').html('');
+        $("#selectedCertificateFiles").html("");
+        $("#selectedSinFiles").html("");
+        $("#selectedOtherFiles").html("");
+        $('#PrimaryPhoneNo').val('');
+        $('#SecondaryPhoneNo').val('');
+        $('#AboutMe').val('');
+        $('#otherquali').val('');
+        $('#ddlQualification').val('0');
+        $('#qualificationContent').html('');
+        $('#tblQualifications').hide();
+        $('#txtOrganisation').val('');
+        $('#txtFromDate').val('');
+        $('#txtToDate').val('');
+        $('#organisationContent').html('');
+        $('#tblOrganisations').hide();
+        $('#organisationContent').html('');
+        $('#tblOrganisations').hide();
+        $('#CertificateFiles').val('');
+        $('#SINFile').val('');
+        $('#ZipCode').val('');
+        $('#KeySkills').val('');
+        $('#OtherDocuments').val('');
+        $('#chkFaxDocuments').prop('checked', false);
+        $('#imgCaretaker').attr('src', "data:image;base64,@System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg")))");
+        $('#ProfilePic').val($('#imgCaretaker').attr('src').split(',')[1]);
+        previousTabProfessional();*@
+        //$.ajax({
+        //    type: "POST",
+        //    url: '/Caretaker/RemoveAllSessions',
+        //    contentType: false,
+        //    processData: false,
+        //    success: function (result) {
+
+        //        spinnerVisible = true;
+        //        hideProgress();
+        //    },
+        //    error: function (xhr, status, p3, p4) {
+        //        var err = "Error " + " " + status + " " + p3 + " " + p4;
+        //        if (xhr.responseText && xhr.responseText[0] == "{")
+        //            err = JSON.parse(xhr.responseText).Message;
+        //        console.log(err);
+        //        spinnerVisible = true;
+        //        hideProgress();
+        //    }
+        //});
+    }
+    function resetExperience() {
+        if ($('#TotalExperience').val() == "") {
+            $('#experienceValidation').hide();
+            $("#TotalExperience").val('0');
+        }
+        else {
+            $('#experienceValidation').show();
+        }
+    }
+
+    function resetExperience() {
+        if ($('#TotalExperience').val() == "")  {
+            $('#experienceValidation').hide();
+            $("#TotalExperience").val('0');
+        }
+        else {
+            $('#experienceValidation').show();
+        }
+    }
+    function changeAvatar() {
+        var reader = new FileReader();
+        if ($('#GenderId').val() == 2) {
+            $('#imgCaretaker')
+                .attr('src', "data:image;base64,@System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/no-avatar-female.png")))");
+        } else {
+            $('#imgCaretaker').attr('src', "data:image;base64,@System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg")))");
+        }
+        $('#ProfilePicByte').val($('#imgCaretaker').attr('src').split(',')[1]);
+    }
+    var changeDateFormat = function (dateToConvert) {
+        var date = new Date(Number(dateToConvert.match(/\d+/)[0]));
+        var day = date.getDate();
+        day = day = (day < 10) ? ("0" + day) : day;
+        var month = date.getMonth() + 1;
+        month = (month < 10) ? ("0" + month) : month;
+        var dateStr = month + "/" + day + "/" + date.getFullYear();
+        return dateStr;
+    }
+
+    $(document).ready(function () {
+
+        $("form").validate().settings.ignore = "";
+        $("#TotalExperience").val('0');
+        $('#ProfilePicByte').val($('#imgCaretaker').attr('src').split(',')[1]);
+        $('#ddlQualification').change(function () {
+            if ($('#ddlQualification').val() === "999") {
+                $('#otherquali').show();
+            }
+            else {
+                $('#otherquali').val('');
+                $('#otherquali').hide();
+            }
+        });
+
+    $('.decimal').keypress(function (e) {
+
+        var character = String.fromCharCode(e.keyCode)
+        var newValue = this.value + character;
+        if (isNaN(newValue) || parseFloat(newValue) * 100 % 1 > 0) {
+            e.preventDefault();
+            return false;
+        }
+        });
+
+
+
+
+        //////////////// Start Dynamic Organisation //////////////////////////////
+
+    $('#btnSaveOrganisation').click(function () {
+            if ($('#txtOrganisation').val() != '') {
+
+                var fromDate = $('#txtFromDate').val();
+                var toDate = $('#txtToDate').val();
+                if (fromDate == "" || toDate == "") {
+                    alert("Add Experience Dates");
+                }
+                if (fromDate != "") {
+                    if (toDate != "") {
+                        if (Date.parse(fromDate) > Date.parse(toDate)) {
+                            alert("To date should be greater than From date in experience details.");
+                            //$('#<%= lblErrorMsg.ClientID %>').text('To date should be greater than From date.');
+                            return false;
+                        }
+                    }
+                }
+               
+              
+                $('#txtOrganisation').removeClass('required-border');
+                if ($('#txtFromDate').val() == '') {
+                    $('#txtFromDate').addClass('required-border');
+                } else {
+                    $('#txtFromDate').removeClass('required-border');
+                }
+
+                if ($('#txtToDate').val() == '') {
+                    $('#txtToDate').addClass('required-border');
+                } else {
+                    $('#txtToDate').removeClass('required-border');
+                }
+
+                $.ajax({
+                    url: "../CareTaker/AddExperienceDetails",
+                    type: "POST",
+                    data: { dateFrom: $('#txtFromDate').val(), dateTo: $('#txtToDate').val(), company: $('#txtOrganisation').val() },
+                    success: function (data) {
+                        $('#btnSaveOrganisation').removeClass('required-border');
+                        $('#txtOrganisation').removeClass('required-border');
+                        $('#txtFromDate').removeClass('required-border');
+                        $('#txtToDate').removeClass('required-border');
+                        var strOrg = "";
+                        console.log(data);
+                        if (data.length > 0) {
+                            $('#organisationContent').html('');
+                            for (var i = 0; i < data.length; i++) {
+
+                                var fromDate = changeDateFormat(data[i].DateFrom);
+                                var toDate = changeDateFormat(data[i].DateTo);
+                                var company = "'" + data[i].Company + "'";
+                                strOrg = strOrg + "<tr>" + "<td class='col-md-5  linewrapStyle'>" + data[i].Company + "</td>" + "<td class='col-md-3'>" + fromDate + "</td>" + "<td class='col-md-3'>" + toDate + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger float-right' onclick = RemoveExperience(" + company + "); title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                            }
+                            $('#organisationContent').html(strOrg);
+
+                            $('#tblOrganisations').show();
+                            $('#txtOrganisation').val('');
+                            $('#txtFromDate').val('');
+                            $('#txtToDate').val('');
+                        }
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while Adding Caregiver Experience. Function: $("#btnSaveOrganisation").click(function ()). Page: CaretakerRegistration.cshtml');
+                        //alert("Some network error has occurred. Please try again after some time.");
+                    }
+                });
+            } else {
+                $('#txtOrganisation').addClass('required-border');
+                if ($('#txtFromDate').val() == '') {
+                    $('#txtFromDate').addClass('required-border');
+                } else {
+                    $('#txtFromDate').removeClass('required-border');
+                }
+
+                if ($('#txtToDate').val() == '') {
+                    $('#txtToDate').addClass('required-border');
+                } else {
+                    $('#txtToDate').removeClass('required-border');
+                }
+           
+                    alert("Please provide Organisation Details");
+            
+            }
+        });
+
+
+        if ($("#tblOrganisations td").closest("tr").length > 0) {
+            $('#tblOrganisations').show();
+        }
+        else {
+            $('#tblOrganisations').hide();
+        }
+
+
+        //////////////// End of Dynamic Organisation //////////////////////////////
+
+
+        //////////////// Start Dynamic Qualification ///////////////////////////////
+
+        $('#btnSaveQualification').click(function () {
+            if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() != '--Select--'){
+
+                if ($('#ddlQualification option:selected').text() != '' && $('#ddlQualification option:selected').text() == 'Others' && $('#otherquali').val().trim() != '') {
+                    $('#otherquali').removeClass('required-border');
+                    $.ajax({
+                        url: "../CareTaker/AddQualificationDetails",
+                        type: "POST",
+                        data: { qualificationId: $('#ddlQualification').val(), qualification: $('#otherquali').val().trim() },
+                        //, qualificationDate: null, university: null
+                        success: function (data) {
+                            $('#btnSaveQualification').removeClass('required-border');
+                            $('#ddlQualification').removeClass('required-border');
+                            if (data.length > 0) {
+
+                                var strQual = "";
+                                $('#qualificationContent').html('');
+                                for (var i = 0; i < data.length; i++) {
+
+                                    strQual = strQual + "<tr>" + "<td class='col-md-11 linewrapStyle'>" + data[i].QualificationName + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveQualification(" + data[i].QualificationId + "," + data[i].CareTakerQualificationId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+
+                                }
+                                $('#otherquali').val('');
+                                $('#otherquali').hide();
+                                $('#qualificationContent').html(strQual);
+                                //$('#qualificationContent').append("<tr>" + "<td class='col-md-11'>" + data[i].Qualification + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = 'removeQualification(" + data[i].QualificationId + ")' title='Delete' ><span class='fa fa-close'></span></label>" + "</td>" + "</tr>");
+                                $('#tblQualifications').show();
+                                $("select#ddlQualification").val('0');
+                            }
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while Adding Caregiver Qualification. Function: $("#btnSaveQualification").click(function ()). Page: CaretakerRegistration.cshtml');
+                            //alert("Some network error has occurred. Please try again after some time.");
+                        }
+                    });
+                }
+                else if ($('#ddlQualification option:selected').text() != 'Others') {
+                    $('#otherquali').removeClass('required-border');
+                    $.ajax({
+                        url: "../CareTaker/AddQualificationDetails",
+                        type: "POST",
+                        data: { qualificationId: $('#ddlQualification').val(), qualification: $('#ddlQualification option:selected').text() },
+                        //, qualificationDate: null, university: null
+                        success: function (data) {
+                            $('#btnSaveQualification').removeClass('required-border');
+                            $('#ddlQualification').removeClass('required-border');
+                            if (data.length > 0) {
+                                var strQual = "";
+                                $('#qualificationContent').html('');
+                                for (var i = 0; i < data.length; i++) {
+
+                                    strQual = strQual + "<tr>" + "<td class='col-md-11 linewrapStyle'>" + data[i].QualificationName + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveQualification(" + data[i].QualificationId + "," + data[i].CareTakerQualificationId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                                }
+                                $('#qualificationContent').html(strQual);
+                                //$('#qualificationContent').append("<tr>" + "<td class='col-md-11'>" + data[i].Qualification + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = 'removeQualification(" + data[i].QualificationId + ")' title='Delete' ><span class='fa fa-close'></span></label>" + "</td>" + "</tr>");
+                                $('#tblQualifications').show();
+                                $("select#ddlQualification").val('0');
+                            }
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while Adding Caregiver Qualification. Function: $("#btnSaveQualification").click(function ()). Page: CaretakerRegistration.cshtml');
+                            //alert("Some network error has occurred. Please try again after some time.");
+                        }
+                    });
+                } else if ($('#ddlQualification option:selected').text() == 'Others' && $('#otherquali').val().trim() == '') {
+                    $('#otherquali').addClass('required-border');
+                }
+            }
+        });
+
+        if ($("#tblQualifications td").closest("tr").length > 0) {
+            $('#tblQualifications').show();
+        }
+        else {
+            $('#tblQualifications').hide();
+        }
+        //////////////// End of Dynamic Qualification types //////////////////////////////
+
+
+        //////////////// Start Dynamic Service types //////////////////////////////
+
+        $('#btnSaveService').click(function () {
+
+            if ($('#ddlService option:selected').text() != '' && $('#ddlService option:selected').text() != '--Select--') {
+                $.ajax({
+                    url: "../CareTaker/AddServiceDetails",
+                    type: "POST",
+                    data: { serviceId: $('#ddlService').val(), serviceName: $('#ddlService option:selected').text(), expectedRate: "0", approvedRate: "0", effdate: null, caretakerId: 0 },
+                    success: function (data) {
+                        $('#btnSaveService').removeClass('required-border');
+                        $('#ddlService').removeClass('required-border');
+                        var strService = "";
+                        $('#serviceContent').html('');
+                        for (var i = 0; i < data.length; i++) {
+                            strService = strService + "<tr>" + "<td class='col-md-9 linewrapStyle'>" + data[i].ServiceName + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger float-right' onclick = 'RemoveService(" + data[i].ServiceId + ");' title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                        }
+                        $('#serviceContent').html(strService);
+
+                        $('#tblServices').show();
+                        $('#txtServiceRate').val('');
+                        $("select#ddlService").val('0');
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while Adding Caregiver Services. Function: $("#btnSaveService").click(function ()). Page: CaretakerRegistration.cshtml');
+                        //alert("Some network error has occurred. Please try again after some time.");
+                    }
+                });
+            }
+        });
+
+        if ($("#tblServices td").closest("tr").length > 0) {
+            $('#tblServices').show();
+        }
+        else {
+            $('#tblServices').hide();
+        }
+        //////////////// End of Dynamic Service types //////////////////////////////
+
+    });
+
+    function RemoveExperience(companyName) {
+        var comName = companyName;
+        if (confirm(' Are you sure  to remove this Experience ?'))
+        $.ajax({
+            url: "../CareTaker/RemoveExperienceDetails",
+            type: "POST",
+            data: { company: companyName },
+            // qualificationDate: null, university: null
+            success: function (data) {
+                $('#organisationContent').html('');
+                var strOrg = "";
+                if (data.length > 0) {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        var fromDate = changeDateFormat(data[i].DateFrom);
+                        var toDate = changeDateFormat(data[i].DateTo);
+                        var company = "'" + data[i].Company + "'";
+                        strOrg = strOrg + "<tr>" + "<td class='col-md-5  linewrapStyle'>" + data[i].Company + "</td>" + "<td class='col-md-3'>" + fromDate + "</td>" + "<td class='col-md-3'>" + toDate + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger float-right' onclick = RemoveExperience(" + company + "); title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                    }
+
+                }
+                $('#organisationContent').html(strOrg);
+                if ($("#tblOrganisations td").closest("tr").length > 0) {
+                    $('#tblOrganisations').show();
+                }
+                else {
+                    $('#tblOrganisations').hide();
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Removing Caregiver Experience. Function: RemoveExperience(companyName). Page: CaretakerRegistration.cshtml');
+                //alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    };
+
+    function RemoveQualification(qualificationId, caretakerQualificationId) {
+        if (confirm(' Are you sure  to remove this Qualification ?'))
+        $.ajax({
+            url: "../CareTaker/RemoveQualificationDetails",
+            type: "POST",
+            data: { qualificationId: qualificationId, caretakerQualificationId: caretakerQualificationId  },
+            // qualificationDate: null, university: null
+            success: function (data) {
+
+                var strQual = "";
+                if (data.length > 0) {
+
+                    $('#qualificationContent').html('');
+                    for (var i = 0; i < data.length; i++) {
+
+                        strQual = strQual + "<tr>" + "<td class='col-md-11 linewrapStyle'>" + data[i].QualificationName + "</td>" + "<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveQualification(" + data[i].QualificationId + "," + data[i].CareTakerQualificationId + ")" + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                    }
+
+                }
+                $('#qualificationContent').html(strQual);
+
+                if ($("#tblQualifications td").closest("tr").length > 0) {
+                    $('#tblQualifications').show();
+                }
+                else {
+                    $('#tblQualifications').hide();
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Removing Caregiver Qualification. Function: RemoveQualification(qualificationId, caretakerQualificationId). Page: CaretakerRegistration.cshtml');
+                //alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    };
+
+    function RemoveService(servId) {
+        if (confirm(' Are you sure to remove this Service ?'))
+        $.ajax({
+            url: "../CareTaker/RemoveServiceDetails",
+            type: "POST",
+            data: { serviceId: servId },
+            success: function (data) {
+                var strService = "";
+                $('#serviceContent').html('');
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        strService = strService + "<tr>" + "<td class='col-md-11 linewrapStyle'>" + data[i].ServiceName + "</td>" + "<td class='col-md-1'>" + "<label class='btn btn-danger float-right' onclick = 'RemoveService(" + data[i].ServiceId + ");' title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                    }
+
+                }
+                $('#serviceContent').html(strService);
+
+                if ($("#tblServices td").closest("tr").length > 0) {
+                    $('#tblServices').show();
+                }
+                else {
+                    $('#tblServices').hide();
+                }
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Removing Caregiver Services. Function: RemoveService(servId). Page: CaretakerRegistration.cshtml');
+                //alert("Some network error has occurred. Please try again after some time.");
+            }
+        });
+    };
+    
+
+    function nextTabPersonal() {
+        $('#FirstName').val($('#FirstName').val().trim());
+        if ($('#FirstName').val() == "") {
+            alert("First name should not be empty.");
+            return false;
+        }
+        $('#LastName').val($('#LastName').val().trim());
+        if ($('#LastName').val() == "") {
+            alert("Last name should not be empty.");
+            return false;
+        }
+        if ($('#GenderId').val() == 0) {
+            alert("Gender should not be empty.");
+            return false;
+        }
+        $('#SSID').val($('#SSID').val().trim());
+        if ($('#SSID').val() == "") {
+            alert("Social ID should not be empty.");
+            return false;
+        }
+        $('#Location').val($('#Location').val().trim());
+      
+        if ($('#CountryId').val() == 0) {
+            alert("Country should not be empty.");
+            return false;
+        }
+        if ($('#StateId').val() == 0) {
+            alert("@Resource.State should not be empty.");
+            return false;
+        }
+        if ($('#CityId').val() == 0) {
+            alert("City should not be empty.");
+            return false;
+        }
+        $('#HouseName').val($('#HouseName').val().trim());
+        if ($('#HouseName').val() == "") {
+            alert("@Resource.StreetName should not be empty.");
+            return false;
+        }
+        $('#ZipCode').val($('#ZipCode').val().trim());
+        $('#PrimaryPhoneNo').val($('#PrimaryPhoneNo').val().trim());
+        $('#SecondaryPhoneNo').val($('#SecondaryPhoneNo').val().trim());
+        $('#EmailAddress').val($('#EmailAddress').val().trim());
+        if ($('#EmailAddress').val() == "") {
+            alert("Email Id should not be empty.");
+            return false;
+        }
+
+        //if ($('#EmailAddress-error').text() != "") {
+        //    alert($('#EmailAddress-error').text());
+        //    return false;
+        //}
+
+        if ($('#Password').val() == "") {
+            alert("Password should not be empty.");
+            return false;
+        }
+        if ($('#RetypePassword').val() == "") {
+            alert("Confirm Password should not be empty.");
+            return false;
+        }
+        if ($('#RetypePassword').val() != $('#Password').val()) {
+            alert("'Password' and 'Confirm Password' doesn't match.");
+            return false;
+        }
+
+        if ($('#result span').text() != "Available" && $('#result span').text() != "") {
+                alert("Invalid Email Id or Email Id already exists");
+                return false;
+            }
+        if ($('#EmailAddress-error').length) {
+            alert("Invalid Email Id");
+            return false;
+        }
+        $('#AboutMe').val($('#AboutMe').val().trim());
+        $('#KeySkills').val($('#KeySkills').val().trim());
+        if ($('#KeySkills').val().length > 500) {
+            alert('Keyskill text is restricted to maximum 500 characters')
+            return false;
+        }
+
+        //if ($('#AboutMe').val().length > 500) {
+        //    alert('About Me text is restricted to maximum 500 characters')
+        //    return false;
+        //}
+
+
+        $('#liCareTakerPersonal').removeClass('active');
+        $('#careTakerPersonal').removeClass('active in');
+        $('#liCareTakerProfessional').addClass('active');
+        $('#careTakerProfessional').addClass('active in');
+    }
+    function nextTabProfessional() {
+        $('#liCareTakerPersonal').removeClass('active');
+        $('#careTakerPersonal').removeClass('active in');
+        $('#liCareTakerProfessional').removeClass('active');
+        $('#careTakerProfessional').removeClass('active in');
+    }
+    function previousTabProfessional() {
+        $('#liCareTakerPersonal').addClass('active');
+        $('#careTakerPersonal').addClass('active in');
+        $('#liCareTakerProfessional').removeClass('active');
+        $('#careTakerProfessional').removeClass('active in');
+    }
+    function previousTabService() {
+        $('#liCareTakerPersonal').removeClass('active');
+        $('#careTakerPersonal').removeClass('active in');
+        $('#liCareTakerProfessional').addClass('active');
+        $('#careTakerProfessional').addClass('active in');
+    }
+</script>
+
+@using (Html.BeginForm("SaveCaretaker", "CareTaker", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form", id = "caretakerRegistration" }))
+{
+    <div class="container">
+        <div class="main-content">
+            <div class="section__content section__content--p30">
+                <div class="container-fluid">
+                    <div class="bootstrap-tab animated wow slideInUp animated " data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: slideInUp;">
+                        @if (TempData["CareTakerMsg"] != null)
+                        {
+                            if (TempData["CareTakerMsg"].ToString() == "Caregiver registration failed!" || TempData["CareTakerMsg"].ToString() == "Session Expired! Please try again.")
+                            {
+                                <p class="alert alert-danger statusmessage" id="successMessage">@TempData["CareTakerMsg"]</p>
+                            }
+                            else
+                            {
+
+                                <p class="alert alert-success statusmessage" role="alert">
+                                    <strong>@TempData["CareTakerMsg"]</strong>
+                                    <br>
+                                    <strong>@TempData["CareTakerContact"]</strong>
+                                </p>
+                            }
+                        }
+                        <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                            <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
+                                <li id="liCareTakerPersonal" role="presentation" class="active"><a href="#careTakerPersonal" id="home-tab" role="tab" style="border: 1px solid #28a745;" data-toggle="tab" aria-controls="home" aria-expanded="true">Personal Details</a></li>
+                                <li id="liCareTakerProfessional" role="presentation"><a href="#careTakerProfessional" role="tab" style="border: 1px solid #28a745;" id="profile-tab" data-toggle="tab" aria-controls="profile">Professional Details</a></li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content panel panel-default">
+                                <div role="tabpanel" class="tab-pane fade bootstrap-tab-text panel-body active in" id="careTakerPersonal" aria-labelledby="home-tab">
+                                    <div class="profile_Style" style="margin-top:20px">
+                                        <div class="col-md-9 left">
+                                            <fieldset>
+                                                <div class="row">
+
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">First Name</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.FirstName, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "First Name" })
+                                                     
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">Last Name</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.LastName, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Last Name" })
+                                                       
+
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Gender">
+                                                            Gender
+                                                        </label><span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.GenderId, ViewData["GenderList"] as SelectList, "--Select--", new { @class = "form-control labelStyle", @onchange = "changeAvatar()" })
+                                                      
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="SocialID">Social ID</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.SSID, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Social ID" })
+                                                   
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Country">Country</label><span class="mandatoryField">*</span>
+                                                        @if (ViewData["CountryList"] != null)
+                                                        {
+                                                            @Html.DropDownListFor(model => model.CountryId, ViewData["CountryList"] as SelectList, "--Select--", new { @class = "form-control ddlCountry labelStyle", @onchange = "LoadStates()" })
+                                                        }
+                                                    
+
+
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="label-style" for="State">@Resource.State</label><span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.StateId, ViewData["StateList"] as SelectList, "--Select--", new { @class = "form-control ddlStates labelStyle", @onchange = "LoadCTRegnCities(this.value)" })
+                                                      
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label class="label-style" for="City">City</label><span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.CityId, ViewData["ListCity"] as SelectList, new { @class = "form-control ddlCity2 labelStyle" })
+
+
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="label-style" for="Branch">Branch</label><span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.branchId1, ViewData["ListCity"] as SelectList, new { @class = "form-control labelStyle", @id = "Branch1" })
+
+                                                        @Html.TextBoxFor(model => model.Country, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2", @id = "cname", @style = "display:none" })
+                                                        @Html.TextBoxFor(model => model.State, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2", id = "sname", @style = "display:none" })
+                                                        @Html.TextBoxFor(model => model.City, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2", id = "ctname", @style = "display:none" })
+                                                        @Html.TextBoxFor(model => model.Branch, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2", id = "cyname", @style = "display:none" })
+
+                                                    </div>
+
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Location">Location</label>
+                                                        @Html.TextBoxFor(model => model.Location, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Location", @maxLength = "50" })
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+
+
+                                                        <label class="label-style" for="HouseName">@Resource.StreetName</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.HouseName, new { @autocomplete = "off", @class = "form-control", @placeholder = Resource.StreetName, @cols = "20", @rows = "2", @maxLength = "50" })
+                                                      
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Postal_Code">@Resource.ZIPCode</label>
+                                                        @Html.TextBoxFor(model => model.ZipCode, "", new { @autocomplete = "off", @class = "form-control", @placeholder = Resource.ZIPCode })
+                                                        @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Phone #1">Phone #1</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><label id="lblPhoneCodePrimary1">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.PrimaryPhoneNo, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Phone #1" })
+                                                          
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Phone Number #2">Phone #2</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><label id="lblPhoneCodePrimary2">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.SecondaryPhoneNo, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Phone #2" })
+                                                            
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Email">Email ID</label><span class="mandatoryField">*</span>
+
+                                                        @Html.TextBoxFor(model => model.EmailAddress, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Email ID" })
+                                                        @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "no-padding required" })
+                                                        <span id="result" />
+
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="pwd">Password</label><span class="mandatoryField">*</span>
+                                                        @Html.PasswordFor(model => model.Password, new { @autocomplete = "off", @class = "form-control", @placeholder = "Password" })
+                                                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="pwd">Confirm Password</label><span class="mandatoryField">*</span>
+
+                                                        @Html.PasswordFor(model => model.RetypePassword, new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Confirm Password" })
+                                                        @Html.ValidationMessageFor(model => model.RetypePassword, "", new { @class = " no-padding required" })
+                                                        <span id="result" />
+
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="About">About Me</label>
+                                                        @Html.TextAreaFor(model => model.AboutMe, new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Description about yourself - Max. 500 characters", @maxLength = "500", @cols = "20", @rows = "2" })
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="clearfix"></div>
+                                            </fieldset>
+                                        </div>
+
+                                        <div class="col-xs-3 col-sm-3 col-md-3">
+                                            <div class="newsright profile-pic image_size">
+
+                                                @if (Model != null)
+                                                {
+                                                    if (Model.ProfilePicPath != null)
+                                                    {
+                                                        <img id="imgCaretaker" src="(@Model.ProfilePicPath)" class="image-style image_height" />
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img id="imgCaretaker" src="data:image;base64,@System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg")))" class="image-style image_height" />
+                                                }
+                                                @Html.HiddenFor(model => model.ProfilePicByte)
+                                                <label class="btn-bs-file btn btn-sm btn-warning profile-button label-style" style="width:100%">
+                                                    Browse
+                                                    <input type="file" id="myPic" onchange="readCaretakerImage(this);" />
+                                                </label>
+
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="form-group">
+                                            <div class="col-xs-12 col-md-11">
+                                                <div class="row newsright text-center" style="margin-top:20px;">
+                                                    <label onclick="nextTabPersonal()" class="btn btn-primary">Next</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="careTakerProfessional" aria-labelledby="profile-tab">
+                                    <div class="bootstrap-tab-text-grids">
+                                        <div class="bootstrap-tab-text-grid">
+                                            <div class="container">
+                                                <div class="row centered-form" id="creatememberpanel">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 registration-div">
+                                                        <div class="profile_Style">
+                                                            <div class="col-md-12 left">
+                                                                <div class="col-lg-6 col-md-6 col-sm-6">
+
+                                                                    @Html.Label("Qualification", new { @class = "label-style" })
+                                                                    <div class="input-group m-b-5">
+                                                                        <div>
+                                                                            @Html.DropDownList("ddlQualification", ViewData["ListQualification"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                            <input type="text" id="otherquali" class="form-control" style="display:none;margin-top:10px" />
+                                                                        </div>
+                                                                        <span class="input-group-btn input-group-outer">
+                                                                            <label class="btn btn-xs btn-primary" id="btnSaveQualification" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></label>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="labelStyle">
+                                                                        <table class="table table-bordered" id="tblQualifications">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="custom-table-header">Qualification</th>
+                                                                                    <th class="custom-table-header">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="qualificationContent"></tbody>
+                                                                        </table>
+                                                                    </div>
+
+                                                                    <label class="label-style" for="Tot_Exp">Total Experience</label>
+                                                                    @Html.TextBoxFor(model => model.TotalExperience, "", new { @class = "form-control", @type = "number", @value = "0", @placeholder = "  Total Experience in Years", ondrop = "return false", onpaste = "return false", onkeypress = "return isNumberKey(this, event)", @onchange = "resetExperience()" })
+                                                                    @*@Html.ValidationMessageFor(model => model.TotalExperience, "", new { @id="experienceValidation",@class = "col-md-12 no-padding required" })*@
+                                                                    <label class="label-style" for="txtFromDate">Experience Range</label>
+
+                                                                    <div class="input-group m-b-5">
+                                                                        <div class="col-md-5 no-padding">
+                                                                            @Html.TextBox("Organisation", "", new { @autocomplete = "off", @id = "txtOrganisation", @class = "form-control", @placeholder = "Organisation" })
+                                                                        </div>
+                                                                        <div class="col-md-3 no-padding">
+                                                                            @Html.TextBox("Date From", "", new { @autocomplete = "off", @id = "txtFromDate", @class = "datetimepicker form-control", @placeholder = "Date From", @readonly = "readonly" })
+                                                                        </div>
+                                                                        <div class="col-md-4 no-padding">
+                                                                            @Html.TextBox("Date To", "", new { @autocomplete = "off", @id = "txtToDate", @class = "datetimepicker form-control", @placeholder = "Date To", @readonly = "readonly" })
+                                                                        </div>
+                                                                        <span class="input-group-btn input-group-outer">
+                                                                            <label class="btn btn-primary add-btn" id="btnSaveOrganisation" title="Add"><span class="fa fa-plus"></span></label>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class=" ">
+                                                                        <table class="table table-bordered" id="tblOrganisations">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="custom-table-header">Organisation</th>
+                                                                                    <th class="custom-table-header">From Date</th>
+                                                                                    <th class="custom-table-header">To Date</th>
+                                                                                    <th class="custom-table-header">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="organisationContent"></tbody>
+                                                                        </table>
+
+                                                                    </div>
+
+
+
+                                                                    <div class="form-group ">
+                                                                        <label class="label-style" for="Type_of_Service">Category</label><span class="mandatoryField">*</span>
+                                                                        @Html.DropDownListFor(model => model.CategoryId, ViewData["ListCategory"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6 col-md-6 col-sm-6">
+
+
+                                                                    @Html.Label("Service", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                                    <div class="input-group m-b-5">
+                                                                        <div>
+                                                                            @Html.DropDownList("ddlService", ViewData["ServiceList"] as SelectList, "--Select--", new { @class = "form-control labelStyle" })
+
+
+                                                                        </div>
+                                                                        <span class="input-group-btn input-group-outer">
+                                                                            <label class="btn btn-xs btn-primary" id="btnSaveService" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></label>
+                                                                        </span>
+                                                                    </div>
+
+                                                                    <div>
+                                                                        <table class="table table-bordered" id="tblServices">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="custom-table-header">Service</th>
+                                                                                    <th class="custom-table-header">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="serviceContent"></tbody>
+                                                                        </table>
+                                                                    </div>
+
+
+                                                                    <div class="form-group owner">
+                                                                        <label class="label-style" for="Key_Skills">Key Skills</label>
+                                                                        @Html.TextBoxFor(model => model.KeySkills, "", new { @autocomplete = "off", @class = "form-control", @placeholder = "Key Skills" })
+                                                                        @Html.ValidationMessageFor(model => model.KeySkills, "", new { @class = "col-md-12 no-padding required" })
+                                                                    </div>
+
+                                                                    <div class="form-group ">
+                                                                        <label class="label-style" for="Upload_Documents">Upload Certificates</label>
+                                                                        @*@Html.TextBoxFor(model => model.CertificateFiles, "", new { @type = "file", @multiple = "multiple", @accept = "application/pdf", @class = "disableUpload" })*@
+                                                                        <label id="lblCertificateFiles" class="btn btn-default btn-file-upload disableUpload">
+                                                                            Choose Files
+                                                                            @Html.TextBoxFor(model => model.CertificateFiles, "", new { @autocomplete = "off", @type = "file", @multiple = "multiple", @accept = "application/msword, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,  text/plain,application/pdf,image/*", @id = "CertificateFiles", Style = "display:none;" })
+                                                                        </label>
+                                                                        <div class="clearfix"></div>
+                                                                        <div id="selectedCertificateFiles"></div>
+
+                                                                    </div>
+                                                                    <div class="form-group ">
+                                                                        <label class="label-style" for="Upload_Documents">Upload SIN</label>
+                                                                        <label id="lblSINFile" class="btn btn-default btn-file-upload disableUpload" style="margin-left:53px;">
+                                                                            Choose Files
+                                                                            @Html.TextBoxFor(model => model.SINFile, "", new { @autocomplete = "off", @type = "file", @multiple = "multiple", @accept = "application/msword, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,  text/plain,application/pdf,image/*", @id = "SinFiles", Style = "display:none;" })
+                                                                        </label>
+                                                                        <div class="clearfix"></div>
+                                                                        <div id="selectedSinFiles"></div>
+
+                                                                    </div>
+                                                                    <div class="form-group ">
+                                                                        <label class="label-style" for="Upload_Documents">Other documents</label>&nbsp;
+                                                                        <label id="lblOtherDocuments" class="btn btn-default btn-file-upload disableUpload" style="margin-left:10px;">
+                                                                            Choose Files
+                                                                            @Html.TextBoxFor(model => model.OtherDocuments, "", new { @autocomplete = "off", @type = "file", @multiple = "multiple", @accept = "application/msword, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,  text/plain,application/pdf,image/*", @id = "OtherFiles", Style = "display:none;" })
+                                                                        </label>
+                                                                        <div class="clearfix"></div>
+                                                                        <div id="selectedOtherFiles"></div>
+
+                                                                    </div>
+                                                                    <div class="form-group ">
+                                                                        @Html.CheckBoxFor(model => model.SendThroughFax, new { @class = "", @Id = "chkFaxDocuments", @onclick = "preventDocumentSelection(this)" }) Send documents through FAX
+
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                    </div>
+                                                                    <div class="g-recaptcha captcha" data-sitekey="6LcGiGMUAAAAAJH0aQ0XFCHVLDf3verptWZ0tvpX"></div>
+                                                                    <span class="msg-error error" style="color:red"></span>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-md-12">
+                                                                        <p for="terms">Read our <a href="#" title="You may read our terms and conditions by clicking on this link" data-toggle="modal" data-target="#TermsNCondition">Terms and Conditions </a> and <a href="#" data-toggle="modal" data-target="#PrivcyPolicy">Privacy Policy</a> for registration.</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="box-footer">
+                                                                    <div class="form-group">
+                                                                        <label onclick="previousTabProfessional()" class=" btn btn-primary">Prev</label>&nbsp;&nbsp;
+                                                                        <label id="Register" class="btn btn-primary" value="Register" name="RegisterCaretaker" onclick="validateForm()">Register</label>&nbsp;&nbsp;
+                                                                        <label class="btn btn-primary" value="Cancel" name="RegisterCaretaker" onclick="resetAllFields()">Cancel</label>&nbsp;&nbsp;
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+                    @*</div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="consentform" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label type="button" class="close" data-dismiss="modal">×</label>
+                    <h4 class="modal-title h4-label" style="text-align:center">Terms And Conditions</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="policyContent" class="policyContent" type="text" readonly="readonly">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <input id="consentAgree" type="submit" class="btn btn-primary" value="Agree" name="RegisterCaretaker">
+
+                    <label id="consentDisagree" type="button" class="btn btn-primary" data-dismiss="modal">Disagree</label>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+}
+
+<!-- Modal -->
+    <div id="TermsNCondition" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label type="button" class="close" data-dismiss="modal">×</label>
+                    <h4 class="modal-title h4-label" style="text-align:center">Terms and Conditions</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="policy" style="overflow-x: visible !important;">
+                        @if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy"))
+                        {
+                            var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy\TermsAndConditions.pdf";
+                            if (System.IO.File.Exists(absolutePath))
+                            {
+                                <iframe type="application/pdf" style="width: 100%; height: 395px" src="\PCMS\Settings\Company\TermsAndPrivacy\TermsAndConditions.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+
+                            }
+                        }
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <label type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Ok</label>
+                    @*<input id="Agree" type="submit" class="btn btn-primary" value="Agree" name="RegisterCaretaker">
+
+                    <label id="Disagree" type="button" class="btn btn-primary" data-dismiss="modal">Disagree</label>*@
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+<div id="PrivcyPolicy" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <label type="button" class="close" data-dismiss="modal">&times;</label>
+                <h4 class="modal-title h4-label" style="text-align:center">Privacy Policy</h4>
+            </div>
+            <div class="modal-body">
+                <p class="policy" style="overflow-x: visible !important;">
+                    @if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy"))
+                    {
+                        var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy\PrivacyPolicy.pdf";
+                        if (System.IO.File.Exists(absolutePath))
+                        {
+                            <iframe type="application/pdf" style="width: 100%; height: 395px" src="\PCMS\Settings\Company\TermsAndPrivacy\PrivacyPolicy.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+
+                        }
+                    }
+                </p>
+            </div>
+
+            <div class="modal-footer">
+
+                <label type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Ok</label>
+
+                @*<label type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</label>*@
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal -->
+
+<div id="spinner">
+
+</div>
+<!-- Modal -->
+
+<div class="loadingModal"><!-- Place at bottom of page --></div>
+<style type="text/css">
+
+    .loadingModal {
+        display: none;
+        position: fixed;
+        z-index: 1051;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, .8 ) url('../images/loader.gif') 50% 50% no-repeat;
+    }
+
+    /* When the body has the loading class, we turn
+                the scrollbar off with overflow:hidden */
+    body.loading .loadingModal {
+        overflow: hidden;
+    }
+
+    /* Anytime the body has the loading class, our
+                modal element will be visible */
+    body.loading .loadingModal {
+        display: block;
+    }
+
+    .input-group-outer {
+        padding-left: 10px;
+    }
+</style>
+<script type="text/javascript">
+
+
+    $('#consentDisagree').on("click", function () {
+     
+        alert('Registration can be completed only after agreeing consent form.')
+    });
+    $(".ddlCity2").change(function () {
+        var cityId = $('.ddlCity2').val();
+        $.ajax({
+            url: '/Admin/GetBranch?city=' + cityId,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            success: function (data) {
+                console.log(data);
+                var ddlState = $("#Branch1");
+                ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                $.each(data, function (data, value) {
+
+                    ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                });
+
+            }
+        });
+    });
+
+
+    $("#Branch1").change(function () {
+
+
+        var cname = $(".ddlCountry option:selected").text();
+        var sname = $(".ddlStates option:selected").text();
+        var cyname = $(".ddlCity2 option:selected").text();
+        var bname = $("#Branch1 option:selected").text();
+        document.getElementById("cname").value = cname;
+        document.getElementById("sname").value = sname;
+        document.getElementById("ctname").value = cyname;
+        document.getElementById("cyname").value = bname;
+    });
+</script>
+<script src="~/js/Custom/Caretaker.js"></script>
+<style>
+    .table > tbody > tr > td {
+        vertical-align: middle !important;
+        padding: 5px 20px !important;
+    }
+
+    .box-footer {
+        text-align: center;
+    }
+    }
+</style>
+
+

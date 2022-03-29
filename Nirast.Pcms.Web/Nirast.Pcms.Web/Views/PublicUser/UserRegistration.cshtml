@@ -1,0 +1,544 @@
+﻿@model Nirast.Pcms.Web.Models.PublicUserRegistration
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<script type="text/javascript">
+
+    function acceptTerms() {
+        $('input:checkbox').prop('checked', true);
+        document.getElementById('btnRegisterUser').disabled = false;
+        //$('#acceptTerms').attr('checked', 'checked');
+    }
+    function CheckExpiryDate() {
+        var currentdate = new Date();
+        var Month = currentdate.getMonth();
+        var Year = currentdate.getFullYear();
+        var selectedMonth = $('#ddlMonth').val();
+        var selectedYear = $('#ddlYear').val();
+        if (selectedMonth != 0 && selectedYear != 0) {
+            if (selectedYear < Year) {
+                alert("Invalid Year");
+                $('#ddlYear').val(0);
+                return false;
+            }
+            else if (selectedYear == Year) {
+                if (selectedMonth < (Month + 1)) {
+                    alert("Invalid Month");
+                    $('#ddlMonth').val(0);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    };
+    function readCaretakerImage(input) {
+        var ext = $("#myPic").val().split('.').pop();
+        var size = parseFloat($("#myPic")[0].files[0].size / 1024).toFixed(2);
+        if (ext == "jpg" || ext == "png" || ext == "JPG" || ext == "PNG") {
+            if (size > 100) {
+                alert("Image size should be maximum 100KB!")
+                return;
+            }
+            else {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imgUser')
+                            .attr('src', e.target.result);
+                        //.width(150)
+                        //.height(200);
+                        $('#ProfilePicByte').val(e.target.result.split(',')[1]);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        }
+        else {
+            alert("You have uploaded an invalid image file type");
+            $('#myPic').val(null);
+        }
+    }
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+            //    $("#ddlStates").html(""); // clear before appending new list
+
+            //$("#ddlStates").append(
+            //    $('<option></option>').val('0').html("--Select--"));
+            //$("#ddlCity").html("");
+            //$("#ddlCity").append(
+            //    $('<option></option>').val('0').html("--Select--"));
+            $("input[name='btnRegisterUser']").on("click", function () {
+
+                if (document.getElementById("invalidCardNumber").textContent == "invalid card number") {
+                    return false;
+                }
+            });
+
+            $("form").submit(function (e) {
+               // debugger;
+                var $captcha = $('#recaptcha'),
+                    response = grecaptcha.getResponse();
+                if (response.length === 0) {
+                    $('.msg-error').text("* Required");
+                    e.preventDefault();
+                    return false;
+                }
+                if ($('#result span').text() != "Available" && $('#result span').text() != "" ) {
+                    alert("Email ID is not available. Choose another Email ID.");
+                    //$('#EmailAddress').focus();
+                    e.preventDefault(); //prevent default form submit
+                    return false;
+                }
+            });
+            $('#UserCard_CardNumber').keyup(function () {
+                if ($(this).val().length != 16) {
+                    $("#invalidCardNumber").hide();
+                    document.getElementById("invalidCardNumber").textContent = "";
+                    $("#Visa").hide();
+                    $("#Mastercard").hide();
+                    $("#AMEX").hide();
+                }
+            });
+
+            $('#UserCard_CardNumber').focusout(function () {
+
+                if ($(this).val().length == 16) {
+                    var cardType = GetCardType($(this).val());
+
+                    document.getElementById("invalidCardNumber").textContent = "";
+                    if (cardType == "Visa") {
+                        $("#Visa").show();
+                        $("#Mastercard").hide();
+                        $("#AMEX").hide();
+                    }
+                    else if (cardType == "Mastercard") {
+                        $("#Visa").hide();
+                        $("#Mastercard").show();
+                        $("#AMEX").hide();
+                    }
+                    else if (cardType == "AMEX") {
+                        $("#Visa").hide();
+                        $("#Mastercard").hide();
+                        $("#AMEX").show();
+                    }
+                    else if (cardType == "") {
+                        document.getElementById("invalidCardNumber").textContent = "invalid card number";
+                        $("#invalidCardNumber").show();
+                        $("#Visa").hide();
+                        $("#Mastercard").hide();
+                        $("#AMEX").hide();
+                        $('#UserCard_CardNumber').focus();
+                    }
+                    else {
+                        document.getElementById("invalidCardNumber").textContent = "Unknown card type";
+                        $("#invalidCardNumber").show();
+                    }
+                }
+                else {
+                    $("#invalidCardNumber").hide();
+                    document.getElementById("invalidCardNumber").textContent = "";
+                    $("#Visa").hide();
+                    $("#Mastercard").hide();
+                    $("#AMEX").hide();
+                }
+        });
+        GetStates();
+        });
+
+        //$("#btnRegisterUser").on("click", ".btn.buttonStyle", function () {
+        //    spinnerVisible = true;
+        //    if ($('#result span').text() != "Available") {
+        //        alert("Login name is not available. Choose another login name.");
+        //        $('#EmailAddress').focus();
+        //        event.preventDefault();
+        //        }
+        //});
+        $('#ProfilePic').val($('#imgUser').attr('src').split(',')[1]);
+
+
+    $("#btnRegisterUser").on("click", ".btn.buttonStyle", function () {
+       // debugger;
+        spinnerVisible = true;
+
+        if ($('#result span').text() != "Available") {
+            alert("Login name is not available. Choose another login name.");
+            $('#EmailAddress').focus();
+            event.preventDefault();
+        }
+    });
+
+    function validateAllFields() {
+       // debugger;
+        var $captcha = $('#recaptcha'),
+            response = grecaptcha.getResponse();
+
+        if (response.length === 0) {
+            $('.msg-error').text("* Required");
+            if (!$captcha.hasClass("error")) {
+                $captcha.addClass("error");
+
+                return false;
+            }
+        } else {
+            $('.msg-error').text('');
+            $captcha.removeClass("error");
+
+        }
+          if ($('#CountryId').val() == 0) {
+            alert("Country should not be empty.");
+            return false;
+        }
+        if ($('#StateId').val() == 0) {
+            alert("@Resource.State should not be empty.");
+            return false;
+        }
+        if ($('#CityId').val() == 0) {
+            alert("City should not be empty.");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+@using (Html.BeginForm("CreatePublicUser", "PublicUser", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form", id = "saveUserRegistration" }))
+{
+    <form id="saveUserRegistration" class="form-horizontal" onsubmit="return CheckExpiryDate()">
+        @{Html.EnableClientValidation(); }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <fieldset>
+            <div class="container">
+                <div class="main-content">
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="row profile_Style">
+
+                                <div class="equal-height-panels">
+                                    @if (TempData["Success"] != null)
+                                    {
+                                        <p class="alert alert-success statusmessage" id="successMessage">@TempData["Success"]</p>
+                                    }
+                                    <div class="col-lg-12 col-md-12 col-sm-12 ">
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4>User Registration</h4>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="col-md-9">
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 no-padding ">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style no-padding">First Name <span></span></label><span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.FirstName, "", new { @class = "form-control labelStyle", @Placeholder = "First Name", @autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style no-padding">Last Name</label><span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.LastName, "", new { @class = "form-control labelStyle", @Placeholder = "Last Name ", @autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style no-padding">Country</label><span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.CountryId, ViewData["CountryList"] as SelectList, "--Select--", new { @Id = "ddlCountry", @class = "form-control labelStyle", @onchange = "GetStates()" })
+                                                                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "col-md-3 no-padding required" })
+
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style no-padding">@Resource.State</label><span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.StateId, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @Id = "ddlStates", @class = "form-control labelStyle", @onchange = "GetCities()" })
+                                                                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style no-padding">City</label><span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.CityId, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @Id = "ddlCity", @class = "form-control labelStyle" })
+                                                                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = "text-danger required" })
+
+                                                            </div>
+
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style no-padding">Branch</label><span class="mandatoryField">*</span>
+                                                                @Html.DropDownListFor(model => model.BranchId1, new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"), "--Select--", new { @Id = "Branch1", @class = "form-control labelStyle" })
+                                                                @Html.ValidationMessageFor(model => model.BranchId1, "", new { @class = "text-danger required" })
+                                                                @Html.TextBoxFor(model => model.CountryId1Name, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2", @id = "cname",@style = "display:none" })
+                                                                @Html.TextBoxFor(model => model.StateId1Name, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2", id = "sname", @style = "display:none" })
+                                                                @Html.TextBoxFor(model => model.CityId1Name, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2", id = "ctname", @style = "display:none" })
+                                                                @Html.TextBoxFor(model => model.BranchId1Name, "", new { @autocomplete = "off", @class = "form-control labelStyle", @placeholder = "Phone #2", id = "cyname", @style = "display:none" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style no-padding">Location</label>
+                                                                @Html.TextBoxFor(model => model.Location, "", new { @class = "form-control labelStyle", @Placeholder = "Location", @autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style no-padding">@Resource.StreetName</label><span class="mandatoryField">*</span>
+                                                                @Html.TextBoxFor(model => model.HouseName, "", new { @class = "form-control labelStyle", @Placeholder = Resource.StreetName, @autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.HouseName, "", new { @class = "text-danger required" })
+                                                            </div>
+
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style no-padding">@Resource.ZIPCode</label>
+                                                                @Html.TextBoxFor(model => model.ZipCode, "", new { @class = "form-control labelStyle", @Placeholder = "ZIP Code", @autocomplete = "off" })
+                                                                @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "no-padding required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label class="label-style no-padding">Phone #1</label>
+                                                                <div class="input-group m-b-5">
+                                                                    <span class="input-group-addon"><label id="lblPhoneCodePrimary1">@ViewBag.PhoneCode</label></span>
+                                                                    @Html.TextBoxFor(model => model.PrimaryPhoneNo, "", new { @class = "form-control labelStyle", @placeholder = "Phone #1", @autocomplete = "off" })
+
+
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.PrimaryPhoneNo, "", new { @class = " no-padding required" })
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style no-padding">Phone #2</label>
+                                                                <div class="input-group m-b-5">
+                                                                    <span class="input-group-addon"><label id="lblPhoneCodePrimary2">@ViewBag.PhoneCode</label></span>
+                                                                    @Html.TextBoxFor(model => model.SecondaryPhoneNo, "", new { @class = "form-control labelStyle", @placeholder = "Phone #2", @autocomplete = "off" })
+
+                                                                </div>
+                                                                @Html.ValidationMessageFor(model => model.SecondaryPhoneNo, "", new { @class = " no-padding required" })
+                                                            </div>
+                                                        </div>
+                                                        <fieldset>
+                                                            <legend>Login Details:</legend>
+
+                                                            <div class="row">
+
+                                                                <div class="col-md-6">
+
+                                                                    <label class=" label-style no-padding">Email ID</label><span class="mandatoryField">*</span>
+                                                                    @Html.TextBoxFor(model => model.EmailAddress, "", new { @class = "form-control labelStyle", @Placeholder = "Email ID", @autocomplete = "off", @onblur = "checkLoginName()" })
+                                                                    <span class="col-md-12 no-padding labelStyle info" title="">Verification mail will be sent to the above Email ID</span>
+                                                                    @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger required" })
+                                                                    <span id="result" />
+
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-style no-padding">Password</label><span class="mandatoryField">*</span>
+                                                                        @Html.PasswordFor(model => model.Password, new { @class = "form-control labelStyle", @Placeholder = "Password", @autocomplete = "off" })
+                                                                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger required" })
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-style no-padding">
+                                                                            Confirm Password
+                                                                        </label><span class="mandatoryField">*</span>
+                                                                        @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control labelStyle", @Placeholder = "Confirm Password", @autocomplete = "off" })
+                                                                        @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger required" })
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+
+                                                                    <div class="g-recaptcha" id="recaptcha" data-sitekey="6LcGiGMUAAAAAJH0aQ0XFCHVLDf3verptWZ0tvpX"></div>
+                                                                    <span class="msg-error error" style="color:red"></span>
+                                                                </div>
+                                                            </div>
+
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+
+                                                </div>
+                                                <div class="col-md-3 col-lg-3 col-sm-3">
+                                                    <div class="form-group">
+                                                        <label class=" label-style no-padding">Profile Picture</label>
+                                                        <div class="newsright profile-pic image_size">
+                                                            @if (Model != null)
+                                                            {
+                                                                if (Model.ProfilePicPath != null)
+                                                                {
+                                                                    <img src="@Model.ProfilePicPath" class="image-style image_height" />
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <img id="imgUser" src="~/images/NOImage.jpg" class="image-style image_height" />
+                                                            }
+                                                            @Html.HiddenFor(model => model.ProfilePicByte)
+                                                            <label class="btn-bs-file btn btn-sm btn-warning profile-button" style="width:100%">
+                                                                Browse
+                                                                <input type="file" id="myPic" accept="image/png,image/jpg,image/jpeg" onchange="readCaretakerImage(this);" />
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="col-md-10">
+                                                    <p for="terms"> <input id="acceptTerms" type="checkbox" required name="terms" onchange="document.getElementById('btnRegisterUser').disabled = !this.checked;">  I agree with the <a href="#" title="You may read our terms and conditions by clicking on this link" data-toggle="modal" data-target="#TermsPopup">Terms and Conditions </a> and <a href="#" data-toggle="modal" data-target="#PrivacyPopup">Privacy Policy</a> for Registration.</p>
+
+                                                </div>
+                                            </div>
+
+                                            <div id="divRegisterNow" class="text-center register_style">
+                                                <button class="btn btn-primary" onclick="validateAllFields()" value="" id="btnRegisterUser" disabled>REGISTER</button>
+                                                &nbsp;&nbsp;
+
+                                                <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>&nbsp;&nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </fieldset>
+    </form>
+}
+
+<!-- Terms and condition -->
+<div class="modal fade" id="TermsPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title h4-label" style="text-align:center">Terms and Conditions</h4>
+            </div>
+            <div class="modal-body">
+                <p class="policy" style="overflow-x: visible !important;">
+                    @if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\PCMS\Settings\Company\TermsAndPrivacy"))
+                    {
+                        var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"\PCMS\Settings\Company\TermsAndPrivacy\TermsAndConditions.pdf";
+                        if (System.IO.File.Exists(absolutePath))
+                        {
+                            <iframe type="application/pdf" style="width: 100%; height: 395px" src="\PCMS\Settings\Company\TermsAndPrivacy\TermsAndConditions.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+                        }
+                    }
+                </p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default newsrightModel" data-dismiss="modal" onclick="acceptTerms()">Accept</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- //login -->
+    <!-- login -->
+    <div class="modal fade" id="PrivacyPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title h4-label" style="text-align:center">Privacy Policy</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="policy" style="overflow-x:scroll;height:400px">
+                        @if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy"))
+                        {
+                            var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy\PrivacyPolicy.pdf";
+                            if (System.IO.File.Exists(absolutePath))
+                            {
+                                <iframe type="application/pdf" style="width: 100%; height: 395px" src="\PCMS\Settings\Company\TermsAndPrivacy\PrivacyPolicy.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+                            }
+                        }
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Ok</button>
+
+                    @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="spinner">
+
+    </div>
+    <!-- //login -->
+    <style>
+        .profile_Style {
+            margin-top: 10px;
+        }
+    </style>
+<script>
+    $("#ddlCity").change(function () {
+        var cityId = $('#ddlCity').val();
+        $.ajax({
+            url: '/Admin/GetBranch?city=' + cityId,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            success: function (data) {
+                console.log(data);
+                var ddlState = $("#Branch1");
+                ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                $.each(data, function (data, value) {
+
+                    ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                });
+
+            }
+        });
+    });
+
+    $("#Branch1").change(function () {
+
+
+        var cname = $("#ddlCountry option:selected").text();
+        var sname = $("#ddlStates option:selected").text();
+        var cyname = $("#ddlCity option:selected").text();
+        var bname = $("#Branch1 option:selected").text();
+        document.getElementById("cname").value = cname;
+        document.getElementById("sname").value = sname;
+        document.getElementById("ctname").value = cyname;
+        document.getElementById("cyname").value = bname;
+    });
+
+</script>

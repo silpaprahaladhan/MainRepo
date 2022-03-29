@@ -1,0 +1,346 @@
+﻿.profile-pic {
+    border: 1px solid #ddd;
+    width: auto;
+    border-radius: 15px;
+    padding: 15px;
+    /*margin-left: 25px;*/
+}
+
+    .profile-pic > img {
+        width: 100%;
+        max-height:300px;
+    }
+
+.profile-details {
+    padding-top: 25px;
+}
+
+.add-btn {
+    margin: 0px !important;
+    padding: 1px 9px;
+}
+.remove-btn{
+    margin:0px !important;
+    padding:1px 9px;
+}
+.profile_Style input[type="text"] {
+    -webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    padding: 10px;
+    border: 1px solid #ccc !important;
+    border-image: initial;
+    height: 40px;
+}
+
+/*.profile_Style select {
+    height: 40px;
+}*/
+.profile_Style form-control labelStyle {
+    height: 40px;
+}
+.profile-button {
+    margin: 0 auto !important;
+    display: block !important;
+    margin-top: 10px !important;
+    text-align: center !important;
+}
+
+.theme-button {
+    border-radius: 4px;
+    color: #fff;
+    background: #28a745;
+    border: none;
+    padding: 8px 8px 8px;
+    font-size: 16px;
+    outline: none;
+    text-transform: uppercase;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+}
+.float-right {
+    float: right;
+}
+
+.statusmessage {
+    padding: 7px
+}
+.profile-edit {
+    float: right;
+}
+
+.profile-header {
+    padding-left: 15px;
+}
+
+.outer-border {
+    border: 1px solid #ddd;
+    /*width: 65%;*/
+    border-radius: 12px;
+    padding: 5px;
+    /*margin-left:25px;*/
+    text-align: center;
+    margin-top: 10px;
+}
+
+.longButton {
+    color: #fff;
+    background: #28a745;
+    border: none;
+    padding: 3px 7px 7px 3px !important;
+    font-family: 'Lato', sans-serif !important;
+    font-size: 15px !important;
+    outline: none;
+    text-transform: none !important;
+    margin: 0 0 0 -4px;
+    width: 89%;
+}
+
+
+.ui-datepicker .ui-datepicker-title {
+    -o-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0;
+    color: #fff;
+    font-family: Arial,Helvetica,sans-serif;
+    font-weight: bold;
+    line-height: 26px;
+    text-align: center;
+}
+
+.ui-datepicker-title, .ui-state-active, .ui-state-active:hover {
+    /*background-color: #DE0D0D !important;*/
+    background-color: #225ca8 !important;
+}
+
+/*.ui-datepicker-calendar {
+    background-color:#28a745;
+}*/
+
+.ui-datepicker-prev {
+    float: left;
+    cursor: pointer;
+    background-position: center -30px;
+    background-color: #225ca8;
+    top: 4px
+}
+
+
+
+.ui-datepicker-next {
+    float: right;
+    cursor: pointer;
+    background-position: center 0px;
+    background-color: #225ca8;
+}
+
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
+    top: 4px !important
+}
+
+.ui-datepicker-header {
+    background: #225ca8 !important;
+    color: #ffffff;
+    font-family: 'Times New Roman';
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    border-color: #111;
+}
+
+.ui-datepicker-calendar a.ui-state-default {
+    background: white;
+}
+
+
+.ui-datepicker tbody td {
+    padding: 0;
+    /*border-right: 1px solid #808080;*/
+    /*background-color:red !important;*/
+}
+/*.ui-datepicker tbody tr {
+    background-color:#28a745
+}*/
+/*.ui-datepicker td span, .ui-datepicker td a {
+    background:#28a745 !important;
+   color: white !important;
+}*/
+input-datepicker.input-short-date {
+    width: 90px;
+}
+
+.input-datepicker {
+    background-image: url(https://fb-assets.com/cache/images/application.v1534383440.png);
+    background-position: right -304px;
+    background-repeat: no-repeat;
+    position: relative;
+    text-align: left;
+    width: 104px;
+}
+select.ui-datepicker-month, select.ui-datepicker-year {
+    color: black;
+}
+
+
+
+.name-heading{
+    font-size:2rem;
+    font-weight:700;
+}
+
+.caretaker-div-admin {
+    min-height: 800px;
+    max-height: 800px;
+}
+.bordered-table td {
+    border: 1px solid #ddd;
+}
+
+.checkbox label:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.checkbox .cr {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #a9a9a9;
+    border-radius: .25em;
+    width: 1.3em;
+    height: 1.3em;
+    float: left;
+    margin-right: .5em;
+}
+
+    .checkbox .cr .cr-icon {
+        position: absolute;
+        font-size: .8em;
+        line-height: 0;
+        top: 50%;
+        left: 15%;
+    }
+
+.checkbox label input[type="checkbox"] {
+    display: none;
+}
+
+    .checkbox label input[type="checkbox"] + .cr > .cr-icon {
+        opacity: 0;
+    }
+
+    .checkbox label input[type="checkbox"]:checked + .cr > .cr-icon {
+        opacity: 1;
+    }
+
+    .checkbox label input[type="checkbox"]:disabled + .cr {
+        opacity: .5;
+    }
+
+.custom-alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+.btn-in-td{
+    width:25px;
+}
+
+.two-btn-in-td {
+    width: 90px;
+}
+
+/*.panel > .panel-heading {
+    padding: 10px;
+}*/
+.input-group-outer{
+    padding-left:10px;
+}
+
+    .input-group-outer > .btn {
+        border-top-left-radius: 3px !important;
+        border-bottom-left-radius: 3px !important;
+    }
+
+.btn-dashboard {
+    font-size: 11px !important;
+    font-style: normal !important;
+}
+
+.table-responsive>.dataTables_wrapper {
+    padding: 5px 5px 25px 5px;
+}
+
+.booking-notification-div {
+    max-height: 463px;
+    overflow: auto;
+}
+
+.p-b-5{
+    padding-bottom:5px;
+}
+.p-b-10 {
+    padding-bottom: 10px;
+}
+.m-l-10{
+    margin-left:10px;
+}
+.m-t-10{
+    margin-top:10px;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    color: #fff;
+    background: #28a745;
+    font-weight: 800;
+}
+.div-slide-auto {
+    padding-top: 30px;
+}
+.cursor-ponter {
+    cursor: pointer;
+}
+.image-style {
+    width: 100%;
+}
+
+/*.row {
+    margin-right: -15px;
+    margin-left: -15px;
+    margin-bottom: -15px;
+}*/
+
+.box-footer {
+    text-align: right;
+    /*border-top-left-radius: 0;
+     border-top-right-radius: 0; 
+    border-bottom-right-radius: 3px;
+     border-bottom-left-radius: 3px; 
+    border-top: 1px solid #f4f4f4;
+    padding: 10px;
+    background-color: #fff;*/
+}
+
+.btn-profilepic {
+    font-size: 11px;
+    border-radius: 25px;
+    padding: 2px 12px;
+}
+.h4-label {
+    color: #777 !important;
+    font-size: 22px;
+}
+.mandatoryField {
+    font-size: 16px;
+    color: red;
+    margin-left: 2px;
+}
+.testimonial_Style{
+    word-break:break-word
+}
+ .service_Style{
+       word-break:break-word
+ }

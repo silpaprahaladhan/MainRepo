@@ -1,0 +1,153 @@
+﻿@model Nirast.Pcms.Web.Models.TimeShiftViewModel
+@{
+    ViewBag.Title = "Time Shift";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<head>
+    @*<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>*@
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="~/js/jquery.timepicker.min.js"></script>
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/js/CustomScript.js"></script>
+    <script type="text/javascript" src="~/js/jquery.timepicker.min.js"></script>
+</head>
+
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            @if (ViewBag.Error != null)
+            {
+                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    @if (TempData["Success"] != null)
+                    {
+                        <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                    }
+                    @if (TempData["Failure"] != null)
+                    {
+                        <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Time Shift Interval</h4>
+                        </div>
+                        <div class="panel-body">
+
+                            @using (Html.BeginForm("CreateIntervalHours", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.Label("Interval Duration (In Hours)", new { @class = "control-label label-style marginTopStyle" })
+                                            
+                                            @Html.TextBoxFor(Model => Model.IntervalHours, (String)ViewBag.IntervalHours, new { @class = "form-control labelStyle", @autocomplete = "off", ondrop = "return false", onpaste = "return false", onkeypress = "return isNumberKey(this, event)" })
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="text-center form-group">
+                                        @if (ViewBag.AllowEdit)
+                                        {
+                                            <input type="submit" class="btn btn-primary  m-t-10" value="Save">
+                                            <label class="btn btn-primary  m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                        }
+                                        else
+                                        {
+                                            <div class="wrapper">
+                                                <input type="submit" class="btn btn-primary  m-t-10" value="Save" disabled>
+                                                <label class="btn btn-primary  m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Manage Time Shifts</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-12 no-padding">
+
+                                @using (Html.BeginForm("CreateTimeShift", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                <div class="col-md-12 col-lg-12 form-group">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            @Html.TextBoxFor(Model => Model.TimeShiftId, "", new { @class = "hidden" })
+
+                                            @Html.Label("Time Shift", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+
+                                            @Html.TextBoxFor(Model => Model.TimeShiftName, "", new { @class = " form-control labelStyle", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.TimeShiftName, "", new { @class = "no-padding required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.Label("Working Hours", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(Model => Model.WorkingHours, "", new { @class = " form-control labelStyle", @autocomplete = "off", ondrop = "return false", onpaste = "return false", onkeypress = "return isNumberKey(this, event)" })
+                                            @Html.ValidationMessageFor(model => model.WorkingHours, "", new { @class = "no-padding required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.Label("Paying Hours", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(Model => Model.PayingHours, "", new { @class = " form-control labelStyle", @autocomplete = "off", ondrop = "return false", onpaste = "return false", onkeypress = "return isNumberKey(this, event)" })
+                                            @Html.ValidationMessageFor(model => model.PayingHours, "", new { @class = "no-padding required" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.Label("Start Time", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(Model => Model.StartTime, "", new { @class = " form-control labelStyle ", @autocomplete = "off", @type = "text" })
+                                            @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "no-padding required" })
+                                        </div>
+                                    </div>
+                          
+                                </div>
+                                <div class="text-center">
+                                    @if (ViewBag.AllowEdit)
+                                    {
+                                        <input type="submit" class=" btn btn-primary" value="Save">
+                                        <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                    }
+                                    else
+                                    {
+                                        <div class="wrapper">
+                                            <input type="submit" class="btn btn-primary" value="Save" disabled>
+                                            <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                        </div>
+                                    }
+                                </div>
+                                    }
+                                </div>
+                                </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    @{Html.RenderAction("TimeShiftList");}
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    $(function () {
+
+
+        $("#StartTime").timepicker({ 'timeFormat': 'h:i A' });
+
+
+        $(document).ready(function () {
+            $('#TimeShiftList').DataTable({
+                "pagingType": "full_numbers"
+            });
+        });
+    });
+
+</script>

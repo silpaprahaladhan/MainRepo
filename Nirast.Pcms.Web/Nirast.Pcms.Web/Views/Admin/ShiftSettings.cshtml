@@ -1,0 +1,115 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.ManageSubcategoryViewModel>
+@{
+    ViewBag.Title = "SubCategory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <div class="container">
+        <div class="row profile_Style">
+            <div class="equal-height-panels">
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    <div class="col-md-6">
+                        <div class="panel panel-default" style="height: 335px;">
+                            <div class="panel-heading">
+                                <h4>Care Shift Details</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-12 innerDiv">
+                                    @Html.Label("Care Shift Name", new { @class = "col-md-5 control-label labelStyle" })
+
+                                    @Html.TextBox("txtShiftName", "", new { @class = "col-md-5 labelStyle" })
+                                    <div class="col-md-2">
+                                        <button class="btn btn-xs btn-primary" id="btnSaveQualification" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></button>
+                                    </div>
+                                  
+                                </div>
+                                <div class="col-md-12 innerDiv labelStyle">
+                                    <div>
+                                        <table class="table table-borderless table-striped table-earning dynamic-table">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3"><strong>Shift Type</strong></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="content">
+                                                <tr>
+                                                    <td>
+                                                        <strong>Floor shift</strong>
+                                                    </td>
+                                                    <td class="col-md-1"><button class='btn btn-primary float-right' title='Edit'><span class='fa fa-edit'></span></button></td>
+                                                    <td class="col-md-1"><button class="btn btn-danger float-right" onclick="RemoveOrientation(this);" title="Delete"><span class="fa fa-close"></span></button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>Individual shift</strong>
+                                                    </td>
+                                                    <td class="col-md-1"><button class='btn btn-primary float-right' title='Edit'><span class='fa fa-edit'></span></button></td>
+                                                    <td class="col-md-1"><button class="btn btn-danger float-right" onclick="RemoveOrientation(this);" title="Delete"><span class="fa fa-close"></span></button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4>Work Time Shift Details</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="map" class="col-md-12 innerDiv">
+
+                                    </div>
+                                    <div class="col-md-12 innerDiv">
+                                        @Html.Label("Work Shift Name", new { @class = "col-md-5 control-label labelStyle" })
+
+                                        @Html.TextBox("txtShiftName", "", new { @class = "col-md-5 labelStyle" })
+                                        <div class="col-md-2">
+                                            <button class="btn btn-xs btn-primary" id="btnSaveQualification" title="Add" data-toggle="modal" data-target="#modal-default"><span class="fa fa-plus"></span></button>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-12 innerDiv labelStyle">
+                                        <div>
+                                            <table class="table table-borderless table-striped table-earning dynamic-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="3"><strong>Shift Hour</strong></th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="content">
+                                                    <tr>
+                                                        <td>
+                                                            4 Hours
+                                                        </td>
+                                                        <td class="col-md-1"><button class='btn btn-primary float-right' title='Edit'><span class='fa fa-edit'></span></button></td>
+                                                        <td class="col-md-1"><button class="btn btn-danger float-right" onclick="RemoveOrientation(this);" title="Delete"><span class="fa fa-close"></span></button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            8 Hours
+                                                        </td>
+                                                        <td class="col-md-1"><button class='btn btn-primary float-right' title='Edit'><span class='fa fa-edit'></span></button></td>
+                                                        <td class="col-md-1"><button class="btn btn-danger float-right" onclick="RemoveOrientation(this);" title="Delete"><span class="fa fa-close"></span></button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            12 Hours
+                                                        </td>
+                                                        <td class="col-md-1"><button class='btn btn-primary float-right' title='Edit'><span class='fa fa-edit'></span></button></td>
+                                                        <td class="col-md-1"><button class="btn btn-danger float-right" onclick="RemoveOrientation(this);" title="Delete"><span class="fa fa-close"></span></button></td>                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>

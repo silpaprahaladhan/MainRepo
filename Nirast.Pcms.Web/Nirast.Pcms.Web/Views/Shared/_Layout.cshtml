@@ -1,0 +1,474 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Tranquil Care - Delivering Care Excellence | Home :: Tranquil Care</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Personal Care, Child care,Services" />
+    <script type="application/x-javascript">
+        addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+               function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/css/CustomStyles.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/jquery.timepicker.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
+    <script type="text/javascript" src="~/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="~/js/app.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.10/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript" language="javascript" src="~/js/CustomScript.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap-3.1.1.min.js"></script>
+    <script type="text/javascript" src="~/js/jquery.timepicker.min.js"></script>
+    @*<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>*@
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/DateFormatter.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <!-- //for bootstrap working -->
+    <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,900,900italic,700italic' rel='stylesheet' type='text/css'>
+    <script src="~/js/jquery.easing.min.js"></script>
+    <script type="text/javascript">
+        $('ul.nav').find('a').click(function () {
+            var $href = $(this).attr('href');
+            var $anchor = $('#' + $href).offset();
+            window.scrollTo($anchor.left, $anchor.top);
+            return false;
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Home/Footer',
+                type: "GET",
+                success: function (data) {
+
+                    $("#footer").html(""); // clear before appending new list
+                    $("#footer").html(data);
+                }
+            });
+            $(".alert").fadeTo(10000, 500).slideUp(500, function () {
+                $(".alert").slideUp(500);
+            });
+
+            if ($('#hdnLoggedUser').val() != '' && $('#hdnLoggedUser').val() != undefined && $('#hdnLoggedUser').val() != null) {
+
+                $('.btnLogin').addClass("hidden");
+                $('#loggedInUser').removeClass("hidden");
+                if ($('#hdnProfilePic').val() != '' && $('#hdnProfilePic').val() != undefined && $('#hdnProfilePic').val() != null) {
+                    $('#profilePic').attr('src', $('#hdnProfilePic').val());
+                    $('#profilePic').removeClass('hidden');
+                    $('#btnLogout').removeClass('hidden');
+                    $('#lblUser').removeClass("hidden");
+                    $('#lblUser').append($('#hdnLoggedUser').val());
+                } else {
+                    $('#profilePic').attr('src', '');
+                    $('#profilePic').addClass('hidden');
+                    $('#btnLogout').removeClass('hidden');
+                    $('#lblUser').removeClass("hidden");
+                    $('#lblUser').append($('#hdnLoggedUser').val());
+                }
+            } else {
+                $('.btnLogin').removeClass("hidden");
+                $('#loggedInUser').addClass("hidden");
+                $('#btnLogout').addClass("hidden");
+                $('#profilePic').addClass('hidden');
+            }
+
+            $('.image-toggler').click(function () {
+                $('.image-toggle').hide();
+                $($(this).attr('data-image-id')).show();
+            });
+            $('#signupuser').click(function () {
+                window.location.href = "../PublicUser/UserRegistration";
+            });
+            $('#signupcaretaker').click(function () {
+                window.location.href = "../CareTaker/CareTakerRegistration";
+            });
+
+            $('ul.nav').find('a').click(function () {
+                var $href = $(this).attr('href');
+                var $anchor = $('#' + $href).offset();
+                window.scrollTo($anchor.left, $anchor.top);
+                return false;
+            });
+
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+            });
+        });
+
+        jQuery(function ($) {
+            var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
+            $('ul a').each(function () {
+                $('ul a').removeClass('menu__item--current');
+                if (this.URL === path) {
+
+                    $(this).addClass('menu__item--current');
+                }
+            });
+        });
+    </script>
+
+
+    @*<script src="~/js/Custom/ClientSearch.js"></script>*@
+    <style type="text/css">
+        @@-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .login-btn {
+            background-color: #33a580;
+            color: white;
+            margin-top: -20px;
+        }
+
+        .content {
+            width: 200px;
+            height: 600px;
+            background-color: blue;
+            position: absolute; /*it can be fixed too*/
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            /*this to solve "the content will not be cut when the window is smaller than the content": */
+            max-width: 100%;
+            max-height: 100%;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bot">
+        <div class="container col-sm-8 col-md-10">
+
+            <div class="col-sm-12 col-md-3 header-left">
+                <img class="submit" onclick="location.href ='/'" src="~/images/logo.jpg">
+            </div>
+
+            <div class=" header-middle"><h1 class="title_phonenumber">1-800-892-6066</h1></div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-sm-4 col-md-2 header-right footer-bottom">
+
+            <div class="hidden navbar" id="loggedInUser">
+
+                @*<button type="submit" formaction="/Home/Logout" id="btnLogout" class="theme-button hidden"><span>Logout</span></button>*@
+                <div class="dropdown">
+                    <label id="lblUser" style="margin-bottom:10px;">Hi </label><br />
+
+                    <img id="profilePic" class="hidden" />
+                    <button class="dropbtn dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content dropdown-menu">
+                        @if (Session["UserType"] != null)
+                        {
+                            if (Session["UserType"].ToString().ToUpper() == "PUBLIC USER")
+                            {
+                                <a id="btnLogin" href="@Url.Action("PublicUserDashboard", "PublicUser", new { id = Convert.ToInt32(Session["loggedInUserId"].ToString()) })">My Dashboard</a>
+                                <a id="btnLogin" href="@Url.Action("UserProfile", "PublicUser", new { id = Convert.ToInt32(Session["loggedInUserId"].ToString()) })">View Profile</a>
+                            }
+                            else if (Session["UserType"].ToString().ToUpper() == "OFFICE STAFF" || Session["UserType"].ToString().ToUpper() == "ADMINISTRATOR")
+                            {
+                                <a id="btnLogin" href="@Url.Action("AdminDashboard", "Admin", null)">My Dashboard</a>
+                                if (Session["UserType"].ToString().ToUpper() == "OFFICE STAFF")
+                                {
+                                    <a id="btnLogin" href="@Url.Action("ViewOfficeStaffProfile", "Admin", new { id = Convert.ToInt32(Session["loggedInUserId"].ToString()) })"> View Profile</a>
+                                }
+                                else if (Session["UserType"].ToString().ToUpper() == "ADMINISTRATOR")
+                                {
+                                    <a id="btnLogin" href="@Url.Action("AdminProfile", "Admin", new { id = Convert.ToInt32(Session["loggedInUserId"].ToString()) })"> View Profile</a>
+                                }
+                            }
+                            else if (Session["UserType"].ToString().ToUpper() == "CARETAKER")
+                            {
+                                <a id="btnLogin" href="@Url.Action("CaretakerDashboardView", "Caretaker", new { id = Convert.ToInt32(Session["loggedInUserId"].ToString()) })">My Dashboard</a>
+                                <a id="btnLogin" href="@Url.Action("CareTakerProfile", "Caretaker", new { id = Convert.ToInt32(Session["loggedInUserId"].ToString()) })">View Profile</a>
+                            }
+                        }
+
+
+                        <a id="btnLogin" href="@Url.Action("ChangePassword", "Account")">Change Password</a>
+                        @Html.ActionLink("Logout", "Logout", "Home", null, new { @class = " logout hidden", id = "btnLogout" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- //header-bot -->
+    <!-- banner -->
+    <div class="ban-top">
+        <div class="container">
+            <div class="top_nav_left">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse menu--shylock" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav menu__list">
+                                <li class="active menu__item menu__item--current">@Html.ActionLink("HOME", "Index", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" }) <span class="sr-only">(current)</span></li>
+                                @if (Session["UserType"] != null)
+                                {
+                                    if (Session["UserType"].ToString() == "PUBLIC USER")
+                                    {
+                                        <li id="liDashboard" class=" menu__item">
+                                            <a class="menu__link" href="@Url.Action("PublicUserDashboard", "PublicUser", new { id = Convert.ToInt32(Session["loggedInUserId"].ToString()) })">DASHBOARD</a>
+                                        </li>
+                                    }
+                                    else if (Session["UserType"].ToString() == "CARETAKER")
+                                    {
+                                        <li id="liDashboard" class=" menu__item">
+                                            <a class="menu__link" href="@Url.Action("CaretakerDashboardView", "Caretaker", new { id = Convert.ToInt32(Session["loggedInUserId"].ToString()) })">DASHBOARD</a>
+                                        </li>
+                                        <li id="liScheduleHistory" class="dropdown dropdown1 menu__item">
+                                            <a class="menu__link dropbtn dropdown-toggle dropbtn1">SCHEDULING<i class="fa fa-caret-down" style="padding-left:5px;"></i></a>
+                                            <div class="dropdown-content dropdown-menu">
+                                                <a id="btnLogin" href="@Url.Action("CaretakerScheduleHistory", "Caretaker")">Scheduling History</a>
+                                                <a id="btnLogin" href="@Url.Action("CaretakerRejectedHistory", "Caretaker")">Schedule Rejected</a>
+                                            </div>
+                                        </li>
+                                        <li id="liBookingHistory" class="dropdown dropdown1 menu__item">
+                                            <a class="menu__link dropbtn dropdown-toggle dropbtn1">BOOKING<i class="fa fa-caret-down" style="padding-left:5px;"></i></a>
+                                            <div class="dropdown-content dropdown-menu">
+                                                <a id="btnLogin" href="@Url.Action("CaretakerBookingHistory", "Caretaker")">Booking History</a>
+                                            </div>
+                                        </li>
+
+                                    }
+                                    else if (Session["UserType"].ToString() == "OFFICE STAFF" || Session["UserType"].ToString() == "ADMINISTRATOR")
+                                    {
+                                        <li id="liDashboard" class=" menu__item">
+                                            <a class="menu__link" href="@Url.Action("AdminDashboard", "Admin", null)">ADMIN DASHBOARD</a>
+                                        </li>
+                                    }
+                                    else if (Session["UserType"].ToString() == "CLIENT")
+                                    {
+                                        <li id="liDashboard" class=" menu__item">
+                                            <a class="menu__link" href="@Url.Action("ClientDashboard", "Client", new { id = Convert.ToInt32(Session["loggedInUserId"].ToString()) })">DASHBOARD</a>
+                                        </li>
+                                    }
+                                }
+                                <li id="liServices" class="menu__item">
+                                    <a style="transition:ease-in" class="menu__link page-scroll" href="/#services">SERVICES</a>
+                                    @*@Html.ActionLink("SERVICES", "Services", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })*@
+                                </li>
+                                <li id="liAboutUs" class=" menu__item">
+                                    @Html.ActionLink("ABOUT US", "About", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+                                </li>
+
+                                <li id="liCareers" class=" menu__item">
+                                    @Html.ActionLink("CAREERS", "Careers", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+
+                                </li>
+
+
+                                <li id="liContact" class=" menu__item">
+                                    @Html.ActionLink("CONTACT US", "Contact", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+
+                </nav>
+                <div class=" header-right">
+                    <a class="sign-btn btnLogin" href="@Url.Action("Login", "Account")">
+                        <i class="fa fa-lock"></i> Sign In
+                    </a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+    <div>
+
+        @if (@Session["loggedInUser"] != null)
+        {
+            <input type="hidden" id="hdnLoggedUser" value="@Session["loggedInUser"].ToString()" />
+        }
+        else
+        {
+            <input type="hidden" id="hdnLoggedUser" value="" />
+        }
+        @if (@Session["profilePic"] != null)
+        {
+            <input type="hidden" id="hdnProfilePic" value="@Session["ProfilePic"].ToString()" />
+        }
+        else
+        {
+            <input type="hidden" id="hdnProfilePic" value="data:image;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8QDQ0ODQ8NDw4PDQ4PDw8OEA8ODg8RFRIWFhURExUYHSggGBolGxMTITEhJSkrLi4uFx8zODMtNygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIANwA3AMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAAAQUDBAYCB//EADIQAQACAAMFBgUDBQEAAAAAAAABAgMEEQUSITFRIjJBYXFyM4GRscETodFCUmKi8SP/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A+kAAAAAAAAAAAABoADJh4Nrd2tp9IZ67OxZ/piPWQag28bZ96Vm1prpHm1AAAAAAAAAAAAAAAAAAAATWszMREazPKIBDPl8pe/djh1nhCxymzojScTtW56eEfysIgFbhbJj+u0z5RwhuYeVw692lY89NZZwERBMJRIKLaV7TiTFtdInsxyjTr5tSIdJj4NbxpaNY+ymzmSth8Y4069PUGoAAAAAAAAAAAAAAAAABC72dk9yN63fmPpHRXbNw97FjXlXtfTkvoBIAAAAACLViY0njE+CQFFn8p+nO9XuT/rPRpulxcOLVms8pjRzd66TMT4TMAgAAAAAAAAAAAAAAAFhsb4lvZ+Vyp9jR27+2PuuAAAAAAAAAQ53Ox/64nul0Tns/8XE9wMAAAAAAAAAAAAAAAALLYsdq/tj7rdU7E72J6V+8rYAAAAAAAAEOez/xcT3Ohc9n/i4nuBgAAAAAAAAAAAAAAABabHwrVm82rMRNa6TPitWPBnWtZ61j7MgAAAAAAAAIlz+f1/VvwnvOhV22u5X3/gFOAAAAAAAAAAAAAAADocjbXCw5/wAYbCu2RjRNNzXjWf2lYwAAAAAAAAAq9t2+HHnaVnqpNrYsWxNI5VjT5+P4BpzCAAAAAAAAAAAAAAABnyV93Fpbz0n0l0MOY/HF0uFeJrWY8YiQewAAAAAAAYc3ibuHe3Ss6ernFvtjE7Fa9Z1+UKgAAAAAAAAAAAAAAAABa7JzXD9OZ4xxr6dFUVmYnWOccgdSPGHyjXnpGr2AAAAAi08EtPadtMG3rEfuCpzmPv4k28OVfRgAAAAAAAAAAAAAAAAABNOcesIbmSyt7TS272d6J15fQF5VKEgAAAANLavwbe6v3bstXaOFa+HNa89YnoCgE3pMTMTGkxzhAAAAAAAAAAAAAAAAGgH/AB0+HXSsRHhEQpNmYO9iRM8qcfn4LyASAAAAAAACk2xXTEietftLRlebTwd7DmY514x+YUQJAAAAAAAAAACE1iZnSImZ6RxBA3sDZd7cbdiPrZZYGSpTlXWf7rcZBUYGRxL8o0jrbhCxwNl0jjaZtP0r9G8kHmtIiNIiIjy4PQAAAAAAAAAjRr4+Sw786xE9Y4S2QFNj7KtHGk70dJ4S0b0ms6Wiaz5uneL0i0aWiJjzBzMi4x9lVnjSZrPSeMK7Hyl6d6vDrHGAYAIAAATWszOkRMz0ji2snkLYmkz2a9fGfRcYGXpSNKxp1nxkFZltl2njiTux0jms8DApSOzER5+M/NmARCQAAAAAAAAAAAAAAAAAedHoBpY+z8O3GI3Z61/hW5nJYlPDer1r+YX6AcuL3M5Cl+Pdt1j8wqMbLXpaa7sz0mI1iYB0UQlCQAAAAAAAAAAAAAAAAAAAAAAAAEaJAf/Z" />
+        }
+        <div id="spinner">
+
+        </div>
+        @RenderBody()
+
+    </div>
+
+    <!-- footer -->
+    <div class="footer padding-50-10" sty>
+
+        <div class="container" id="footer">
+
+        </div>
+        <p class="copy-right" style="margin-top: 5px;background-color:#000">© @DateTime.Now.Year Tranquil Care Inc. All rights reserved | Design by <a href="http://nirasystems.com/" style="font-size:16px;" target="_blank">NIRA Systems</a><br><a href=@Url.Action("TermsAndCondition", "Home")>Terms and Conditions</a> | <a style="margin-left:10px;" href=@Url.Action("PrivacyPolicy", "Home")>Privacy Policy</a></p>
+
+    </div>
+    <!-- //footer -->
+    <!-- login -->
+
+
+    <style>
+        #loginName-error, #loginPasword-error {
+            color: red;
+            padding-bottom: 10px;
+        }
+
+        #loginName.error, #loginPasword.error {
+            margin-bottom: 0px;
+        }
+
+        /* Links inside the navbar */
+        .navbar a {
+            float: left;
+            font-size: 14px;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .dropbtn1 {
+            background-color: transparent !important;
+        }
+
+        .dropbtn {
+            border: 1px solid #EEEEEE;
+            background-color: #28a745;
+        }
+        /* Dropdown button */
+        .dropdown .dropbtn {
+            font-size: 15px;
+            border: none;
+            outline: none;
+            color: white;
+            font-family: inherit; /* Important for vertical align on mobile phones */
+            margin: 0; /* Important for vertical align on mobile phones */
+        }
+
+        /* Add a red background color to navbar links on hover */
+        .navbar a:hover, .dropdown:hover .dropbtn {
+            background-color: #2359a7;
+        }
+
+        /* Dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            /*position: absolute;*/
+            background-color: #f9f9f9;
+            min-width: 140px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown.dropdown1 {
+            width: auto;
+        }
+
+        .dropdown {
+            width: 150px;
+            float: right;
+        }
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            float: none;
+            color: black;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+            /* Add a grey background color to dropdown links on hover */
+            .dropdown-content a:hover {
+                background-color: #ddd;
+            }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .sign-btn {
+            color: white;
+            letter-spacing: 2px;
+            font-size: 18px;
+        }
+
+            .sign-btn:hover {
+                text-decoration: none;
+                color: white
+            }
+
+        @@media (max-width:992px) {
+            .header-right {
+                float: right;
+                /*width:110%;*/
+            }
+        }
+
+        @@media (max-width:1400px) {
+            .header-right {
+                padding-top: 2.25vw;
+                /*width:110%;*/
+            }
+        }
+        .fa-lg {
+            font-size: 30px;
+            line-height: 0.75em;
+            vertical-align: -15%;
+        }
+    </style>
+    @section Scripts {
+        <script src="~/Scripts/signature_pad.min.js"></script>
+        <script src="~/Scripts/SignaturePadInit.js"></script>
+    }
+    <!-- //login -->
+    @RenderSection("scripts", required: false)
+</body>
+</html>

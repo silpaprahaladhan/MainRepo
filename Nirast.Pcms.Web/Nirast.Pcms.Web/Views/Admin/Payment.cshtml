@@ -1,0 +1,35 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("PaymentWithPaypal", "Admin"))
+{
+    <div>
+        <table>
+            <tr>
+                <td>
+                    product Name:
+                </td>
+                <td>
+                    <input type="text" name="product" value="Visual Studio 2013" readonly />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Total Price:
+                </td>
+                <td>
+                    <input type="text" name="totalPrice" value="14800" readonly />
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input id="paypal-button" type="submit" name="btnConfirm" value="Check Out with Paypal" />
+                    @*<div id="paypal-button"></div>*@
+                </td>
+            </tr>
+        </table>
+    </div>
+}

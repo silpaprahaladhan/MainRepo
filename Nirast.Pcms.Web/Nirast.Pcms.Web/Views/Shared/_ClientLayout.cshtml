@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Tranquil Care - Delivering Care Excellence | Home :: Tranquil Care</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Personal Care, Child care,Services" />
+    <script type="application/x-javascript">
+        addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+               function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- //for-mobile-apps -->
+    <link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/css/CustomStyles.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
+    <link href="~/css/AdminDashboard/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/AdminDashboard/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/AdminDashboard/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
+    <link href="~/css/AdminDashboard/fullcalendar/dist/fullcalendar.print.css" rel="stylesheet" media="print">
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/css/CustomStyles.css" rel="stylesheet" type="text/css" />
+    <script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>
+    <script src="~/css/AdminDashboard/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/css/AdminDashboard/echarts/dist/echarts.min.js"></script>
+    <script src="~/css/AdminDashboard/Chart.js/dist/Chart.min.js"></script>
+    <script src="~/css/AdminDashboard/moment/min/moment.min.js"></script>
+    <script src="~/css/AdminDashboard/fullcalendar/dist/fullcalendar.min.js"></script>
+    <script src="../build/js/custom.js"></script>
+
+
+</head>
+<body>
+    <div class="header-bot">
+        <div class="container">
+            <div class="col-md-4 header-left">
+                <h1><img class="submit" onclick="location.href ='@Url.Action("Index", "Home")'" src="~/images/logo.jpg" /></h1>
+            </div>
+            <div class="col-md-3 header-middle"><h1 class="title_phonenumber">1-800-892-6066</h1></div>
+            <div class="col-md-3 header-right footer-bottom">
+                <ul>
+                    <li>
+                        <a href="#" class="use1" data-toggle="modal" data-target="#myModal4"><span>Login</span></a>
+
+                    </li>
+                    <li><a class="fb" href="#"></a></li>
+                    <li><a class="twi" href="#"></a></li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!-- //header-bot -->
+    <!-- banner -->
+    <div class="ban-top">
+        <div class="container">
+            <div class="top_nav_left">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse menu--shylock" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav menu__list">
+                                <li class="active menu__item menu__item--current">@Html.ActionLink("HOME", "Index", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" }) <span class="sr-only">(current)</span></li>
+                                <li class=" menu__item">
+                                    @Html.ActionLink("ABOUT US", "About", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+
+                                </li>
+                                <li class=" menu__item">
+                                    @Html.ActionLink("CONTACT US", "Contact", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+                                </li>
+                                @*<li class=" menu__item">
+                                        @Html.ActionLink("QUESTIONNARE", "Questionnare", "Admin", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+                                    </li>*@
+                                @*<li class=" menu__item">
+                                        @Html.ActionLink("Manage Caretaker", "ManageCaretaker", "Admin", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+                                    </li>*@
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div>
+        @RenderBody()
+        
+    </div>
+
+    <!-- footer -->
+    <div class="footer">
+
+        <div class="container">
+
+            <div class="col-md-3 header-right footer-left">
+                <h2><img class="footerimg submit" onclick="location.href ='@Url.Action("Index", "Home")'" src="~/images/logo.jpg" alt="tranquilcarelogo" /></h2>
+                <ul>
+                    <li><a class="fb" href="#"></a></li>
+                    <li><a class="twi" href="#"></a></li>
+                </ul>
+            </div>
+            <div class="col-md-9 footer-right">
+                <div class="clearfix"></div>
+                <div class="sign-grds">
+
+                    <div class="col-md-2 sign-gd-two"></div>
+                    <div class="col-md-6 sign-gd-two">
+                        <h4>Tranquil Care Inc.</h4>
+                        Address : 240 Duncan Mill Rd , Ste 501, <br><span>Toronto ON-M3B 3S6, Canada.</span>
+
+                    </div>
+                    <div class="col-lg-4 sign-gd-two" style="margin-bottom: 5px;">
+                        <p>Email : <a href="mailto:Info@tranquilcare.ca">Info@tranquilcare.ca</a><br></p>
+                        <p>Fax : 416 960 1042<br></p>
+                        <p>Free Phone : +1 800 892 6066   </p>
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <p class="copy-right" style="margin-top: 5px;background-color:#000">© 2018 Tranquil Care Inc. All rights reserved | Design by <a href="http://nirasystems.com/" class="h4-label" target="_blank">NIRA Systems</a></p>
+
+    </div>
+    <!-- //footer -->
+    <!-- login -->
+    <script>
+		$(document).ready(function () {
+			$('.image-toggler').click(function () {
+				$('.image-toggle').hide();
+				$($(this).attr('data-image-id')).show();
+			});
+			$('#signupuser').click(function () {
+				window.location.href = "../PublicUser/UserRegistration";
+			});
+			$('#signupcaretaker').click(function () {
+				window.location.href = "../CareTaker/CareTakerRegistration";
+			});
+		});
+
+    </script>
+    <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="login-grids">
+                        <div class="login">
+                            <div class="login-right">
+                                <h3>Sign in with your account</h3>
+                                <form>
+                                    <div class="sign-in">
+                                        <h4>Email :</h4>
+                                        <input type="text" value="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Type here';}" required="">
+                                    </div>
+                                    <div class="sign-in">
+                                        <h4>Password :</h4>
+                                        <input type="password" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" required="">
+                                        <a href="#">Forgot password?</a>
+                                    </div>
+                                    <div class="single-bottom">
+                                        <input type="checkbox" id="brand" value="">
+                                        <label for="brand"><span></span>Remember Me.</label>
+                                    </div>
+                                    <div class="sign-in">
+                                        <input type="submit" value="SIGNIN">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="login-bottom">
+                                <h3>Sign Up</h3>
+                                <div class="sign-in user">
+                                    <input id="signupuser" class="btn btn-primary bouton-image monBouton" type="submit" value="Create User">
+                                </div>
+                                <br />
+                                <div class="sign-in caretaker">
+                                    <input id="signupcaretaker" class="btn btn-primary bouton-image monBouton" type="submit" value="Create Caretaker">
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <p>By logging in you agree to our <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //login -->
+</body>
+</html>

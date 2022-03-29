@@ -1,0 +1,49 @@
+﻿
+@model Nirast.Pcms.Web.Models.AdminSchedulingDetails
+<div class="form-group col-md-12 padding-top-15">
+    <div class="col-md-6">
+        @Html.Label("Booking Date", new { @class = "control-label labelStyle bold-heading" })
+        @*@Html.DisplayFor(modelIte => modelIte.BookingDate, "{dd/MM/yyyy}", new { @class = "col -md-6 control-label labelStyle" })*@
+        <label class="col-md-6 form-control labelStyle">@Model.BookingDate</label>
+    </div>
+    <div class="col-md-6">
+
+        @Html.Label("Client", new { @class = "control-label labelStyle bold-heading" })
+        @Html.DisplayFor(modelIte => modelIte.Client, new { @class = "col-md-6 form-control labelStyle" })
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="col-md-6">
+        @Html.Label("Caregiver", new { @class = "control-label labelStyle bold-heading" })
+        @Html.DisplayFor(modelIte => modelIte.Caretaker, new { @class = "col-md-6 form-control labelStyle" })
+    </div>
+    <div class="col-md-6">
+        @Html.Label("Start Date", new { @class = "control-label labelStyle bold-heading" })
+        @Html.DisplayFor(modelIte => modelIte.StartDate, new { @class = "col-md-6 form-control labelStyle" })
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="col-md-6">
+        @Html.Label("End Date", new { @class = "control-label labelStyle bold-heading" })
+        @Html.DisplayFor(modelIte => modelIte.EndDate, new { @class = "col-md-6 form-control labelStyle" })
+        @*@Html.DisplayFor(modelIte => modelIte.BookingStartTime, new { @class = "col-md-6 control-label labelStyle" })*@
+    </div>
+    <div class="col-md-6">
+        @Html.Label("Work Mode", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col -md-6 form-control labelStyle">@Model.WorkMode</label>
+
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="col-md-6">
+        @Html.Label("Time Shift", new { @class = "control-label labelStyle bold-heading" })
+        <label class="col -md-6 form-control labelStyle">@Model.TimeShift</label>
+    </div>
+  
+</div>
+
+
+

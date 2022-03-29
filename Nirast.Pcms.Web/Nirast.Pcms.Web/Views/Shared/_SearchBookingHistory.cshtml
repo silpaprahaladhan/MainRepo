@@ -1,0 +1,197 @@
+﻿@using Nirast.Pcms.Web.Models
+@model IEnumerable<Nirast.Pcms.Web.Models.UserBookingInvoiceReport>
+
+<div>
+    <div class="filterable table-responsive">
+        <input type="hidden" id="hdnCTId" />
+        <input type="hidden" id="hdnSTId" />
+        <table id="tableBookingHistory" class="table table-borderless table-striped table-earning padding-top-10">
+            <thead>
+                <tr>
+                    <th>Booking Date</th>
+                    <th>User</th>
+                    <th>Caregiver</th>
+                    <th>Start Date Time</th>
+                    <th>End Date Time</th>
+                    <th>Service</th>
+                    <th>Paying Rate</th>
+                    <th>Action</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                <tr>
+                    @* <td onclick="showBookingDetails('@item.BookingId')">@item.BookingDateTime.ToString("dd-MMM-yyyy")</td>*@
+                    <td onclick="showBookingDetails('@item.BookingId')">@item.BookingDateTime.ToString("dd-MMM-yyyy")</td>
+                    <td onclick="showBookingDetails('@item.BookingId')">@item.UserName</td>
+                    <td onclick="showBookingDetails('@item.BookingId')">@item.CareTakerName</td>
+                    <td onclick="showBookingDetails('@item.BookingId')">@item.StartDateTime.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) @item.StartDateTime.ToString("h:mm tt")</td>
+                    <td onclick="showBookingDetails('@item.BookingId')">@item.EndDateTime.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) @item.EndDateTime.ToString("h:mm tt")</td>
+                    <td onclick="showBookingDetails('@item.BookingId')">@item.Service</td>
+                    <td onclick="showBookingDetails('@item.BookingId')">@item.Symbol @item.ServiceRate /hr</td>
+                    <td><button class="btn btn-xs btn-primary" title="View Details" data-toggle="modal" onclick="showBookingDetails('@item.BookingId')"><span class="fa fa-eye"></span></button></td>
+                   
+
+                    @*<td>
+
+            @if ((Enums.BookingStatus)item.BookingStatus == Enums.BookingStatus.Completed || (Enums.BookingStatus)item.BookingStatus == Enums.BookingStatus.PendingPayment)
+            {
+                <button class="btn btn-info btn-dashboard" title="View Invoice" onclick="viewSchedule('@(item.InvoicePath)')">
+                    View Invoice
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-info btn-dashboard" title="View Invoice" onclick="viewSchedule('@(item.InvoicePath)')" disabled>
+                    View Invoice
+                </button>
+            }
+        </td>*@
+                </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="bookingDetailDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content panel">
+            <div class="modal-header panel-heading padding-10">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Booking Details</h4>
+            </div>
+            <div id="bookingDetail" class="modal-body no-padding">
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-xs btn btn-primary " data-dismiss="modal">Close</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="spinner">
+
+</div>
+
+<div class="modal fade" id="modal-cancel">
+    <div class="modal-dialog">
+        <div class="modal-content panel">
+            <div class="modal-header panel-heading padding-10">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Reject Booking Details</h4>
+            </div>
+            <div class="modal-body">
+                Booking will be Rejected. Are you sure to Reject?
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="cancelbooking()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal-invoice">
+    <div class="modal-dialog" style="width: 80%">
+        <div class="modal-custom">
+            <div class="panel panel-group panel-success">
+                <div class="panel-heading" style="padding:10px 15px">
+                    <h4 class="modal-title"> Invoice <span class="fa fa-close float-right" data-dismiss="modal"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @*<div class="row">
+                                <div class="col-md-12" style="margin-top:5px;">
+                                    <label class=" label-style no-padding">Email ID</label><span class="mandatoryField">*</span>
+                                    @Html.TextBox("EmailTxt", new { @class = "form-control labelStyle" })
+                                    <input type="hidden" id="hdnSearchInputId" name="hdnSearchInputId" />
+
+                                    <button class="btn btn-primary" onclick="SendEmail()" value="" id="SendMail" style="margin-bottom: inherit;margin-left: 15px;">Send</button>
+                                    <span class="col-md-12 no-padding labelStyle info" title="" style="margin-bottom:10px;">Report will be sent to the above Email ID</span>
+                                </div>
+                            </div>*@
+                        <div id="policyContent" class="policyContent" type="text" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function setOfficeStaffId(userId, status) {
+        debugger;
+        $('#hdnCTId').val(userId);
+        $('#hdnSTId').val(status);
+
+    }
+    function cancelbooking() {
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/CancelBookingStatus",
+            data: { userId: $('#hdnCTId').val(), status: $('#hdnSTId').val() },
+            success: function () {
+                window.location.reload();
+            }
+        });
+    }
+
+    function showBookingDetails(bookingId) {
+        debugger;
+        showProgress();
+        $.ajax({
+            url: "../Admin/UserBookingDetails/",
+            data: {
+                bookingId: bookingId
+            },
+            success: function (feed) {
+                $('#bookingDetail').html(feed);
+                $('#bookingDetailDialog').modal('show');
+                spinnerVisible = true;
+                hideProgress();
+            },
+            error: function (feed) {
+                spinnerVisible = true;
+                hideProgress();
+                console.log(feed.responseText);
+                logError(feed.statusText + ' - Error occurred while showing Notification details. Function: showNotificationDetails(bookingId). Page: _PublicUserNotification.cshtml');
+                //alert('Some error has occurred. Please try again after some time.');
+            }
+        });
+    }
+
+    function viewSchedule(bookingId,action) {
+
+        var src = '../Reports/SavePublicUserInvoiceReport.aspx?';
+        src = src + "bookingId=" + bookingId;
+        src = src + "&action=" + action;
+        $("#policyContent").html('<iframe src="' + src + '" style="width: 100%; height: 700px" onload="hideProgress()"></iframe>');
+        $('#modal-invoice').modal('toggle');
+
+    }
+
+    $('#tableBookingHistory').DataTable({
+        "pagingType": "full_numbers",
+
+    });
+</script>

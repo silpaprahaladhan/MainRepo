@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.WorkShiftViewModel>
+<div class=" table--no-card table-responsive">
+    <input type="hidden" id="hiddenWork" />
+    <table id="WorkShiftList" class="table table-borderless table-striped table-earning padding-top-10">
+        <thead>
+            <tr>
+                <th class="label_width">Work Shift</th>
+                <th>Show Resident's Name</th>
+                <th>Invoice Separately</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td onclick="editWorkShiftDetails(@item.ShiftId,'@item.ShiftName','@item.ShowResidentName.ToString().ToLower()','@item.IsSeparateInvoice.ToString().ToLower()')">@item.ShiftName</td>
+                        <td onclick="editWorkShiftDetails(@item.ShiftId,'@item.ShiftName','@item.ShowResidentName.ToString().ToLower()','@item.IsSeparateInvoice.ToString().ToLower()')">@(item.ShowResidentName ? "Yes" : "No")</td>
+                        <td onclick="editWorkShiftDetails(@item.ShiftId,'@item.ShiftName','@item.ShowResidentName.ToString().ToLower()','@item.IsSeparateInvoice.ToString().ToLower()')">@(item.IsSeparateInvoice ? "Yes" : "No")</td>
+                        <td>
+                            @if (ViewBag.AllowEdit)
+                            {
+                                <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" onclick="editWorkShiftDetails(@item.ShiftId,'@item.ShiftName','@item.ShowResidentName.ToString().ToLower()','@item.IsSeparateInvoice.ToString().ToLower()')" data-target="#modal-default"><span class="fa fa-edit"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-primary" title="Modify" disabled><span class="fa fa-edit"></span></button>
+                                </div>
+                            }
+
+                            @if (ViewBag.AllowDelete)
+                            {
+                                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" onclick="getID(@item.ShiftId)" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="modal-delete" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Delete Workshift</h4>
+            </div>
+            <div class="modal-body">
+                Record will be deleted from the system. Are you sure you want to delete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteWorkshift()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function getID(shiftId) {
+       
+        $('#hiddenWork').val(shiftId)
+    }
+    function deleteWorkshift() {
+   
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/DeleteWorkShift",
+            data: { shiftID: $('#hiddenWork').val() },
+            success: function (data) {
+                alert(data)
+                window.location.reload();
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Deletingcountry. Function: deleteUser(). Page: Country.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+</script>

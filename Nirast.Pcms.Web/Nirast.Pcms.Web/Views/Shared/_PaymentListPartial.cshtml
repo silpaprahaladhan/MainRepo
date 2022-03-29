@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.PaymentHistory>
+
+<div class=" table--no-card m-b-40 table-responsive">
+    <input type="hidden" id="hdnCTId" />
+    <table class="table table-borderless table-striped table-earning padding-top-10" id="History">
+        <thead>
+            <tr>
+                <th>Paid Date</th>
+                <th>Paid Amount</th>
+                <th>Invoice Number</th>
+                <th>Booking Date</th>
+                <th>Category</th>
+                <th>Service</th>
+                <th>Method</th>
+                <th>Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.PaidDate.ToString("dd-MMM-yyyy, hh:mm tt")</td>
+                        <td>@item.Symbol @item.PaidAmount.ToString("0.00")</td>
+                        <td>@item.InvoiceNumber</td>
+                        <td>@item.BookingDate.ToString("dd-MMM-yyyy, hh:mm tt")</td>
+                        <td>@item.CaretakerType</td>
+                        <td>@item.ServiceName</td>
+                        <td>@item.Method</td>
+                        <td>@item.Status</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+

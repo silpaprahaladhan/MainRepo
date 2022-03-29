@@ -1,0 +1,142 @@
+﻿@model Nirast.Pcms.Web.Models.PayPalAccount
+@{
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<script src="~/js/CustomScript.js"></script>
+@Styles.Render("~/css/CustomStyles.css")
+
+<div class="container">
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="row profile-details">
+                    @{
+                        if (ViewBag.Error != null)
+                        {
+                            <div><p class="alert alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+                        }
+                        else
+                        {
+                            <div class="equal-height-panels" id="EditProfile">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div>
+                                        @using (Html.BeginForm("AddPayPalAccount", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                        {
+                                            Html.EnableClientValidation();
+                                            if (TempData["Userupdate"] != null)
+                                            {
+                                                <p class="alert alert-success statusmessage" id="successMessage">@TempData["Userupdate"]</p>
+                                            }
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4>PayPal Settings</h4>
+                                                </div>
+                                                <div class="panel-body" style="padding:7px;">
+
+                                                    <div class="col-lg-12 col-md-12 col-sm-12">
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                @Html.HiddenFor(model => model.PaypalId)
+                                                                <label class=" label-style">Client ID : <span class="mandatoryField">*</span></label>
+                                                                @Html.TextBoxFor(model => model.ClientId, "", new { @class = "form-control labelStyle  ", @Placeholder = "Company Name" })
+                                                                @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Secret Key : <span class="mandatoryField">*</span></label>
+                                                                @Html.TextBoxFor(model => model.SecretKey, "", new { @class = "form-control labelStyle", @Placeholder = "Tag line " })
+                                                                @Html.ValidationMessageFor(model => model.SecretKey, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+
+                                                    </div>
+                                                    <div class="col-md-12 text-center padding-top-10">
+                                                        @if (Model == null)
+                                                        {
+                                                            <input type="submit" class="btn btn-primary" value="SAVE" name="update">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="submit" class="btn btn-primary" value="UPDATE" name="update">
+                                                        }
+                                                        <input type="button" class="btn btn-primary " onclick="cancel()" value="CANCEL" name="Cancel" style="margin-left:10px;">
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <style>
+                .editButton {
+                    margin: 5px 10px;
+                }
+
+                .btn-bs-file {
+                    position: relative;
+                }
+
+                    .btn-bs-file input[type="file"] {
+                        position: absolute;
+                        top: -9999999;
+                        filter: alpha(opacity=0);
+                        opacity: 0;
+                        width: 0;
+                        height: 0;
+                        outline: none;
+                        cursor: inherit;
+                    }
+
+                .register {
+                    color: lightslategrey;
+                }
+
+                .box-body {
+                    padding: 10px;
+                }
+
+                .logo_size {
+                    min-height: 100px;
+                    width: auto;
+                }
+
+                @@media (min-width: 200px) {
+                    .userProfile-style {
+                        width: 50%;
+                    }
+                }
+
+                @@media (max-width: 340px) {
+                    .updateButton {
+                        float: unset;
+                        margin-bottom: 12px;
+                    }
+                }
+            </style>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    function cancel() {
+        window.location.reload();
+    }
+
+</script>

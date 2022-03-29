@@ -1,0 +1,232 @@
+﻿@model Nirast.Pcms.Web.Models.CareTakerRegistrationViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .HeadingStyle {
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+
+    .imageSize {
+        width: 262px;
+        height: 174px;
+    }
+</style>
+<script>
+    function readCaretakerImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgCaretaker')
+                    .attr('src', e.target.result);
+                //.width(150)
+                //.height(200);
+                $('#ProfilePic').val(e.target.result.split(',')[1]);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+@*<div class="single">*@
+<div class="container">
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="row panel-body" style="border:solid;border-color:lightgray;border-width:thin;margin-top:20px;">
+                    <div class="row">
+                        @*<div class="col-md-3 single-right-left">
+                                <img class="img-responsive imageSize" src="~/images/1.jpg" alt=" " />
+                            </div>*@
+                        <div class="col-md-3 single-right-left ">
+                            <div class="newsright profile-pic image_size">
+                                @if (Model != null)
+                                {
+                                    if (Model.ProfilePicPath != null)
+                                    {
+                                        <img src="@Model.ProfilePicPath" class="image-style image_height" />
+                                    }
+                                }
+                                else
+                                {
+                                    <img src="~/images/NOImage.jpg" class="image-style image_height" />
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-8 ">
+                            <h3 class="bars" style="margin-left:10px;color:#777">
+
+                                @Model.FirstName  @Model.LastName
+
+                            </h3>
+                            @{
+                                string finalService = string.Empty;
+                                var services = Model.CareTakerServices;
+                                if (Model.CareTakerServices != null)
+                                {
+                                    if (Model.CareTakerServices.Count > 0)
+                                    {
+                                        foreach (var service in Model.CareTakerServices)
+                                        {
+                                            finalService += service.ServiceName + ",";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        finalService = "NIL";
+                                    }
+                                }
+
+
+                                finalService = finalService.TrimEnd(',');
+                                string finalLocation = string.Empty;
+                                var location = Model.Location;
+                                if (location == null)
+                                {
+                                    finalLocation = "NIL";
+                                }
+                                else
+                                {
+                                    finalLocation = location;
+                                }
+
+                            }
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="label-style" for="Gender">Rate/Hr</label>
+                                            <p class="form-control">@Model.CurrencySymbol @ViewData["ServiceRate"] /hr</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="label-style" for="Gender">Experience</label>
+                                            <p class="form-control">@Model.TotalExperience Yrs </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="label-style" for="Gender">Country</label>
+                                            <p class="form-control">@Model.Country</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="label-style" for="Gender">State</label>
+                                            <p class="form-control">@Model.State</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="label-style" for="Gender">City</label>
+                                            <p class="form-control">@Model.City</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="label-style" for="Gender">Location</label>
+                                            <p class="form-control">@Model.Location </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="">
+                                    <p>
+                                        <b>@Html.DisplayFor(modelItem => modelItem.Gender, new { })</b> | <b>@finalService</b>  | <b>@finalLocation</b> |<b>@Html.DisplayFor(modelItem => modelItem.City, new { })</b>
+                                    </p>
+                                </div>
+
+
+                                <p>Total Experience : <b> @Html.DisplayFor(modelItem => modelItem.TotalExperience, new { }) Yrs </b></p>
+
+                                <p>Bookig Start : <b>@ViewData["dateFrom"] @ViewData["timeFrom"]</b> </p>
+
+                                <p>Booking End : <b>@ViewData["dateTo"] @ViewData["timeTo"]</b>  </p>
+                                <p>Rate : <b>@Model.CurrencySymbol @ViewData["ServiceRate"] /hr </b>  </p>
+
+                                <p>Total hours : <b>@ViewData["totalhours"]</b>  Holiday hours: <b>@ViewData["totalholidayhours"]</b>  </p>
+
+                                <p>Total Amount : <b>@Model.CurrencySymbol @ViewData["rate"]</b>  </p>*@
+
+                        </div>
+                    </div>
+                    <div class="clearfix"> </div>
+
+                    <div class="bootstrap-tab animated wow slideInUp animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: slideInUp;">
+                        <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                            <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
+                                <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">About</a></li>
+                                <li role="presentation"><a href="#qualification" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">Qualification</a></li>
+                                <li role="presentation"><a href="#experience" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">Services</a></li>
+                                @*<li role="presentation"><a href="#services" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">Services</a></li>*@
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade in active bootstrap-tab-text" id="home" aria-labelledby="home-tab">
+                                    <p>
+                                        <span style="color: #555;font-size:1em">
+                                            @Html.DisplayFor(modelItem => modelItem.AboutMe, new { })
+                                        </span>
+                                    </p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="qualification" aria-labelledby="profile-tab">
+                                    <table class="table table-hover table-condensed" style="margin-top:15px">
+
+                                        @foreach (var qualification in Model.CareTakerQualifications)
+                                        {
+                                            <tr>
+                                                <td class="col-md-3 td-padding-zero caretakerDetail" style="font-size:1em;color: #555;">
+                                                    @qualification.QualificationName
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                    <div class="clearfix"> </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="experience" aria-labelledby="profile-tab">
+                                    <table class="table table-hover table-condensed" style="margin-top:15px">
+
+                                        @foreach (var service in Model.CareTakerServices)
+                                        {
+                                            <tr>
+                                                <td class="col-md-3 td-padding-zero caretakerDetail" style="font-size:1em;color: #555;">
+                                                    @service.ServiceName
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                    <div class="clearfix"> </div>
+                                </div>
+                                <div class="row newsright panel-body p-b-0 text-center">
+                                  
+                                        <label onclick="location.href ='@(Url.Action("Search", "Home", new { @serviceId = Model.ServiceId }))'" class="btn btn-primary margin-right-15">Back</label>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .caretakerDetail {
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
+

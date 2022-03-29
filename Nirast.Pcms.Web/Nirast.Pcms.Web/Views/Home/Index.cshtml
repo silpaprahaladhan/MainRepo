@@ -1,0 +1,134 @@
+﻿@model List<Nirast.Pcms.Web.Models.ServicesViewModel>
+
+@using (Html.BeginForm("Search", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+   
+<div class="carousel slide" data-ride="carousel" id="myCarousel">
+    <ul class="carousel-indicators">
+        <li class="active" data-target="#myCarousel" data-slide-to="0"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ul>
+    <div class="carousel-inner">
+        <div class="item active">
+            <img class="img-responsive" src="~/images/Banner1.png" alt="Banner1" />
+        </div>
+        <div class="item">
+            <img class="img-responsive" src="~/images/Banner2.png" alt="Banner2" />
+        </div>
+        <div class="item">
+            <img class="img-responsive" src="~/images/Banner3.png" alt="Banner3" />
+        </div>
+    </div>
+    <a href="#myCarousel" class="left carousel-control" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a href="#myCarousel" class="right carousel-control" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+</div>
+
+
+<div class="new_arrivals">
+    <div id="services" class="container">
+        <h3><span>our </span>services</h3>
+        <div class="contentAlign">
+            <p>
+                Tranquil Care is here to help you, ensuring that every individual irrespective of their physical, social or psychological condition have the right to be treated with dignity and respect and to be supported to maintain choice and control over their own lives.
+                It’s our privilege to create care and support programme for each individual and their family to meet their specific wishes, goals and aspirations through our multi-disciplinary approach in all stages of Life.
+            </p>
+        </div>
+        @{var i = 1;
+            var count = 1;
+        }
+        @if (Model != null)
+        {
+            foreach (var service in Model)
+            {
+                if (i == 1)
+                {
+                    @Html.Raw("<div class='new_grids'>");
+                }
+
+                <div class="col-lg-4 product-men no-pad-men">
+                    <div class="men-pro-item simpleCart_shelfItem" onclick="location.href='@Url.Action("PublicUserBooking", "PublicUser", new { serviceId = service.ServiceId })'">
+                        @*<div class="men-pro-item simpleCart_shelfItem" onclick="location.href='@Url.Action("ServiceDescription", "Home", new { serviceId = service.ServiceId})'">*@
+                        <div class="men-thumb-item">
+
+                            <img src="data:image;base64,@((service.ServicePicture != null) ? @System.Convert.ToBase64String(service.ServicePicture) : @System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg"))))" alt="" class="pro-image-front">
+                            <img src="data:image;base64,@((service.ServicePicture != null) ? @System.Convert.ToBase64String(service.ServicePicture) : @System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg"))))" alt="" class="pro-image-back">
+                            <div class="men-cart-pro">
+                                @*<div class="inner-men-cart-pro">
+                                        @Html.ActionLink("Find People", "Search", "Home", new { serviceId = service.ServiceId }, htmlAttributes: new { serviceId = service.ServiceId, @class = "link-product-add-cart" })
+                                    </div>*@
+                            </div>
+
+                        </div>
+                        <div class="item-info-product ">
+                            <h4 style="cursor:pointer;word-break:break-all"><a>@service.Name</a></h4>
+                        </div>
+                    </div>
+                </div>
+                if (i == 3 || Model.Count == count)
+                {
+                    @Html.Raw("<div class='clearfix'></div></div> ");
+                    i = 0;
+                }
+                i = i + 1;
+                count = count + 1;
+
+            }
+        }
+
+    </div>
+</div>
+
+<!-- //content -->
+<!-- content-bottom -->
+<hr />
+<div class="content-bottom">
+    <h2 class="testimonialHeader">What Clients Say</h2>
+    @{Html.RenderAction("TestimonialViewPartial");}
+    <div class="clearfix"></div>
+</div>
+<!-- //content-bottom -->
+}
+
+<script type="text/javascript" src="~/js/pignose.layerslider.js"></script>
+<script type="text/javascript">
+    //<![CDATA[
+    $(window).load(function () {
+        $('#visual').pignoseLayerSlider({
+            play: '.btn-play',
+            pause: '.btn-pause',
+            next: '.btn-next',
+            prev: '.btn-prev'
+        });
+    });
+    //]]>
+
+    $(document).ready(function ($) {
+        //for scrolling from other page
+        if ($(window.location.hash).length) {
+            $('html,body').animate({
+                scrollTop: $(window.location.hash).offset().top
+            }, 1000);
+            window.location.hash = '';
+        }
+
+        $('.men-pro-item').hover(
+            function () {
+                $(this).animate({
+                    marginTop: "-=1%"
+                }, 200);
+            },
+            function () {
+                $(this).animate({
+                    marginTop: "0%"
+                }, 200);
+            }
+        );
+    });
+
+
+</script>

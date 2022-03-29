@@ -1,0 +1,197 @@
+﻿@model  Nirast.Pcms.Web.Models.PaymentAdvancedSearch
+<head>
+ 
+</head>
+<div class="panel-body">
+    @using (Html.BeginForm("SearchPaymentHistory", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "searchForm" }))
+    {
+    <div class="col-md-12 innerDiv">
+        <div class="row">
+            <div class="col-md-4 col-lg-4">
+                <label class="label-style">Category :</label>
+                @Html.DropDownListFor(model => model.Category, new SelectList(ViewBag.Category, "Value", "Text"), "--Category Type--", new { @class = "form-control  col-md-12  labelStyle" })
+            </div>
+            <div class="col-md-4 col-lg-4">
+
+                <label class="label-style">Caregiver:</label>
+                <select id="CareTakerId" name="CareTakerId" class="form-control  col-md-12  labelStyle">
+                    @*<option value="" disabled selected>--Select--</option>*@
+                </select>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <label class="label-style">Service :</label>
+                @Html.DropDownListFor(model => model.Service, new SelectList(ViewBag.Service, "Value", "Text"), "--Services--", new { @class = "form-control col-md-12 labelStyle" })
+                @Html.HiddenFor(model => model.Year)
+                @Html.HiddenFor(model => model.Month)
+            </div>
+       
+        </div>
+        <div class="row">
+            <div class="col-md-4  col-lg-4">
+                <label class="label-style">Date Range :</label>
+                @Html.DropDownList("ddlSearchRange", ViewData["listPaySearch"] as SelectList, new { @class = "form-control col-md-3 labelStyle", autocomplete = "off" })
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <label id="lblfrmdate" class="label-style">From Date :</label>
+                @Html.TextBox("FromDate", "", new { @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtFromDate", @placeholder = "From Date", @onchange = "dateRangeValidation(this.value)" })
+
+                <label id="lblyear" class="label-style">Year :</label>
+                @Html.DropDownList("ddlyear", ViewData["listYears"] as SelectList, new { @class = "form-control col-md-12 labelStyle", @id = "ddlYearly",@onchange = "setYear()"})
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <label id="lblmonth" class="label-style">Month :</label>
+                @Html.DropDownList("ddlMonth", ViewData["listMonths"] as SelectList, new { @class = "form-control col-md-12 labelStyle", @id = "ddlMonthly", @onchange = "setMonth()" })
+                <label id="lbltodate" class="label-style">To Date :</label>
+                @Html.TextBox("ToDate", "", new { @class = "datePickerControlStyle datetimepicker form-control labelStyle", @id = "txtToDate", @placeholder = "To Date", @onchange = "dateRangeValidation(this.value)" })
+            </div>
+
+        </div>
+        <div class="form-group">
+
+        </div>
+
+
+
+        @*<div id="Result">
+
+        </div>*@
+    </div>
+        <div class="col-md-12 text-center" style="padding-top: 15px; ">
+
+
+            <button type="button" id="paymentSearchbtn" class="btn btn-primary min-btn">
+                SEARCH
+            </button>
+
+
+            <button type="button" class="btn btn-primary min-btn m-l-10" onclick="reload()">
+                CANCEL
+            </button>
+
+        </div>
+    }
+</div>
+        <div id="spinner">
+        
+        </div>
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            url: "/Client/LoadCategory",
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            success: function (result) {
+
+                $("#ddServiceType").html(""); // clear before appending new list
+                $("#ddServiceType").append($('<option></option>').val("").html("--Select--"));
+                $.each($.parseJSON(result), function (i, care) {
+                    $("#ddServiceType").append($('<option></option>').val(care.CategoryId).html(care.Name));
+                })
+
+            },
+            error: function (data) { 
+                logError(data.statusText + ' - Error occurred while Loading Caregiver Type. Function:SendEmail(). Page: _PaymentAdvancedSearchPartial.cshtml');
+                //alert('Some network error gas occurred. PLease try again after some time.');
+    }
+        });
+    });
+
+    $('#Category').change(function () {
+        if ($('#Category option:selected').text() != '' && $('#Category option:selected').text() != '--Select--') {
+            var categoryId = $('#Category').val();
+            $.ajax({
+                url: '/Client/LoadCaretakersByCategory',
+                type: "POST",
+                data: {
+                    categoryId: categoryId
+                },
+                success: function (data) {
+                    $("#CareTakerId").html(""); // clear before appending new list
+                    $("#CareTakerId").append(
+                        $('<option></option>').val("").html("--Select--"));
+                    $.each($.parseJSON(data), function (i, care) {
+                        $("#CareTakerId").append(
+
+                            $('<option></option>').val(care.CaretakerId).html(care.CareTakerName));
+
+                    });
+                    //if (selectedEvent != null) {
+                    //    $('#CareTakerId').val(selectedEvent.CategoryId);
+                    //}
+                    //else {
+                    //    $('#CareTakerId').val("--Select--");
+                    //}
+
+
+                },
+            });
+        }
+    })
+ 
+
+    //$('#Category').change(function () {
+    //    if ($('#Category option:selected').text() != '' && $('#Category option:selected').text() != '--Select--') {
+    //        var categoryId = $('#Category').val();
+    //        $.ajax({
+    //            url: '/Client/LoadCaretakersByCategory',
+    //            type: "GET",
+    //            dataType: "JSON",
+    //            data: { categoryId: categoryId },
+    //            success: function (data) {
+    //                $("#CareTakerId").html(""); // clear before appending new list
+    //                $("#CareTakerId").append(
+    //                      $('<option></option>').val("").html("--Select--"));
+    //                $.each($.parseJSON(data), function (i, care) {
+    //                    $("#CareTakerId").append(
+
+    //                        $('<option></option>').val(care.CaretakerId).html(care.CareTakerName));
+
+    //                });
+    //                //if (selectedEvent != null) {
+    //                //    $('#CareTakerId').val(selectedEvent.CategoryId);
+    //                //}
+    //                //else {
+    //                //    $('#CareTakerId').val("--Select--");
+    //                //}
+                   
+
+    //            },
+    //        });
+    //    }
+    //})
+
+    function LoadCaretakersByCategoryAndLocation() {
+            var categoryId = $('#Category').val();
+            $.ajax({
+                url: '/Client/LoadCaretakersByCategoryAndLocation',
+                type: "POST",
+                data: {
+                    categoryId: categoryId,
+                    countryId: $('#ddlCountry1').val(),
+                    stateId: $('#ddlStates1').val(),
+                    cityId: $('#ddlCity1').val()
+                },
+                success: function (data) {
+                    $("#CareTakerId").html(""); // clear before appending new list
+                    $("#CareTakerId").append(
+                        $('<option></option>').val("").html("--Select--"));
+                    $.each($.parseJSON(data), function (i, care) {
+                        $("#CareTakerId").append(
+
+                            $('<option></option>').val(care.CaretakerId).html(care.CareTakerName));
+
+                    });
+                    //if (selectedEvent != null) {
+                    //    $('#CareTakerId').val(selectedEvent.CategoryId);
+                    //}
+                    //else {
+                    //    $('#CareTakerId').val("--Select--");
+                    //}
+
+
+                },
+            });
+    }
+</script>

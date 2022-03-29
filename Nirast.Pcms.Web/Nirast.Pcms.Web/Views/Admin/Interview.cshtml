@@ -1,0 +1,432 @@
+﻿@model Nirast.Pcms.Web.Models.SignatureModel
+
+@{
+    ViewBag.Title = "Interview";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<head>
+    @*<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>*@
+    <script src="~/Scripts/signature_pad.min.js"></script>
+    <script src="~/Scripts/SignaturePadInit.js"></script>
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+</head>
+<div class="container animsition" style="padding-bottom: 15px;">
+
+    <h3 class="h4-label">Manage Interview</h3>
+
+    <div class="row">
+        <div class="equal-height-panels">
+            <div class="ui segment">
+                <div id="dvMain" name="dvMain">
+                    <div class="clr"></div>
+                    <div class="col-md-12">
+                        @{
+                            if (ViewBag.Error != null)
+                            {
+                                <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+                            }
+                            else
+                            {
+                                <div class="signature-pad col-md-12">
+                                    <div style="padding-bottom: 50px;">
+                                        <div class="col-md-2 mid-align">
+                                            <label><strong>Choose policy:</strong></label>
+                                        </div>
+                                        <div class="col-md-4" style="margin-top: 7px;">
+                                            @{
+                                                if (ViewBag.AllowEdit)
+                                                {
+                                                    <input type="file" name="postedFiles" accept=".pdf" value="" id="myFile" />
+                                                }
+                                                else
+                                                {
+                                                    <div class="wrapper">
+                                                        <input type="file" name="postedFiles" value="" id="myFile" disabled />
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div id="DOC1"></div>
+                                    <div class="panel panel-group panel-success">
+                                        <div class="panel-heading"> <h4>Company Policy</h4></div>
+                                        <div class="panel-body">
+                                            <div id="policyContent" class="policyContent" type="text" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="label-style"><strong>Candidate Name:</strong></label><span class="mandatoryField">*</span>
+                                            <input id="txtCaretaker" class="form-control" type="text" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="label-style"><strong>Candidate Email:</strong></label><span class="mandatoryField">*</span>
+                                            <input id="txtCandidateEmail" class="form-control" type="email" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="label-style">Please sign below, if you agree to above terms and conditions.</label>
+
+                                            <div>
+                                                <canvas id="canvas1" class="panel panel-default signpad"></canvas>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="label-style" style="padding-left: 4px;margin-top:6px"><strong>Candidate Initial:</strong></label>
+                                            <input id="txtInitial" class="form-control" type="text" />
+
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="padT25">
+                                            @*<button type="button" class="btn btn-primary" onclick="clearCanvas()">Clear</button>*@
+                                            @{
+                                                if (ViewBag.AllowEdit)
+                                                {
+                                                    <button type="button" class="btn btn-primary" onclick="convertToImage()">Submit</button>
+                                                    <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                                }
+                                                else
+                                                {
+                                                    <div class="wrapper">
+                                                        <button type="button" class="btn btn-primary" onclick="convertToImage()" disabled>Submit</button>
+                                                        <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                        <input type="hidden" />
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="spinner">
+</div>@section Scripts {
+    <script src="~/Scripts/signature_pad.min.js"></script>
+    <script src="~/Scripts/SignaturePadInit.js"></script>
+    @*<script src="~/Scripts/jquery.form.js"></script>*@
+}
+@{
+    if (ViewBag.AllowView != null)
+    {
+        <script>
+            function clearCanvas() {
+                
+                $('#txtCaretaker').val('')
+                $('#txtCandidateEmail').val('')
+                $('#txtInitial').val('')
+                $('#myFile').val('')
+                $("#policyContent").hide();
+                var signaturePadWrappers = document.querySelectorAll('.signature-pad');
+
+                [].forEach.call(signaturePadWrappers, function (wrapper) {
+                    var canvas = wrapper.querySelector('canvas');
+                    var clearButton = wrapper.querySelector('.btn-clear-canvas');
+                    var hiddenInput = wrapper.querySelector('input[type="hidden"]');
+
+                    var signaturePad = new SignaturePad(canvas);
+
+                    // Read base64 string from hidden input
+                    var base64str = '';
+
+                    if (base64str) {
+                        // Draws signature image from data URL
+                        signaturePad.fromDataURL('data:image/png;base64,' + base64str);
+                    }
+                    signaturePad.onEnd = function () {
+                        // Returns signature image as data URL and set it to hidden input
+                        base64str = signaturePad.toDataURL().split(',')[1];
+                        hiddenInput.value = base64str;
+                    };
+                    clearButton.addEventListener('click', function () {
+                        // Clear the canvas and hidden input
+                        signaturePad.clear();
+                        hiddenInput.value = '';
+                    });
+                });
+
+
+            }
+
+    function convertToImage() {
+
+        var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+        var emailaddress = $('#txtCandidateEmail').val();
+        var candidateName = $('#txtCaretaker').val();
+        if ($('#txtCaretaker').val().length <= 0) {
+            alert('Please enter candidate name')
+            return false;
+        }
+        if ($("#myFile").val() == "") {
+            alert("Please select a file");
+            return false;
+        }
+        if (!filter.test(emailaddress) ) {
+            alert('Please enter a valid mail Id')
+            return false;
+        }
+        var can = document.getElementById('canvas1');
+        var ctx = can.getContext('2d');
+
+        //ctx.fillRect(50, 50, 50, 50);
+
+        var fileUpload = $("#myFile").get(0);
+        var files = fileUpload.files;
+        var fileData = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            fileData.append(files[i].name, files[i]);
+        }
+
+        var img = new Image();
+        $('#img1').attr("src", can.toDataURL());
+        showProgress();
+        $.ajax({
+
+            type: "POST",
+    url: '@Url.Action("CreatePDF", "Admin")',
+            data: {
+                caretakerName: $('#txtCaretaker').val(), toMail: $('#txtCandidateEmail').val(),
+                initial: $('#txtInitial').val(),
+                signatureString: can.toDataURL().split(',')[1], policyContent: $('#policyContent').text()
+            },
+            success: function (data) {
+                    spinnerVisible = true;
+                    hideProgress();
+                alert('Email Sent successfully');
+                window.location.reload();
+
+            },
+            error: function (data) {
+                spinnerVisible = true;
+                hideProgress();
+                logError(data.statusText + ' - Error occurred while Creating PDF. Function: convertToImage(). Page: Interview.cshtml');
+                        //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+        //document.body.appendChild(img);
+    }
+
+    function showPdf() {
+        var totalFiles = document.getElementById("postedFiles");
+        alert(totalFiles);
+    }
+
+    $(function () {
+        if (window.FileReader) {
+            $('#uploadResume').on('change', function (e) {
+                var file = e.target.files[0];
+                if (file.name.split('.')[1] == 'doc' || file.name.split('.')[1] == 'docx') {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var csv = reader.result.split(',');
+                        $('#policyContent').text(reader.result);
+                    }
+                    $("#Submit").prop("disabled", false);
+                    reader.readAsText(file);
+                }
+                else {
+                    e.target.value = '';
+                    $("#Submit").prop("disabled", true);
+                    alert("Only Pdf files are supported.");
+                }
+            });
+        } else {
+            console.log("no support");
+        }
+
+        $('#Submit').on('click', function (e) {
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Upload", "Admin")',
+                data: { fileContent: $('#policyContent').text() },
+                success: function () { alert("Document uploaded successfully"); },
+                error: function (data) {
+                    logError(data.statusText + ' - Error occurred while submitting. Function: $("#Submit").on("click", function (e)). Page: Interview.cshtml');
+                    alert(data);
+                }
+            });
+        });
+    });
+
+    $body = $("body");
+
+    $(document).on({
+        ajaxStart: function () { $body.addClass("loading"); },
+        ajaxStop: function () { $body.removeClass("loading"); }
+    });
+
+
+
+    $(document).ready(function () {
+
+        $("#myFile").change(function () {
+            if ($("#myFile").val() == "") {
+                alert("Please select a file");
+                return false;
+            }
+            var ext = $("#myFile").val().split('.').pop();
+            if (ext == 'pdf') {
+
+                var fileUpload = $("#myFile").get(0);
+                var files = fileUpload.files;
+                var fileData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+                $.ajax({
+                    url: '/Admin/Show',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    success: function (result) {
+                        $("#policyContent").html('<iframe src="@Url.Action("ShowDocument", "Admin", new { FilePath = "_FilePath" }) "'.replace("_FilePath", result.FileName) + ' style="width: 98%; height: 600px" ></iframe>');
+                        // $("#DOC1").show();
+                    },
+                    error: function (err) {
+                        logError(data.statusText + ' - Error occurred while Uploading. Function:  $("#myFile").change(function ()). Page: Interview.cshtml');
+                        //alert(err.statusText);
+                    }
+                });
+
+            }
+            else {
+
+                alert("Please select a pdf file");
+                $("#myFile").val('');
+                return false;
+            }
+        });
+
+
+        $("#btnUpload").click(function () {
+
+
+            if ($("#myFile").val() == "") {
+                alert("Please select a file");
+                return false;
+            }
+
+
+            var fileUpload = $("#myFile").get(0);
+            var files = fileUpload.files;
+            var fileData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+
+            $.ajax({
+                url: '/Admin/Show',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+                    $("#policyContent").html('<iframe src="@Url.Action("ShowDocument", "Admin", new { FilePath = "_FilePath" }) "'.replace("_FilePath", result.FileName) + ' style="width: 98%; height: 98%" ></iframe>');
+                    // $("#DOC1").show();
+                },
+                error: function (err) {
+                    logError(data.statusText + ' - Error occurred while uploading. Function: $("#btnUpload").click(function ()). Page: Interview.cshtml');
+                    //alert(err.statusText);
+                }
+            });
+        });
+    });
+
+        </script>
+    }
+}
+
+<style type="text/css">
+    .policyContent {
+        height: auto;
+        max-height: 600px;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        padding: 10px;
+        text-align: justify;
+    }
+
+    /*.btn:hover, .btn:focus, .btn.focus,
+     .login-btn {
+         background-color: #1c6db3;
+         color: white;
+         margin-top: -20px;
+     }*/
+
+    .mid-align {
+        padding: 7px 0;
+        color: #555;
+    }
+
+    body {
+        padding-bottom: 20px;
+    }
+
+    /* Set padding to keep content from hitting the edges */
+    .body-content {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Override the default bootstrap behavior where horizontal description lists
+                    will truncate terms that are too long to fit in the left column
+                 */
+    .dl-horizontal dt {
+        white-space: normal;
+    }
+
+    /* Set width on the form input elements since they're 100% wide by default */
+    input,
+    select,
+    textarea {
+        max-width: 280px;
+    }
+
+    .signature-pad > canvas {
+        display: block;
+        width: 300px;
+        height: 150px;
+        margin-bottom: 5px;
+    }
+
+    .loadingModal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, .8 ) url('../images/loader.gif') 50% 50% no-repeat;
+        pointer-events: none;
+    }
+
+    /* When the body has the loading class, we turn
+    the scrollbar off with overflow:hidden */
+    body.loading .loadingModal {
+        overflow: hidden;
+    }
+
+    /* Anytime the body has the loading class, our
+    modal element will be visible */
+    body.loading .loadingModal {
+        display: block;
+    }
+</style>

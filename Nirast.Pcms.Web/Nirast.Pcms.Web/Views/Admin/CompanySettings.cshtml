@@ -1,0 +1,305 @@
+﻿@model Nirast.Pcms.Web.Models.CompanyProfile
+@{
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<script src="~/js/CustomScript.js"></script>
+@Styles.Render("~/css/CustomStyles.css")
+
+<div class="container">
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="row profile-details">
+                    @{
+                        if (ViewBag.Error != null)
+                        {
+                            <div><p class="alert alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+                        }
+                        else
+                        {
+                            <div class="equal-height-panels" id="EditProfile">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div>
+                                        @using (Html.BeginForm("CompanySettings", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                        {
+                                            Html.EnableClientValidation();
+                                            if (TempData["Userupdate"] != null)
+                                            {
+                                                <p class="alert alert-success statusmessage" id="successMessage">@TempData["Userupdate"]</p>
+                                            }
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4>Company Settings</h4>
+                                                </div>
+                                                <div class="panel-body" style="padding:7px;">
+
+                                                    <div class="col-lg-9 col-md-9 col-sm-9">
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                @Html.HiddenFor(model => model.CompanyId)
+                                                                @*@Html.HiddenFor(model => model.ProfilePic)*@
+                                                                <label class=" label-style">Company Name : <span class="mandatoryField">*</span></label>
+                                                                @Html.TextBoxFor(model => model.CompanyName, "", new { @autocomplete = "off", @class = "form-control labelStyle  ", @Placeholder = "Company Name" })
+                                                                @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Tag Line : <span class="mandatoryField">&nbsp;</span></label>
+                                                                @Html.TextBoxFor(model => model.TagLine, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Tag line " })
+                                                                @Html.ValidationMessageFor(model => model.TagLine, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">@Resource.StreetName : <span class="mandatoryField">*</span></label>
+                                                                @Html.TextBoxFor(model => model.AddressLine, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = Resource.StreetName })
+                                                                @Html.ValidationMessageFor(model => model.AddressLine, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">Country : <span class="mandatoryField">*</span></label>
+                                                                @Html.DropDownListFor(model => model.CountryId, ViewData["CountryList"] as SelectList, "--Select--", new { @id = "ddlCountry", @class = "form-control labelStyle", @onchange = "GetStates()" })
+                                                                @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class="label-style">@Resource.State : <span class="mandatoryField">*</span></label>
+                                                                @Html.DropDownListFor(model => model.StateId, ViewData["States"] as SelectList, "--Select--", new { @id = "ddlStates", @class = "form-control labelStyle", @onchange = "GetCities()" })
+                                                                @Html.ValidationMessageFor(model => model.StateId, "", new { @class = "text-danger required" })
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">City : <span class="mandatoryField">*</span></label>
+                                                                @Html.DropDownListFor(model => model.CityId, new SelectList(ViewBag.City, "Value", "Text"), "--Select--", new { @id = "ddlCity", @class = "form-control labelStyle" })
+                                                                @Html.ValidationMessageFor(model => model.CityId, "", new { @class = " no-padding required" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label class=" label-style">@Resource.ZIPCode :<span class="mandatoryField">&nbsp;</span></label>
+                                                                @Html.TextBoxFor(model => model.Zipcode, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = @Resource.ZIPCode })
+                                                                @Html.ValidationMessageFor(model => model.Zipcode, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class=" label-style">Phone #1 : <span class="mandatoryField">*</span></label>
+                                                                @Html.TextBoxFor(model => model.PhoneNo1, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Phone #1" })
+                                                                @Html.ValidationMessageFor(model => model.PhoneNo1, "", new { @class = "text-danger required" })
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                <label class=" label-style">Phone #2 :<span class="mandatoryField">&nbsp;</span></label>
+                                                                @Html.TextBoxFor(model => model.PhoneNo2, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Phone #2" })
+                                                                @Html.ValidationMessageFor(model => model.PhoneNo2, "", new { @class = "text-danger required" })
+
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">Fax :</label>
+                                                                @Html.TextBoxFor(model => model.Fax, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Fax" })
+                                                                @Html.ValidationMessageFor(model => model.Fax, "", new { @class = "text-danger required" })
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">Website :</label>
+                                                                @Html.TextBoxFor(model => model.Website, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Website" })
+                                                                @Html.ValidationMessageFor(model => model.Website, "", new { @class = "text-danger required" })
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">Email: <span class="mandatoryField">*</span></label>
+                                                                @Html.TextBoxFor(model => model.EmailAddress, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Email" })
+                                                                @Html.HiddenFor(model => model.EmailAddress)
+                                                                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger required" })
+                                                            </div>
+                                                           
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">Desciption 1 :</label>
+                                                                @Html.TextBoxFor(model => model.Description1, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Description" })
+                                                                @Html.ValidationMessageFor(model => model.Description1, "", new { @class = "text-danger required" })
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">Desciption 2 : </label>
+                                                                @Html.TextBoxFor(model => model.Description2, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Description" })
+                                                                @Html.ValidationMessageFor(model => model.Description2, "", new { @class = "text-danger required" })
+                                                            </div>
+                                                           
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label class="label-style">Desciption 3 : </label>
+                                                                @Html.TextBoxFor(model => model.Description3, "", new { @autocomplete = "off", @class = "form-control labelStyle", @Placeholder = "Description" })
+                                                                @Html.ValidationMessageFor(model => model.Description3, "", new { @class = "text-danger required" })
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="clearfix"></div>
+
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                        <label class="label-style">Logo : <span class="mandatoryField">&nbsp;</span></label>
+                                                        @Html.TextBoxFor(model => model.LogoImage, new { @autocomplete = "off", @id = "file", type = "file", @onchange = "readUserImage(this)" })
+                                                        @Html.ValidationMessageFor(model => model.LogoImage, "", new { @class = "text-danger required" })
+                                                        <div class="padding-top-15">
+                                                            <div class="newsright profile-pic logo_size">
+                                                                @Html.HiddenFor(model => model.LogoImage)
+                                                                @Html.HiddenFor(model => model.Logo)
+
+                                                                @if (Model != null)
+                                                                {
+                                                                    if (Model.Logo != null)
+                                                                    {
+                                                                        <img id="imgUser" src="data:image;base64,@System.Convert.ToBase64String(Model.Logo)" class="image-style image_height " style="min-height:100px;max-height:100px;" />
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                        <img id="imgUser" src="~/images/logo_sample.png" class="image-style image_height " style="min-height:150px;" />
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    <img id="imgUser" src="~/images/logo_sample.png" class="image-style image_height " style="min-height:150px;" />
+                                                                }
+                                                                <div class="p-b-10 clearfix">
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 text-center padding-top-10">
+                                                        @if (Model == null)
+                                                        {
+                                                            <input type="submit" class="btn btn-primary" value="SAVE" name="update">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="submit" class="btn btn-primary" value="UPDATE" name="update">
+                                                        }
+                                                        <input type="button" class="btn btn-primary " onclick="cancel()" value="CANCEL" name="Cancel" style="margin-left:10px;">
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <style>
+                .editButton {
+                    margin: 5px 10px;
+                }
+
+                .btn-bs-file {
+                    position: relative;
+                }
+
+                    .btn-bs-file input[type="file"] {
+                        position: absolute;
+                        top: -9999999;
+                        filter: alpha(opacity=0);
+                        opacity: 0;
+                        width: 0;
+                        height: 0;
+                        outline: none;
+                        cursor: inherit;
+                    }
+
+                .register {
+                    color: lightslategrey;
+                }
+
+                .box-body {
+                    padding: 10px;
+                }
+
+                .logo_size {
+                    min-height: 100px;
+                    width: auto;
+                }
+
+                @@media (min-width: 200px) {
+                    .userProfile-style {
+                        width: 50%;
+                    }
+                }
+
+                @@media (max-width: 340px) {
+                    .updateButton {
+                        float: unset;
+                        margin-bottom: 12px;
+                    }
+                }
+            </style>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+    function cancel() {
+        window.location.reload();
+    }
+
+
+    function readUserImage(input) {
+        var ext = $("#file").val().split('.').pop();
+        var size = parseFloat($("#file")[0].files[0].size / 1024).toFixed(2);
+        if (ext == "jpg" || ext == "png") {
+
+            if (size > 100) {
+                alert("Image size should be maximum 100KB!")
+                return;
+            }
+            else {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#imgUser')
+                            .attr('src', e.target.result);
+                        //.width(150)
+                        //.height(200);
+                        $('#Logo').val(e.target.result.split(',')[1]);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        }
+        else {
+            alert("You have uploaded an invalid image file type")
+        }
+
+    }
+
+    $(document).ready(function () {
+        GetStates(@(Model != null? Model.StateId:0 ),@(Model != null? Model.CityId:0) );
+    });
+</script>

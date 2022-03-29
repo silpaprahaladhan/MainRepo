@@ -1,0 +1,111 @@
+USE [PCMS_DB_APR]
+GO
+/****** Object:  StoredProcedure [dbo].[SpSelectBookingHistoryDetail]    Script Date: 5/22/2019 1:05:20 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROC [dbo].[SpSelectBookingHistoryDetail] --null
+	(@BookingId INT) 
+AS
+BEGIN
+
+	DECLARE @Currency VARCHAR(100)
+	DECLARE @CurrencySymbol VARCHAR(10)
+
+	IF EXISTS (SELECT 1 from [Settings_Country] WHERE IsDefault = 1)
+	BEGIN
+		SELECT TOP 1 @Currency = Currency, @CurrencySymbol = ISNULL(Symbol,'$')	FROM [dbo].[Settings_Country] c	Where IsDefault = 1
+	END
+	ELSE
+	BEGIN
+		SELECT TOP 1 @Currency = Currency, @CurrencySymbol = ISNULL(Symbol,'$')	FROM [dbo].[Settings_Country] c	Where [CountryId] = 1
+	END
+
+							select *, 
+		@Currency as Currency,
+		@CurrencySymbol as CurrencySymbol,
+		cast(isnull(t2.HoildayHours,0)as decimal(10,2))as HoildayHours,
+		cast((isnull(t2.HoildayHours,0)*t1.DisplayRate)*t2.HolidayPayValue as decimal(10,2))    HoildayAmout ,
+		cast((((t1.TotalHours-isnull(t2.HoildayHours,0)) *isnull(t1.ServiceRate,0))  + (isnull(t2.HoildayHours,0)*isnull(t1.ServiceRate,0)) *isnull(t2.HolidayPayValue,0))  as decimal(10,2)) as TotalPayingAmount,
+		cast((((t1.TotalHours-isnull(t2.HoildayHours,0)) *isnull(t1.DisplayRate,0))  + (isnull(t2.HoildayHours,0)*isnull(t1.DisplayRate,0)) *isnull(t2.HolidayPayValue,0))  as decimal(10,2)) as TotalDisplayAmountWithOutTax,
+	    --cast((((t1.TotalHours-isnull(t2.HoildayHours,0)) *isnull(t1.DisplayRate,0))  + (isnull(t2.HoildayHours,0)*isnull(t1.DisplayRate,0)) *isnull(t2.HolidayPayValue,0))  as decimal(10,2)) as Taxx,
+	   (cast((((t1.TotalHours-isnull(t2.HoildayHours,0))*isnull(t1.DisplayRate,0))  +  (isnull(t2.HoildayHours,0)*isnull(t1.DisplayRate,0))*isnull(t2.HolidayPayValue,0))  as decimal(10,2)) * (t1.taxx)) as Tax,
+	   cast((((t1.TotalHours-isnull(t2.HoildayHours,0)) *isnull(t1.DisplayRate,0))  + (isnull(t2.HoildayHours,0)*isnull(t1.DisplayRate,0)) *isnull(t2.HolidayPayValue,0))  as decimal(10,2))+
+	   (cast((((t1.TotalHours-isnull(t2.HoildayHours,0))*isnull(t1.DisplayRate,0))  +  (isnull(t2.HoildayHours,0)*isnull(t1.DisplayRate,0))*isnull(t2.HolidayPayValue,0))  as decimal(10,2)) * (t1.taxx)) as TotalDisplayAmount
+		--cast(isnull((t1.ServiceRate * ((isnull(t1.TotalHours-t2.HoildayHours,0)*t1.ServiceRate)*t2.HolidayPayValue )),t1.PayingAmount) as decimal(10,2))as TotalPayingAmount,
+		--cast(isnull((t1.DisplayRate *((isnull(t1.TotalHours-t2.HoildayHours,0)*t1.DisplayRate)*t2.HolidayPayValue )),t1.DisplayAmount) as decimal(10,2))as TotalDisplayAmount
+		
+
+
+		from 
+			             (SELECT   b.BookingId,
+								   b.BookingDateTime						                             AS BookingDate,
+								   cs.ServiceName,			
+								   cs.ServiceId,			                                 			  
+								   u.FirstName +' ' +u.LastName			                                 AS BookedUser, 
+								   ua.Location							                                 AS UserLocation,
+								   cu.FirstName +' '+ cu.LastName		                                 AS Caretaker,
+								   cu.UserId															 AS CaretakerId,
+								   cua.Location							                                 AS CaretakerLocation,
+								   cps.PayingRate						                                 AS ServiceRate,
+								   cps.DisplayRate,						                                 
+								   b.Status								                                 AS BookingStatus,
+								   b.FromDateTime						                                 AS BookingStartTime,
+								   b.ToDateTime							                                 AS BookingEndTime,
+								   DateDiff(minute,b.FromDateTime,ToDateTime)  / 60.0					 AS TotalHours,
+								 ( DateDiff(minute,b.FromDateTime,ToDateTime)  / 60.0) * cps.PayingRate  AS PayingAmount,
+								 ( DateDiff(minute,b.FromDateTime,ToDateTime)  / 60.0) * cps.DisplayRate AS DisplayAmount,
+								   crd.Purpose							                                 AS BookingPurpose,
+								   C.CityName							                                 AS City,
+								   S.StateName							                                 AS State,           
+								   CN.CountryName						                                 AS Country,
+								   --CN.Symbol,							                                 
+								   --CN.Currency,						                                 
+								   cua.ZipCode,							                                 
+								   UL.EmailId							                                 AS EmailAddress,
+								   isnull(ppi.InvoiceNo,0)				                                 AS InvoiceNo,
+								   (ISNULL(s.TaxPercent,0)/100)			                                 AS Taxx,
+								   UA.Phone1								                             AS PhoneNo1
+						  FROM     [dbo].[PublicUser_Caretaker_Booking] b								 
+							       INNER JOIN [dbo].[Settings_CaretakerServices] cs		                 ON cs.ServiceId = b.ServiceId
+							       INNER JOIN [dbo].[UserDetails_Master] U				                 ON u.UserId = b.PublicUserId
+							       INNER JOIN [dbo].[User_AddressDetails] ua				             ON ua.UserId = b.PublicUserId
+								   INNER JOIN [dbo].[User_LoginDetails] ul				                 ON ul.UserId = U.UserId
+								   INNER JOIN [dbo].[UserDetails_Master] CU				                 ON cu.UserId = b.CaretakerUserId
+								   INNER JOIN [dbo].[User_AddressDetails] cua			                 ON cua.UserId = b.CaretakerUserId
+								   INNER JOIN [dbo].[Caretaker_Details] cd			                     ON cd.UserId = b.CaretakerUserId
+								   INNER JOIN [dbo].[PublicUser_CareRecipientDetails] crd                ON crd.BookingId = b.BookingId
+								   LEFT  JOIN [dbo].[Caretaker_PublicUser_Service] cps	                 ON cps.UserId = b.CaretakerUserId AND cps.ServiceId = b.ServiceId
+								   LEFT  JOIN [dbo].[Settings_City] C					                 ON UA.CityId = C.CityId 
+								   LEFT  JOIN [dbo].[Settings_State] S					                 ON S.StateId = C.StateId
+								   LEFT  JOIN [dbo].[Settings_Country] CN				                 ON CN.CountryId = S.CountryId
+								   LEFT  JOIN [dbo].[PublicUser_PaymentInvoice] PPI		                 ON PPI.bookingId=b.bookingID
+						  WHERE	   b.BookingId = @BookingId 								                 
+						  GROUP BY b.BookingId,b.BookingDateTime,cs.ServiceName,cu.FirstName,			 
+								  cu.LastName,u.FirstName,u.LastName,cua.Location,ua.Location,cps.PayingRate,cps.DisplayRate,
+								  b.Status,b.FromDateTime,b.ToDateTime,crd.Purpose,c.CityName,s.StateName,cn.CountryName,  CN.Symbol,
+								  CN.Currency,ul.EmailId,ua.Phone1, cua.ZipCode,ppi.InvoiceNo,s.TaxPercent,cs.ServiceId,cu.UserId)  t1
+							   																			 
+																										 
+																										 
+								 left join 																 
+																										 
+						    (select csd.BookingId,														 
+							sum(csd.Hours) as HoildayHours,												 
+							sum(csd.Hours * shp.HolidayPayValue)										 AS HolidayAmount,
+							sh.CountryId,																 
+							isnull(shp.HolidayPayValue,0)												 AS HolidayPayValue
+							from Settings_Holidays sh  													 
+							JOIN [dbo].[PublicUser_Booking_Dates] csd			                         ON csd.Date = sh.HolidayDate
+							JOIN [dbo].[Settings_HolidayPay] shp					                     ON shp.HolidayPayId=shp.HolidayPayId
+							JOIN [dbo].[PublicUser_Caretaker_Booking] B			                         ON B.BookingId = csd.BookingId
+							JOIN [dbo].[UserDetails_Master] CU					                         ON cu.UserId = b.CaretakerUserId
+							JOIN [dbo].[User_AddressDetails] cua					                     ON cua.UserId = b.CaretakerUserId
+							JOIN [dbo].[Settings_City]cuc						                         ON cuc.CityId = cua.CityId
+							JOIN [dbo].[Settings_State]cus						                         ON cus.StateId = cuc.StateId and cus.CountryId = sh.CountryId
+							WHERE Sh.StateId IS NULL OR Sh.StateId = cuc.StateId						 
+							group by csd.BookingId, sh.CountryId,shp.HolidayPayValue ) t2				 
+						    on t1.BookingId=t2.BookingId												 
+END

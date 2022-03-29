@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.HolidayViewModel>
+<div class=" table--no-card table-responsive">
+    <input type="hidden" id="hiddenHoliday" />
+    <table id="HolidayList" class="table table-borderless table-striped table-earning padding-top-10 dataTable no-footer">
+        <thead>
+            <tr>
+                <th>Country</th>
+                <th>State</th>
+                <th>Holiday</th>
+                <th>Date</th>
+                <th class="text-right">Action</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    string holidayDate = (@item.HolidayDate != null) ? ((DateTime)@item.HolidayDate).ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) : "";
+                    <tr>
+                        <td onclick="editHolidayDetails(@item.CountryId,@item.StateId,@item.HolidayId,'@item.HolidayName','@holidayDate')">@item.Country</td>
+                        <td onclick="editHolidayDetails(@item.CountryId,@item.StateId,@item.HolidayId,'@item.HolidayName','@holidayDate')">@item.State</td>
+                        <td onclick="editHolidayDetails(@item.CountryId,@item.StateId,@item.HolidayId,'@item.HolidayName','@holidayDate')">@item.HolidayName</td>
+                        <td onclick="editHolidayDetails(@item.CountryId,@item.StateId,@item.HolidayId,'@item.HolidayName','@holidayDate')">@holidayDate</td>
+                        <td class="text-right">
+                            @if (ViewBag.AllowEdit)
+                            {
+                                <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" onclick="editHolidayDetails(@item.CountryId,@item.StateId,@item.HolidayId,'@item.HolidayName','@holidayDate')" data-target="#modal-default"><span class="fa fa-edit"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" disabled>
+                                        <span class="fa fa-edit"></span>
+                                    </button>
+                                </div>
+                            }
+
+                            @if (ViewBag.AllowDelete)
+                            {
+                                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" onclick="getID(@item.HolidayId)" name="deleteCity" value="deleteCity" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="modal-delete" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Delete Holiday</h4>
+            </div>
+            <div class="modal-body">
+                Record will be deleted from the system. Are you sure you want to delete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteHoliday()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function getID(holidayId) {
+   
+        $('#hiddenHoliday').val(holidayId)
+    }
+    function deleteHoliday() {
+      
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/DeleteHoliday",
+            data: { holidayId: $('#hiddenHoliday').val() },
+            success: function (data) {
+                alert(data)
+                window.location.reload();
+
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Deletingcountry. Function: deleteUser(). Page: Country.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+</script>

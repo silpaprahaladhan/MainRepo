@@ -1,0 +1,123 @@
+﻿@model Nirast.Pcms.Web.Models.RolePrivileges
+@Html.HiddenFor(model => model.RoleId)
+
+<table id="RoleList" class="table table-borderless table-striped table-earning padding-top-10">
+    <thead>
+        <tr>
+            <th class="col-md-10">Modules</th>
+            <th>View</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            @*<th>All</th>
+                <th>Save</th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Privileges != null)
+        {
+            for (var item = 0; item < Model.Privileges.Count(); item++)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(it => it.Privileges[item].ModuleName)
+                        @Html.HiddenFor(it => it.Privileges[item].ModuleName)
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(it => it.Privileges[item].AllowView, new { type = "checkbox", @checked = Model.Privileges[item].AllowView, @class = "checkbox" })
+                        @*<label for="@it[item].AllowView" class="switch">
+                                <span class="slider"></span>
+                            </label>*@
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(it => it.Privileges[item].AllowEdit, new { type = "checkbox", @checked = Model.Privileges[item].AllowEdit, @class = "checkbox" })
+                        @*<label class="switch">
+                                <span class="slider1"></span>
+                            </label>*@
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(it => it.Privileges[item].AllowDelete, new { type = "checkbox", @checked = Model.Privileges[item].AllowDelete, @class = "checkbox" })
+                        @*<label class="switch">
+                                <span class="slider2"></span>
+                            </label>*@
+                    </td>
+                    <td class="hidden"><text id="@Model.Privileges[item].RoleId">@Model.RoleId</text></td>
+                    <td class="hidden">@Html.HiddenFor(it => it.Privileges[item].ModuleId)</td>
+                    <td class="hidden">@Html.HiddenFor(it => it.Privileges[item].PrivilegeId)</td>
+                    @*<td>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider3"></span>
+                            </label>
+                        </td>
+                        <td>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider4"></span>
+                            </label>
+                        </td>
+                        <td>
+                            <label class="switch">
+                                <input type="button">
+                                <span class="slider5"></span>
+                            </label>
+                        </td>*@
+                </tr>
+            }
+        }
+        else {
+            <tr>
+                <td colspan="4" align="center">No records available.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="align-div-content-center padding-10 buttonRight">
+    <button type="submit" class="btn btn-primary">Update</button>
+</div>
+<style type="text/css">
+    #RoleList th {
+        font-weight: bold;
+    }
+</style>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        
+    });
+    function checkAll() {
+        var select_all = document.getElementById("selectAll"); //select "Enable All" checkbox
+        var uncheck_all = document.getElementById("selectNone"); //select "Disable All" checkbox
+        var checkboxes = document.getElementsByClassName("checkbox"); //checkbox items
+        $('#selectNone').prop('checked', false);
+        //select all checkboxes
+        select_all.addEventListener("change", function (e) {
+            for (i = 0; i < checkboxes.length; i++) {
+                if (!checkboxes[i].checked) {
+                    checkboxes[i].checked = select_all.checked;
+                } else {
+                    
+
+                }
+            }
+        });
+    }
+
+    function uncheckAll() {
+        var uncheck_all = document.getElementById("selectNone"); //select all checkbox
+        var checkboxes = document.getElementsByClassName("checkbox"); //checkbox items
+        var select_all = document.getElementById("selectAll"); //select all checkbox
+
+        //select all checkboxes
+        uncheck_all.addEventListener("change", function (e) {
+            for (i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    checkboxes[i].checked = false;
+                    select_all.checked = false;
+                }
+            }
+        });
+    }
+</script>

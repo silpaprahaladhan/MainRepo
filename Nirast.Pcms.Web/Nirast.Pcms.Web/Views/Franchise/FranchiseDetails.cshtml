@@ -1,0 +1,1143 @@
+﻿@model Nirast.Pcms.Web.Models.ClientModel
+
+
+@{ ViewBag.Title = "ClientRegistration";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml"; }
+<script src="~/css/AdminDashboard/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
+
+@Styles.Render("~/css/CustomStyles.css")
+
+<script>
+
+
+    function RemoveCategory(button) {
+
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+        if (confirm("Do you want to delete: " + name)) {
+            //Get the reference of the Table.
+            var table = $("#tblCategory")[0];
+            //Delete the Table row using it's Index.
+            table.deleteRow(row[0].rowIndex);
+
+            if ($("#tblCategory td").closest("tr").length > 0) {
+                $('#tblCategory').show();
+            }
+            else {
+                $('#tblCategory').hide();
+            }
+        }
+    };
+
+    $(document).ready(function () {
+        //$('#caretakerList').DataTable({
+        //    "pagingType": "full_numbers"
+        //});
+        $(".qty").on("keypress keyup blur", function (event) {
+            //this.value = this.value.replace(/[^0-9\.]/g,'');
+            $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+            if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+        $('#tblmappedcaretakerList').DataTable({
+            "pagingType": "full_numbers"
+        });
+
+        $('#caretakerList').DataTable({
+            "pagingType": "full_numbers"
+        });
+        $('.filters').hide();
+
+        $('.filterable .btn-filter').click(function () {
+            var $panel = $(this).parents('.filterable'),
+                $filters = $panel.find('.filters input'),
+                $tbody = $panel.find('.table tbody');
+            if ($filters.prop('disabled') == true) {
+                $filters.prop('disabled', false);
+                $('.filters').show();
+                $('.non-filter-header').hide();
+                $filters.first().focus();
+            } else {
+                $filters.val('').prop('disabled', true);
+                $tbody.find('.no-result').remove();
+                $tbody.find('tr').show();
+                $('.non-filter-header').show();
+                $('.filters').hide();
+            }
+        });
+
+        $('.filterable .filters input').keyup(function (e) {
+            /* Ignore tab key */
+            var code = e.keyCode || e.which;
+            if (code == '9') return;
+            /* Useful DOM data and selectors */
+            var $input = $(this),
+                inputContent = $input.val().toLowerCase(),
+                $panel = $input.parents('.filterable'),
+                column = $panel.find('.filters th').index($input.parents('th')),
+                $table = $panel.find('.table'),
+                $rows = $table.find('tbody tr');
+            /* Dirtiest filter function ever ;) */
+            var $filteredRows = $rows.filter(function () {
+                var value = $(this).find('td').eq(column).text().toLowerCase();
+                return value.indexOf(inputContent) === -1;
+            });
+            /* Clean previous no-result if exist */
+            $table.find('tbody .no-result').remove();
+            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+            $rows.show();
+            $filteredRows.hide();
+            /* Prepend no-result row if all rows are filtered */
+            if ($filteredRows.length === $rows.length) {
+                $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="' + $table.find('.filters th').length + '">No result found</td></tr>'));
+            }
+        });
+
+
+        //////////////// Start TimeShift  ///////////////////////////////
+        // $("#ChkDiv").hide();
+        $('#btnSaveTimeShift').click(function () {
+            if ($('#ddlTimeShift option:selected').text() != '' && $('#ddlTimeShift option:selected').text() != '--Select--') {
+                $.ajax({
+                    url: "../Client/AddClientTimeShift",
+                    type: "POST",
+                    data: { timeShiftId: $('#ddlTimeShift').val(), timeShiftName: $('#ddlTimeShift option:selected').text() },
+                    success: function (data) {
+                        $('#btnSaveTimeShift').removeClass('required-border');
+                        if (data.length > 0) {
+                            var strQual = "";
+                            $('#addedTimeShiftList').html('');
+                            for (var i = 0; i < data.length; i++) {
+
+                                strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].TimeShiftName + "</td>" +
+                                    "<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveTimeShift(" + data[i].TimeShiftId + ")"
+                                    + " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+                            }
+                            $('#addedTimeShiftList').html(strQual);
+                            $('#tblTimeShift').show();
+                            $('#ddlTimeShift').val("");
+                        }
+                    },
+                    error: function (data) {
+                        logError(data.statusText + ' - Error occurred while Saving Time Shift. Function: $("#btnSaveTimeShift").click(function ()). Page: ClientRegistration.cshtml');
+                        //alert("Some network error has occurred. Please try again after some time.");
+                    }
+                });
+
+            }
+
+        });
+
+        if ($("#tblmappedcaretakerList td").closest("tr").length > 0) {
+            $('#tblmappedcaretakerList').show();
+        }
+        else {
+            $('#tblmappedcaretakerList').hide();
+        }
+
+        if ($("#tblTimeShift td").closest("tr").length > 0) {
+            $('#tblTimeShift').show();
+        }
+        else {
+            $('#tblTimeShift').hide();
+        }
+
+        //////////////// End of Dynamic TimeShift types //////////////////////////////
+
+        //////////////// Start Caretaker  ///////////////////////////////
+
+        $('#caretakerList').on('click', '#btnMapCareTaker', function () {
+
+            var caretakerrate = $(this).closest("tr").find("#Quantity").val().trim();
+            if (caretakerrate == "") {
+                alert("Please enter the rate")
+            }
+            else {
+                var map = [];
+                $('#caretakerList tr').each(function () {
+                   // debugger;
+                    var rate = $('.qty', this).val();
+
+                    if (rate != "" && rate != undefined) {
+
+                        var CaretakerId = ($('.caretakerID', this).val());
+                        var CaretakerName = ($('.caretakername', this).text());
+                        var CategoryId = ($('.categoryID', this).val());
+                        var CategoryName = ($('.categoryname', this).text());
+                        var Rate = ($('.qty', this).val());
+                        //var IsTaxApplicable ="N";// $('.chcktax',this).prop('checked');
+
+                        //if ($('.chcktax',this).is(':checked') == true) {
+                        //    TaxApplicable="Y";
+                        //}
+
+                        map.push({
+
+                            CaretakerId: CaretakerId,
+                            CaretakerName: CaretakerName,
+                            CategoryId: CategoryId,
+                            Rate: Rate,
+                            //IsTaxApplicable:IsTaxApplicable,
+                            CategoryName: CategoryName
+                        });
+                        //if (map != null) {
+                        //    alert("Caretaker mapped successfully")
+                        //}
+                    }
+
+
+                });
+            }
+
+
+            console.log(map);
+
+            if (map != "") {
+                var i;
+                for (i = 0; i < map.length; i++) {
+
+                    $.ajax({
+                        url: "../Client/AddCareTakerList",
+                        type: "POST",
+                        data: { caretakerId: map[i].CaretakerId, careTakerName: map[i].CaretakerName, categoryTypeId: map[i].CategoryId, ServiceRate: map[i].Rate, categoryName: map[i].CategoryName },
+                        success: function (data) {
+
+                            if (data.length > 0) {
+                                var strQual = "";
+                                $('#mappedCaretakerList').html('');
+                                for (var i = 0; i < data.length; i++) {
+
+                                    strQual = strQual + "<tr>" + "<td class='col-md-3'>" + data[i].CategoryName + "</td>" +
+                                        "<td class='col-md-3'>" + data[i].CareTakerName + "</td>" +
+                                        /**/
+                                        "<td class='col-md-3'> @ViewData["CurrencySymbol"] " + data[i].Rate + "/hr.</td>" + "<td>" +
+    /**/
+    "<label class='btn btn-danger float-right' onclick = " + "RemoveCaretaker(" + data[i].CaretakerId + ")" +
+    " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+}
+$('#mappedCaretakerList').html(strQual);
+if ($("#tblmappedCaretakerList td").closest("tr").length > 0) {
+$('#tbmappedCaretakerList').show();
+}
+}
+},
+error: function (data) {
+    logError(data.statusText + ' - Error occurred while mapping caretakers for a Client. Function: $("#caretakerList").on("click", "#btnMapCareTaker", function ()). Page: ClientRegistration.cshtml');
+//alert("Some network error has occurred. Please try again after some time.");
+}
+
+});
+}
+}
+});
+
+
+
+$('#btnAddCareTaker').click(function () {
+if ($('#ddlCategory option:selected').text() != '--Select--' && $('#txtRate').val() != '' && $('#txtRate').val() != '0') {
+    debugger;
+    var date = $('#categoryFromDate').val();
+    if (date == "")
+    {
+        alert("Please Enter the EffectiveFrom Date");
+        return false;
+    }
+var taxStatus = "N";
+var isChecked = document.getElementById("taxApplicable").checked;
+if (isChecked == true) {
+taxStatus = "Y";
+}
+$.ajax({
+url: "../Client/AddCategoryandRateList",
+type: "POST",
+data: { categoryTypeId: $('#ddlCategory').val(), ServiceRate: $('#txtRate').val(), taxApplicable: taxStatus, categoryName: $('#ddlCategory option:selected').text(), EffectiveFrom: date, ClientId: 0 },
+success: function (data) {
+$('#btnAddCareTaker').removeClass('required-border');
+if (data.length > 0) {
+var strQual = "";
+$('#addedCaretakerList').html('');
+for (var i = 0; i < data.length; i++) {
+var taxapplicable = data[i].IsTaxApplicable == true ? "Yes" : "No";
+strQual = strQual + "<tr>" +
+"<td class='col-md-3'>" + data[i].CategoryName + "</td>" +
+/**/
+"<td class='col-md-3'> @ViewData["CurrencySymbol"] " + data[i].Rate + "/hr.</td>" + "<td class='col-md-6'>" + taxapplicable + "</td>" + "<td>" +
+    /**/
+    "<label class='btn btn-danger ' onclick = " + "RemoveCategory(" + data[i].CategoryId + ")" +
+    " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+}
+$('#addedCaretakerList').html(strQual);
+$('#tblCaretaker').show();
+$("select#ddlCareTaker").val('0');
+$("#txtRate").val('');
+document.getElementById("taxApplicable").checked = false;
+//$("#ChkDiv").hide();
+$("select#ddlCategory").val("");
+}
+},
+error: function (data) {
+    logError(data.statusText + ' - Error occurred while adding category and rate for Client. Function: $("#btnAddCareTaker").click(function ()). Page: ClientRegistration.cshtml');
+//alert("Some network error has occurred. Please try again after some time.");
+}
+});
+
+}
+else {
+alert("Please add category and rate!")
+}
+});
+
+if ($("#tblCaretaker td").closest("tr").length > 0) {
+$('#tblCaretaker').show();
+}
+else {
+$('#tblCaretaker').hide();
+}
+
+
+
+        $("input[name='RegisterClient']").on("click", function () {
+            debugger;
+            if ($('#ddlTimeShift option:selected').text() != '' && $('#ddlTimeShift option:selected').text() != '--Select--') {
+                $('#ddlTimeShift').focus();
+                $('#btnSaveTimeShift').addClass('required-border');
+                alert("Please click the '+' button to add the selected Time Shift.");
+                return false;
+            }
+            else {
+                $('#btnSaveTimeShift').removeClass('required-border');
+            }
+            if (($('#categoryFromDate').val()) == '') {
+                alert("Please Enter the Effective Date")
+                return false;
+            }
+            if (($('#EmailId').val()) == '') {
+                alert("Please Enter Email Id")
+                return false;
+            }
+            if ($('#EmailId-error').length) {
+                alert("Invalid Email Id");
+                return false;
+            }
+            if ($('#tblCaretaker').css('display') == 'none') {
+                $('#ddlCategory').focus();
+                $('#btnAddCareTaker').addClass('required-border');
+                alert("Please click the '+' button to add the selected category rate.");
+                return false;
+            }
+            else {
+                $('#btnAddCareTaker').removeClass('required-border');
+            }
+            var fromDate = $('#txtAvailableFrom').val();
+            var toDate = $('#txtAvailableTo').val();
+            if (fromDate != "") {
+                if (toDate != "") {
+                    if (Date.parse(fromDate) > Date.parse(toDate)) {
+                        alert("To date should be greater than From date in availability.");
+                        return false;
+                    }
+                }
+            }
+        });
+
+
+//////////////// End of Dynamic caretaker //////////////////////////////
+
+$("#tblCategory").hide();
+$("#tblOrientation").hide();
+$('#btnSaveCategory').click(function () {
+if ($('#ddlCategory option:selected').text() != '' && $('#ddlCategory option:selected').text() != '--Select--') {
+$('#content').append("<tr>" + "<td class='col-md-9'>" + $('#ddlCategory option:selected').text() + "</td>" + "<td class='col-md-2'>" + $('#txtRate').val() + "</td>" + "<td class='col-md-1'>" + "<button class='btn btn-danger float-right' onclick = 'RemoveCategory(this);' title='Delete' ><span class='fa fa-minus'></span></button>" + "</td>" + "</tr>");
+$("#tblCategory").show();
+$("select#ddlCategory").val('0');
+$('#txtRate').val('');
+}
+});
+
+});
+function nextTabOrientaion() {
+$('#liClientDetails').removeClass('active');
+$('#clientDetails').removeClass('active in');
+$('#liOrientation').addClass('active');
+$('#orientation').addClass('active in');
+}
+function previousTabClientDetails() {
+$('#liClientDetails').addClass('active');
+$('#clientDetails').addClass('active in');
+$('#liOrientation').removeClass('active');
+$('#orientation').removeClass('active in');
+}
+function GetCaretakers() {
+if ($('#ddlCategory option:selected').text() != '' && $('#ddlCategory option:selected').text() != '--Select--') {
+$("#ChkDiv").show();
+
+}
+}
+
+
+function GetStatesForCurrentAddress(StateId ) {
+debugger;
+var countryId = ($('#ddlCountry2').val() == "" || $('#ddlCountry2').val() == undefined) ? 0 : $('#ddlCountry2').val();
+//$('#CountryId2').val(countryId);
+$.ajax({
+url: '/Admin/LoadStatesByCountryId',
+type: "GET",
+dataType: "JSON",
+data: { CountryId: countryId },
+success: function (data) {
+
+$("#ddlStates2").html(""); // clear before appending new list
+
+$("#ddlStates2").append(
+        $('<option></option>').val('0').html("--Select--"));
+    $("#ddlCity2").html("");
+    $("#ddlCity2").append(
+        $('<option></option>').val('0').html("--Select--"));
+    if (countryId != 0) {
+        $.each($.parseJSON(data), function (i, state) {
+
+            $("#ddlStates2").append(
+                $('<option></option>').val(state.StateId).html(state.Name));
+        });
+        document.getElementById("ddlStates2").value = StateId;
+    }
+    //$('#lblPhoneCodePrimary').text($.parseJSON(data)[0] === undefined ? '+1' : $.parseJSON(data)[0].PhoneCode);
+    //$('#lblPhoneCodeSecondary').text($.parseJSON(data)[0] === undefined ? '+1' : $.parseJSON(data)[0].PhoneCode);
+        $.ajax({
+        url: '/admin/loadphonecodebycountryid',
+        type: "get",
+        datatype: "json",
+            data: { countryid: countryId },
+        success: function (data) {
+            $('#lblPhoneCodeSecondary1').text(data);
+            $('#lblPhoneCodeSecondary2').text(data);
+
+        },
+    });
+},
+    });
+}
+function GetCitiesForCurrentAddress() {
+var StateId = $('#ddlStates2').val();
+$.ajax({
+url: '/Admin/LoadCitiesbyId',
+type: "GET",
+dataType: "JSON",
+data: { StateId: StateId },
+success: function (data) {
+$("#ddlCity2").html(""); // clear before appending new list
+$("#ddlCity2").append(
+$('<option></option>').val(0).html("--Select--"));
+$.each($.parseJSON(data), function (i, city) {
+$("#ddlCity2").append(
+$('<option></option>').val(city.CityId).html(city.CityName));
+});
+},
+});
+}
+////////////////////////////Start Remove Time Shift //////////////////////////////////////
+function RemoveTimeShift(timeShiftId) {
+    if (confirm('This may affect the scheduling created with this shift. Are you sure  to remove this Time shift?'))
+$.ajax({
+url: "../Client/RemoveClientTimeShift",
+type: "POST",
+data: { timeShiftId: timeShiftId },
+success: function (data) {
+
+var strQual = "";
+if (data.length > 0) {
+
+$('#addedTimeShiftList').html('');
+for (var i = 0; i < data.length; i++) {
+
+strQual = strQual + "<tr>" + "<td class='col-md-11'>" + data[i].TimeShiftName + "</td>" +
+"<td>" + "<label class='btn btn-danger float-right' onclick = " + "RemoveTimeShift(" + data[i].TimeShiftId + ")"
++ " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+
+}
+}
+$('#addedTimeShiftList').html(strQual);
+if ($("#tblTimeShift td").closest("tr").length > 0) {
+$('#tblTimeShift').show();
+}
+else {
+$('#tblTimeShift').hide();
+}
+},
+error: function (data) {
+    logError(data.statusText + ' - Error occurred while removing Time Shift for Client. Function: RemoveTimeShift(timeShiftId). Page: ClientRegistration.cshtml');
+//alert("Some network error has occurred. Please try again after some time.");
+}
+});
+};
+
+
+////////////////////////////Start Remove Time Shift //////////////////////////////////////
+function RemoveCaretaker(caretakerId) {
+$.ajax({
+url: "../Client/RemoveCareTakerList",
+type: "POST",
+data: { caretakerId: caretakerId },
+success: function (data) {
+var strQual = "";
+if (data.length > 0) {
+$('#mappedCaretakerList').html('');
+for (var i = 0; i < data.length; i++) {
+
+
+strQual = strQual + "<tr>" + "<td class='col-md-3'>" + data[i].CategoryName + "</td>" +
+"<td class='col-md-3'>" + data[i].CareTakerName + "</td>" +
+/**/
+"<td class='col-md-3'> @ViewData["CurrencySymbol"] " + data[i].Rate + "/hr.</td>" + "<td>" +
+    /**/
+    "<label class='btn btn-danger float-right' onclick = " + "RemoveCaretaker(" + data[i].CaretakerId + ")" +
+    " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+}
+
+}
+else {
+strQual = strQual + '<tr class="odd"><td colspan="4" class="dataTables_empty" valign="top">No data available in table</td></tr>'
+}
+$('#mappedCaretakerList').html(strQual);
+
+
+},
+error: function (data) {
+    logError(data.statusText + ' - Error occurred while removing Caretakers for Client. Function: RemoveCaretaker(caretakerId). Page: ClientRegistration.cshtml');
+//alert("Some network error has occurred. Please try again after some time.");
+}
+});
+};
+
+
+
+    function RemoveCategory(caretakerId) {
+        if (confirm('This may affect the scheduling created with this category. Are you sure  to remove this Category?'))
+$.ajax({
+url: "../Client/RemoveCategoryandRateList",
+type: "POST",
+data: { categoryTypeId: caretakerId },
+success: function (data) {
+var strQual = "";
+
+if (data.length > 0) {
+$('#addedCaretakerList').html('');
+for (var i = 0; i < data.length; i++) {
+strQual = strQual + "<tr>" +
+    "<td class='col-md-3'>" + data[i].CategoryName + "</td>" +
+    /**/
+    "<td class='col-md-3'> @ViewData["CurrencySymbol"] " + data[i].Rate + "/hr.</td>" + "<td class='col-md-6'>" + data[i].IsTaxApplicable + "</td>" + "<td>" +
+    /**/
+    "<label class='btn btn-danger' onclick = " + "RemoveCategory(" + data[i].CategoryId + ")" +
+    " title='Delete' ><span class='fa fa-minus'></span></label>" + "</td>" + "</tr>";
+}
+}
+
+$('#addedCaretakerList').html(strQual);
+if ($("#tblCaretaker td").closest("tr").length > 0) {
+$('#tblCaretaker').show();
+}
+else {
+$('#tblCaretaker').hide();
+}
+$("#txtRate").val('');
+document.getElementById("taxApplicable").checked = false;
+//$("#ChkDiv").hide();
+$("select#ddlCategory").val("");
+},
+error: function (data) {
+    logError(data.statusText + ' - Error occurred while removing Caretaker and rates for Client. Function: RemoveCategory(caretakerId). Page: ClientRegistration.cshtml');
+//alert("Some network error has occurred. Please try again after some time.");
+}
+});
+};
+    $(function () {
+        $('#categoryFromDate').datepicker({
+            //minDate: 0,
+            changeMonth: true,
+            changeYear: true,
+        });
+
+    });
+</script>
+@{ if (ViewBag.Error != null)
+    {
+<div class="padT25"><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div> }
+else
+{
+<div class="container">
+    <div class="main-content">
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="profile_Style clientRegister">
+                    <input type="hidden" value="1" id="hdnValue" />
+                    @if (TempData["Success"] != null)
+                    {
+                        if (TempData["Success"].ToString() == "Branch details updated Successfully.")
+                        {
+    <p class="alert alert-danger statusmessage" id="successMessage">@TempData["Success"]</p> }
+else
+{
+<p class="alert alert-success statusmessage" id="successMessage">@TempData["Success"]</p>}
+
+}
+                    <div class="col-md-12">
+                        @using (Html.BeginForm("UpdateFranchiseDetails", "Franchise", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+
+                        <div id="ViewProfile">
+                            <form>
+                                @*<button class="btn btn-primary float-right editButton" title="Edit" onclick="EditClick()">Edit</button>*@
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4>Franchise Registration</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+
+                                            @Html.Hidden("clientId")
+
+                                            <div class="col-lg-12">
+                                                <div class="col-md-6">
+                                                    <label class=" label-style">Branch Name</label><span class="mandatoryField">*</span>
+                                                    @Html.TextBoxFor(model => model.ClientName, "", new { @class = "form-control ", @Placeholder = "Client Name" })
+                                                    @Html.ValidationMessageFor(model => model.ClientName, "", new { @class = " no-padding required" })
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="label-style" for="Last_Name">Website</label>
+                                                    @Html.TextBoxFor(model => model.WebsiteAddress, "", new { @class = "form-control", @placeholder = "Website" })
+                                                    @Html.ValidationMessageFor(model => model.WebsiteAddress, "", new { @class = " no-padding required" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <fieldset>
+                                            <legend class="legend_style">Primary Address:</legend>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label("Country", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry", @class = "form-control labelStyle", @onchange = "GetStates()" })
+                                                        @Html.ValidationMessageFor(model => model.CountryId1, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label(@Resource.State, new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates", @class = "form-control labelStyle", @onchange = "GetCities()" })
+                                                        @Html.ValidationMessageFor(model => model.StateId1, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label("City", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, new { @Id = "ddlCity", @class = "form-control labelStyle" })
+
+                                                        @Html.ValidationMessageFor(model => model.CityId1, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Address">Address Line #1</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.Address1, new { @class = "form-control", @placeholder = "Address Line #1" })
+                                                        @Html.ValidationMessageFor(model => model.Address1, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">Phone #1</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><label id="lblPhoneCodePrimary1">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.PhoneNo1, "", new { @class = "form-control", @placeholder = "Phone #1" })
+
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.PhoneNo1, "", new { @class = " no-padding required" })
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">Phone #2</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">  <label id="lblPhoneCodePrimary2">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.PhoneNo2, "", new { @class = "form-control", @placeholder = "Phone #2" })
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.PhoneNo2, "", new { @class = " no-padding required" })
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">Invoice To</label>
+                                                        @Html.TextBoxFor(model => model.InvoiceAddress, "", new { @class = "form-control labelStyle", @Placeholder = "Invoice To" })
+                                                        @Html.ValidationMessageFor(model => model.InvoiceAddress, "", new { @class = "no-padding required" })
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend style="padding-top:5px;margin-left:10px;margin-bottom: 5px">Secondary Address:</legend>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label("Country", new { @class = "label-style", @id = "Country2" })
+                                                        @{ Html.EnableClientValidation(false); }
+                                                        @Html.DropDownListFor(model => model.CountryId2, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry2", @class = "form-control labelStyle", @onchange = "GetStatesForCurrentAddress()" })
+
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label(Resource.State, new { @class = "label-style" })
+                                                        @Html.DropDownListFor(model => model.StateId2, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates2", @class = "form-control labelStyle", @onchange = "GetCitiesForCurrentAddress()" })
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label("City", new { @class = "label-style" })
+                                                        @Html.DropDownListFor(model => model.CityId2, ViewData["ListCity1"] as SelectList, new { @Id = "ddlCity2", @class = "form-control labelStyle" })
+
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Address">Address Line #2</label>
+                                                        @Html.TextBoxFor(model => model.Address2, new { @class = "form-control", @placeholder = "Address Line #2" })
+                                                        @Html.ValidationMessageFor(model => model.Address2, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                    @{ Html.EnableClientValidation(true); }
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">Phone #1</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><label id="lblPhoneCodeSecondary1">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.SecondaryPhoneNo1, "", new { @class = "form-control", @placeholder = "Phone #1" })
+
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.SecondaryPhoneNo1, "", new { @class = " no-padding required" })
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">Phone #2</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">  <label id="lblPhoneCodeSecondary2">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.SecondaryPhoneNo2, "", new { @class = "form-control", @placeholder = "Phone #2" })
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.SecondaryPhoneNo2, "", new { @class = " no-padding required" })
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend style="margin-left:10px;margin-bottom: 5px">Login Credentials:</legend>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+                                                        <label class="label-style" for="Last_Name">Email ID</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.EmailId, new { @class = "form-control", @placeholder = "Email ID", @autocomplete = "off", @onblur = "checkClientLoginName()" })
+                                                        @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = " no-padding required" })
+                                                        <span id="result" />
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6" id="commission">
+
+                                                    @Html.Label("Commission Percentage", new { @class = "label-style" })
+                                                    <div class="input-group" style="margin:unset">
+                                                        <div>
+                                                            @Html.TextBoxFor(model => model.Commission, new { @class = "form-control", @autocomplete = "off", @onblur = "checkClientLoginName()" })
+                                                            <input type="text" id="otherquali" class="form-control" style="display:none;margin-top:10px" maxLength="50" />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-12 no-padding" style="margin-top:10px;">
+                                                        <table class="table table-borderless table-striped table-earning dynamic-table" id="tblTimeShift">
+                                                            <thead><tr><th class="custom-table-header"><strong>Time Shift</strong></th><th class="custom-table-header">Action</th></tr>
+                                                            <tbody id="addedTimeShiftList"></tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-2"></div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="col-md-3 no-padding">
+                                                        @Html.Label("Effective From :", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.EffectiveFrom, "", new { @id = "categoryFromDate", @class = "datetimepicker form-control", @autocomplete = "off", @placeholder = "From Date" })
+                                                        @*@Html.ValidationMessageFor(model => model.EffectiveFrom, "", new { @class = "no-padding required" })*@
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6" style="margin-left:10px">
+                                                <div class="form-group label-style ">
+                                                    @*@Html.CheckBoxFor(model => Model.HasMidnightCut, new { @id = "chkMidnightCutOff" }) Has Midnight Cut Off*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-xs-12 text-center" style="margin-bottom:10px;" id="register">
+                                        <div>
+                                            @{ if (ViewBag.AllowEdit)
+                                                {
+                                <input type="submit" class="btn btn-primary" id="btnRegister" value="REGISTER" name="RegisterClient" style="font-weight:bold"> }
+                            else
+                            {
+            <div class="wrapper">
+                <button class="btn btn-primary" value="" id="btnRegister" name="RegisterClient" disabled>REGISTER</button>
+            </div> } }
+                                            &nbsp;&nbsp;
+                                            <label class="btn btn-primary" value="Cancel" onclick="reload()">Back</label>&nbsp;&nbsp;
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="EditProfile" style="display:none">
+                            <form>
+                                @*<button class="btn btn-primary float-right editButton" title="Edit" onclick="EditClick()">Edit</button>*@
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4>Franchise Registration</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+
+
+
+                                            <div class="col-lg-12">
+                                                <div class="col-md-6">
+                                                    <label class=" label-style">Branch Name</label><span class="mandatoryField">*</span>
+                                                    @Html.TextBoxFor(model => model.ClientName, "", new { @class = "form-control ", @Placeholder = "Client Name" })
+                                                    @Html.ValidationMessageFor(model => model.ClientName, "", new { @class = " no-padding required" })
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="label-style" for="Last_Name">Website</label>
+                                                    @Html.TextBoxFor(model => model.WebsiteAddress, "", new { @class = "form-control", @placeholder = "Website" })
+                                                    @Html.ValidationMessageFor(model => model.WebsiteAddress, "", new { @class = " no-padding required" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <fieldset>
+                                            <legend class="legend_style">Primary Address:</legend>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label("Country", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry", @class = "form-control labelStyle", @onchange = "GetStates()" })
+                                                        @Html.ValidationMessageFor(model => model.CountryId1, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label(@Resource.State, new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates", @class = "form-control labelStyle", @onchange = "GetCities()" })
+                                                        @Html.ValidationMessageFor(model => model.StateId1, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label("City", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                        @Html.DropDownListFor(model => model.CityId1, ViewData["ListCity1"] as SelectList, new { @Id = "ddlCity", @class = "form-control labelStyle" })
+
+                                                        @Html.ValidationMessageFor(model => model.CityId1, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Address">Address Line #1</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.Address1, new { @class = "form-control", @placeholder = "Address Line #1" })
+                                                        @Html.ValidationMessageFor(model => model.Address1, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">Phone #1</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><label id="lblPhoneCodePrimary1">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.PhoneNo1, "", new { @class = "form-control", @placeholder = "Phone #1" })
+
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.PhoneNo1, "", new { @class = " no-padding required" })
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">Phone #2</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">  <label id="lblPhoneCodePrimary2">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.PhoneNo2, "", new { @class = "form-control", @placeholder = "Phone #2" })
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.PhoneNo2, "", new { @class = " no-padding required" })
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style">Invoice To</label>
+                                                        @Html.TextBoxFor(model => model.InvoiceAddress, "", new { @class = "form-control labelStyle", @Placeholder = "Invoice To" })
+                                                        @Html.ValidationMessageFor(model => model.InvoiceAddress, "", new { @class = "no-padding required" })
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend style="padding-top:5px;margin-left:10px;margin-bottom: 5px">Secondary Address:</legend>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label("Country", new { @class = "label-style", @id = "Country2" })
+                                                        @{ Html.EnableClientValidation(false); }
+                                                        @Html.DropDownListFor(model => model.CountryId2, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry2", @class = "form-control labelStyle", @onchange = "GetStatesForCurrentAddress()" })
+
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label(Resource.State, new { @class = "label-style" })
+                                                        @Html.DropDownListFor(model => model.StateId2, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates2", @class = "form-control labelStyle", @onchange = "GetCitiesForCurrentAddress()" })
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        @Html.Label("City", new { @class = "label-style" })
+                                                        @Html.DropDownListFor(model => model.CityId2, ViewData["ListCity1"] as SelectList, new { @Id = "ddlCity2", @class = "form-control labelStyle" })
+
+
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Address">Address Line #2</label>
+                                                        @Html.TextBoxFor(model => model.Address2, new { @class = "form-control", @placeholder = "Address Line #2" })
+                                                        @Html.ValidationMessageFor(model => model.Address2, "", new { @class = " no-padding required" })
+
+                                                    </div>
+                                                    @{ Html.EnableClientValidation(true); }
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">Phone #1</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><label id="lblPhoneCodeSecondary1">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.SecondaryPhoneNo1, "", new { @class = "form-control", @placeholder = "Phone #1" })
+
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.SecondaryPhoneNo1, "", new { @class = " no-padding required" })
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <label class="label-style" for="Last_Name">Phone #2</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">  <label id="lblPhoneCodeSecondary2">@ViewBag.PhoneCode</label></span>
+                                                            @Html.TextBoxFor(model => model.SecondaryPhoneNo2, "", new { @class = "form-control", @placeholder = "Phone #2" })
+
+                                                        </div>
+                                                        @Html.ValidationMessageFor(model => model.SecondaryPhoneNo2, "", new { @class = " no-padding required" })
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend style="margin-left:10px;margin-bottom: 5px">Login Credentials:</legend>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="col-md-6">
+                                                        <label class="label-style" for="Last_Name">Email ID</label><span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.EmailId, new { @class = "form-control", @placeholder = "Email ID", @autocomplete = "off", @onblur = "checkClientLoginName()" })
+                                                        @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = " no-padding required" })
+                                                        <span id="result" />
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6" id="commission">
+
+                                                    @Html.Label("Commission Percentage", new { @class = "label-style" })
+                                                    <div class="input-group" style="margin:unset">
+                                                        <div>
+                                                            @Html.TextBoxFor(model => model.Commission, new { @class = "form-control", @autocomplete = "off", @onblur = "checkClientLoginName()" })
+                                                            <input type="text" id="otherquali" class="form-control" style="display:none;margin-top:10px" maxLength="50" />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-12 no-padding" style="margin-top:10px;">
+                                                        <table class="table table-borderless table-striped table-earning dynamic-table" id="tblTimeShift">
+                                                            <thead><tr><th class="custom-table-header"><strong>Time Shift</strong></th><th class="custom-table-header">Action</th></tr>
+                                                            <tbody id="addedTimeShiftList"></tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-2"></div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="col-md-3 no-padding">
+                                                        @Html.Label("Effective From :", new { @class = "label-style" })<span class="mandatoryField">*</span>
+                                                        @Html.TextBoxFor(model => model.EffectiveFrom, "", new { @id = "categoryFromDate", @class = "datetimepicker form-control", @autocomplete = "off", @placeholder = "From Date" })
+                                                        @*@Html.ValidationMessageFor(model => model.EffectiveFrom, "", new { @class = "no-padding required" })*@
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6" style="margin-left:10px">
+                                                <div class="form-group label-style ">
+                                                    @*@Html.CheckBoxFor(model => Model.HasMidnightCut, new { @id = "chkMidnightCutOff" }) Has Midnight Cut Off*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-xs-12 text-center" style="margin-bottom:10px;display:none" id="register">
+                                        <div>
+                                            @{ if (ViewBag.AllowEdit)
+                                                {
+                                <input type="submit" class="btn btn-primary" id="btnRegister" value="REGISTER" name="RegisterClient" style="font-weight:bold"> }
+                            else
+                            {
+            <div class="wrapper">
+                <button class="btn btn-primary" value="" id="btnRegister" name="RegisterClient" disabled>REGISTER</button>
+            </div> } }
+                                            &nbsp;&nbsp;
+                                            <label class="btn btn-primary" value="Cancel" onclick="reload()">Back</label>&nbsp;&nbsp;
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </form>
+                        </div>
+                        }
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <hr />
+            </div>
+        </div>
+    </div>
+</div> } }
+<style>
+    .close_icon {
+        margin-bottom: 10px;
+    }
+
+    .input-group .form-control {
+        z-index: 0 !important;
+    }
+
+    @@media(max-width:991px) {
+        .timeshift-style {
+            margin-top: 10px;
+        }
+    }
+</style>
+
+<script>
+    $("#GetnotCommission").change(function () {
+        document.getElementById('commission').style.display = "none";
+
+    });
+
+    $("#GetCommission").change(function () {
+        document.getElementById('commission').style.display = "block";
+
+    });
+
+
+
+    function EditClick() {
+        //document.getElementById('register').style.display = "block";
+
+        localStorage.setItem('EditMode', 'Edit');
+        $('#ViewProfile').hide();
+        $('#EditProfile').show();
+    }
+</script>
+
+
+
+

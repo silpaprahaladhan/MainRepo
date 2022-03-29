@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.TimeShiftViewModel>
+<div class=" table--no-card table-responsive">
+    <input type="hidden" id="hiddenTime" />
+    <table id="TimeShiftList" class="table table-borderless table-striped table-earning padding-top-10">
+        <thead>
+            <tr>
+
+                <th>Shift Name</th>
+                <th class="">Working Hours</th>
+                <th class="">Paying Hours</th>
+                <th>Start Time</th>
+                <th style="width:80px">Action</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td onclick="editTimeShiftDetails(@item.TimeShiftId,'@item.TimeShiftName','@item.WorkingHours','@item.PayingHours','@Convert.ToDateTime(item.StartTime).ToString("hh:mm tt")')">@item.TimeShiftName</td>
+                        <td onclick="editTimeShiftDetails(@item.TimeShiftId,'@item.TimeShiftName','@item.WorkingHours','@item.PayingHours','@Convert.ToDateTime(item.StartTime).ToString("hh:mm tt")')">@item.WorkingHours</td>
+                        <td onclick="editTimeShiftDetails(@item.TimeShiftId,'@item.TimeShiftName','@item.WorkingHours','@item.PayingHours','@Convert.ToDateTime(item.StartTime).ToString("hh:mm tt")')">@item.PayingHours</td>
+                        <td onclick="editTimeShiftDetails(@item.TimeShiftId,'@item.TimeShiftName','@item.WorkingHours','@item.PayingHours','@Convert.ToDateTime(item.StartTime).ToString("hh:mm tt")')">@Convert.ToDateTime(item.StartTime).ToString("hh:mm tt")</td>
+                        <td>
+                            @if (ViewBag.AllowEdit)
+                            {
+                                <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" onclick="editTimeShiftDetails(@item.TimeShiftId,'@item.TimeShiftName','@item.WorkingHours','@item.PayingHours','@Convert.ToDateTime(item.StartTime).ToString("hh:mm tt")')">
+                                    <span class="fa fa-edit"></span>
+                                </button> }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-primary" title="Modify" data-toggle="modal" disabled>
+                                        <span class="fa fa-edit"></span>
+                                    </button>
+                                </div>
+                            }
+
+                            @if (ViewBag.AllowDelete)
+                            {
+                                <button class="btn btn-xs btn-danger" title="Delete" data-toggle="modal" onclick="getID(@item.TimeShiftId)" data-target="#modal-delete"><span class="fa fa-minus-circle"></span></button>
+                            }
+                            else
+                            {
+                                <div class="wrapper">
+                                    <button class="btn btn-xs btn-danger" title="Delete" disabled><span class="fa fa-minus-circle"></span></button>
+                                </div>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="modal-delete" role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Delete Timeshift</h4>
+            </div>
+            <div class="modal-body">
+                Record will be deleted from the system. Are you sure you want to delete?
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteTimeshift()" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function getID(shiftId) {
+     
+        $('#hiddenTime').val(shiftId)
+    }
+    function deleteTimeshift() {
+     
+        $.ajax({
+            type: 'POST',
+            url: "../Admin/DeleteClientTimeShiftDetail",
+            data: { TimeShiftId: $('#hiddenTime').val() },
+            success: function (data) {
+                alert(data)
+                window.location.reload();
+            },
+            error: function (data) {
+                logError(data.statusText + ' - Error occurred while Deletingcountry. Function: deleteUser(). Page: Country.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+</script>

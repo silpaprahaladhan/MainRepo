@@ -1,0 +1,88 @@
+﻿
+@model Nirast.Pcms.Web.Models.AdminBookingDetails
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 " style="padding:10px">
+
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Booking Date", new { @class = "control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.BookingDate</label>
+            @*@Html.DisplayFor(modelIte => modelIte.BookingStartTime, new { @class = "col-md-6 control-label labelStyle" })*@
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Booked User", new { @class = "control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.BookedUser</label>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Location", new { @class = "control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.Location</label>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Service", new { @class = "control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.Service</label>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("From Date", new { @class = " control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.FromDateTime.ToString("MM/dd/yyyy")</label>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("To Date", new { @class = "control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.ToDateTime.ToString("MM/dd/yyyy")</label>
+            @*@Html.DisplayFor(modelIte => modelIte.BookingStartTime, new { @class = "col-md-6 control-label labelStyle" })*@
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("From Time", new { @class = " control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.FromDateTime.ToString("hh:mm tt")</label>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("To Time", new { @class = "control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.ToDateTime.ToString("hh:mm tt")</label>
+            @*@Html.DisplayFor(modelIte => modelIte.BookingStartTime, new { @class = "col-md-6 control-label labelStyle" })*@
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Caregiver", new { @class = "control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.Caretaker</label>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Status", new { @class = " control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.Status</label>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Amount", new { @class = "control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.CurrencySymbol @Model.Amount</label>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Label("Currency", new { @class = " control-label labelStyle bold-heading" })
+            <label class="col-md-6 form-control labelStyle">@Model.Currency</label>
+        </div>
+    </div>
+</div>
+   
+

@@ -1,0 +1,112 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.UserBooking>
+
+@*<h6>User Bookings</h6>*@
+<div class=" table--no-card table-responsive  m-b-40 ">
+    <table class="table table-borderless table-striped table-earning padding-top-10 table-font" id="UserBooking">
+        <thead>
+            <tr>
+                <th>Booking Date</th>
+                <th>Booked User</th>
+                <th>Service</th>
+                @*<th>Location</th>*@
+                <th>From Date Time</th>
+                <th>To Date Time</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody class="table-font">
+            @if (Model != null)
+            {
+                if (Model.Count() > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr onclick="showNotificationDetails('@item.BookingId')">
+                            @{
+                                DateTime date = Convert.ToDateTime(item.BookingDate);
+                                <td>
+                                    @date
+                                </td>
+                            }
+                            <td onclick="showNotificationDetails('@item.BookingId')">@item.BookedUser </td>
+
+                            <td onclick="showNotificationDetails('@item.BookingId')">@item.Service</td>
+                            @*<td>@item.Location</td>*@
+                            <td onclick="showNotificationDetails('@item.BookingId')">@item.FromDateTime.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) @item.FromDateTime.ToString("h:mm tt")</td>
+                            <td onclick="showNotificationDetails('@item.BookingId')">@item.FromDateTime.ToString(System.Configuration.ConfigurationManager.AppSettings["DateFormat"].ToString()) @item.ToDateTime.ToString("h:mm tt")</td>
+                            <td onclick="showNotificationDetails('@item.BookingId')"><button class="btn btn-xs btn-primary" title="View Details" data-toggle="modal" data-target="#notificationDetailDialog" onclick="showNotificationDetails('@item.BookingId')"><span class="fa fa-eye"></span></button></td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>No record found</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>No record found</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="notificationDetailDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content panel">
+            <div class="modal-header panel-heading padding-10">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <h4 class="modal-title">Booking Details</h4>
+            </div>
+            <div id="notificationDetails" class="modal-body no-padding">
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-xs btn btn-primary " data-dismiss="modal">Close</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .table-font {
+        font-size: 16px
+    }
+</style>
+
+<script type="text/javascript">
+    function showNotificationDetails(bookingId) {
+        debugger;
+        showProgress();
+        $.ajax({
+            url: "../CareTaker/ViewNotificationDetails/",
+            data: {
+                bookingId: bookingId
+            },
+            success: function (feed) {
+                $('#notificationDetails').html(feed);
+                $('#notificationDetailDialog').modal('show');
+                spinnerVisible = true;
+                hideProgress();
+            },
+            error: function (feed) {
+                spinnerVisible = true;
+                hideProgress();
+                console.log(feed.responseText);
+                logError(feed.statusText + ' - Error occurred while showing Notification details. Function: showNotificationDetails(bookingId). Page: _CaretakerDashboardNotificationPartial.cshtml');
+                //alert('Some error has occurred. Please try again after some time.');
+            }
+        });
+    }
+
+</script>

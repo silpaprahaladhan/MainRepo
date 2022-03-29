@@ -1,0 +1,420 @@
+﻿@model  Nirast.Pcms.Web.Models.AdvancedSearchInputModel
+
+<script src="~/js/SearchPageScript.js" type="text/javascript"></script>
+<script src="~/js/easyResponsiveTabs.js" type="text/javascript"></script>
+
+<script>
+   
+    function LoadStatesByCountry() {
+        debugger;
+        
+        var selectedCountry = ($('#Country').val() == "" || $('#Country').val() == undefined) ? 0 : $('#Country').val();
+        localStorage.setItem("bookingCountry", selectedCountry == 0 ? "": selectedCountry);
+        $.ajax({
+            url: '/Admin/LoadStatesByCountryId',
+            type: "GET",
+            dataType: "JSON",
+            data: { countryId: selectedCountry },
+            success: function (data) {
+
+                $("#State").html(""); // clear before appending new list
+                $("#State").append(
+                    $('<option></option>').val(0).html("--Select--"));
+                if (selectedCountry != 0) {
+                    $.each($.parseJSON(data), function (i, state) {
+
+                        $("#State").append(
+                            $('<option></option>').val(state.StateId).html(state.Name));
+                    });
+                }
+                $('#City').html('');
+                $('#City').append($('<option></option>').val('0').html('--Select--'));
+               
+            },
+            error: function (data) {
+                logError(feed.statusText + ' - Error occurred while loading States for Country:' + selectedCountry + '. Function: LoadStatesByCountry(). Page: Search.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+    function LoadCitiesByStates(selectedState) {
+        // debugger;
+        localStorage.setItem("bookingState", selectedState);
+        $.ajax({
+            url: '/Admin/LoadCitiesbyStateId',
+            type: "GET",
+            dataType: "JSON",
+            data: { stateId: selectedState },
+            success: function (data) {
+                $("#City").html(""); // clear before appending new list
+                $("#City").append(
+                    $('<option></option>').val(0).html("--Select--"));
+                $.each($.parseJSON(data), function (i, city) {
+                    $("#City").append(
+                        $('<option></option>').val(city.CityId).html(city.CityName));
+                });
+               
+            },
+            error: function (data) {
+                logError(feed.statusText + ' - Error occurred while loading Cities for State:' + selectedState + '. Function: LoadCitiesByStates(selectedState). Page: Search.cshtml');
+                //alert('Some network error has occurred. Please try again after some time.');
+            }
+        });
+    }
+
+    function ChangeCity(cityId) {
+        localStorage.setItem("bookingCity", selectedState);
+    }
+
+    function ChangeType(type) {
+        localStorage.setItem("bookingType", type);
+    }
+
+    function ChangeService(type) {
+        GetServiceDescription(type);
+        localStorage.setItem("bookingService", type);
+    }
+
+    function ChangeGender(type) {
+        localStorage.setItem("bookingGender", type);
+    }
+
+    function ChangePrice(type) {
+        localStorage.setItem("bookingPrice", type);
+    }
+
+    function ChangeExp(type) {
+        localStorage.setItem("bookingExp", type);
+    }
+
+    function ChangeProfile(type) {
+        localStorage.setItem("bookingProfile", type);
+    }
+
+</script>
+@if (Session["UserType"] != null)
+{
+    <input type="hidden" id="hdnUserType" value="@Session["UserType"].ToString()" />
+
+}
+else
+{
+    <input type="hidden" id="hdnUserType" value="" />
+}
+@using (Html.BeginForm("SearchCareTaker", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "myForm" }))
+{
+    <div class="product-easy">
+        <div class="container">
+
+            @*<div class="col-md-3 products-left">
+
+                    <div class="css-treeview">
+                        <h4>Services</h4>
+                        <ul class="tree-list-pad">
+                            @{Html.RenderAction("ServicesMenu");}
+                        </ul>
+                    </div>
+                </div>*@
+            <div class="products-right">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    @if (TempData["SaveBooking"] != null)
+                    {
+                        if (TempData["SaveBooking"].ToString() == "Booking failed" || TempData["SaveBooking"].ToString() == "Booking already exist for this Caregiver!")
+                        {
+                            <p class="alert alert-danger statusmessage" id="successMessage">@TempData["SaveBooking"]</p>
+                        }
+                        else
+                        {
+                            <p class="alert alert-success statusmessage" id="successMessage">@TempData["SaveBooking"]</p>
+                        }
+
+                    }
+                    <div>
+                       @* <div id="ServiceDescriptions"></div>*@
+                        <div class="panel panel-default homeSearch" style="margin-bottom:5px;">
+                            <div class="panel-heading ">
+                                <h4 class="panel-title">
+                                    <a> Default Search</a>
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label class="label-style">Country </label>
+                                    @if (ViewBag.Country != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.Country, new SelectList(ViewBag.Country, "Value", "Text"), "--Select--", new { @class = "form-control labelStyle",
+                                       @onchange = "LoadStatesByCountry(this.value)" })
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label class="label-style">@Resource.State </label>
+                                    @Html.DropDownListFor(model => model.State, new SelectList(ViewBag.StateName, "Value", "Text"), "--Select--", new { @class = "form-control labelStyle", @onchange = "LoadCitiesByStates(this.value)" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label class="label-style">City </label>
+                                    @Html.DropDownListFor(model => model.City, new SelectList(ViewBag.City, "Value", "Text"), "--Select--", new { @class = "form-control labelStyle", @onchange = "ChangeCity(this.value)" })
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label class="label-style">Caregiver Type</label>
+                                    @Html.DropDownListFor(model => model.Category, new SelectList(ViewBag.Category, "Value", "Text"), "--Select--", new { @class = "form-control labelStyle", @onchange = "ChangeType(this.value)" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3">
+                                <label class="label-style">Service Required From Date </label>
+                                @Html.TextBoxFor(Model => Model.FromDate, "", new
+                                {
+                                    @class = "datePickerControlStyle datetimepicker form-control labelStyle",
+                                    @placeholder = "From Date",
+                                    @autocomplete = "off",
+                                    @onkeydown = "return false;",
+                                    @onchange = "setBookingFromDate(this.value)"
+                                })
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <label class="label-style">From Time </label>
+                                @Html.TextBoxFor(Model => Model.FromTime, "", new { @class = "form-control labelStyle homeSearch", @placeholder = "From Time", @autocomplete = "off", @onkeydown = "return false;", @onchange = "setBookingFromTime(this.value)" })
+                            </div>
+
+                            <div class="col-md-3 col-lg-3">
+                                <label class="label-style">Service Required To Date</label>
+                                @Html.TextBoxFor(Model => Model.ToDate, "", new
+                                {
+                                    @class = "datePickerControlStyle datetimepicker form-control labelStyle",
+                                    @placeholder = "To Date",
+                                    @autocomplete = "off",
+                                    @onkeydown = "return false;",
+                                    @onchange = "setBookingToDate(this.value)"
+                                })
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <label class="label-style">To Time </label>
+                                @Html.TextBoxFor(Model => Model.ToTime, "", new { @class = "form-control labelStyle homeSearch", @placeholder = "To Time", @autocomplete = "off", @onkeydown = "return false;", @onchange = "setBookingToTime(this.value)" })
+                            </div>
+                        </div>
+
+                        @*<div class="row">
+
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <label class="label-style">Care recipient location :</label>
+                                    @Html.TextBoxFor(Model => Model.Location, "", new { @class = "form-control", @placeholder = "Location", @autocomplete = "off" })
+                                    @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger required" })
+                                </div>
+                            </div>*@
+                    </div>
+                    <div>
+
+                    </div>
+                    <div>
+                        <div class="panel-group" id="accordion" style="margin-top:10px;">
+                            <div class="panel panel-default">
+                                <div class="panel-heading ">
+                                    <h4 class="panel-title collapsed" data-toggle="collapse" data-parent="#accordion" href="#advancedSearch" style="cursor:pointer;">
+                                        <a> Advanced Search</a><span class="glyphicon glyphicon-chevron-down float-right"></span>
+                                    </h4>
+                                </div>
+                                <div class="" id="accordion">
+                                    <div id="advancedSearch" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-4 col-xs-6">
+                                                    <div class="form-group">
+                                                        @Html.DropDownListFor(model => model.Services, new SelectList(ViewBag.Service, "Value", "Text"), new { @class = "form-control labelStyle", @onchange = "ChangeService(this.value)" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-6">
+                                                    <div class="form-group">
+                                                        @Html.DropDownListFor(model => model.Price, new SelectList(ViewBag.Rates, "Value", "Text"), "--Price/Range Per Hour--", new { @class = "form-control labelStyle", @onchange = "ChangePrice(this.value)" })
+                                                        @*@Html.HiddenFor(model => model.Services)*@
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-6">
+                                                    <div class="form-group">
+                                                        @Html.DropDownListFor(model => model.Experience, new SelectList(ViewBag.Experience, "Value", "Text"), "--Experience--", new { @class = "form-control labelStyle", @onchange = "ChangeExp(this.value)" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-4 col-xs-6">
+                                                    <div class="form-group">
+                                                        @Html.TextBoxFor(model => model.ProfileId, "", new { @class = "form-control", @placeholder = "Profile ID", @autocomplete = "off" })
+                                                        @Html.ValidationMessageFor(model => model.ProfileId, "", new { @class = "text-danger required", @onchange = "ChangeProfile(this.value)" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-6">
+                                                    <div class="form-group">
+                                                        @Html.DropDownListFor(model => model.Gender, new SelectList(ViewBag.Gender, "Value", "Text"), "--Gender--", new { @class = "form-control labelStyle", @onchange = "ChangeGender(this.value)" })
+                                                    </div>
+                                                </div>
+
+                                                @*<div class="col-sm-4 col-xs-6">
+                                <div class="form-group">
+                                    <button data-toggle="modal" data-target="#MapLocations" id="btnShowmap" type="button" class="btn btn-custome min-btn">
+                                        Map Location
+                                    </button>
+                                </div>
+                            </div>*@
+                                            </div>
+
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center" style="padding-top: 15px;">
+
+                                    <button type="button" id="searchBtn" class="btn btn-success btn-width100">
+                                        SEARCH
+                                    </button>
+
+                                    <button type="button" class="btn btn-default btn-width100" onclick="resetSearch()">
+                                        RESET
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="sort-grid" id="sort">
+                                <div class="sorting text-right">
+                                    <div class="col-md-12">
+                                        <label class="label-style">Sort by: </label>
+                                        <select id="sortByExp" onchange="SortData(this.value, 'Experience')">
+                                            <option value="0">--Select--</option>
+                                            <option value="1">Experience (High - Low)</option>
+                                            <option value="2">Experience (Low - High)</option>
+                                            <option value="3">Rate/hr (High - Low)</option>
+                                            <option value="4">Rate/hr (Low - High)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div id="Result" style="margin-top:10px;">
+
+                            </div>
+                            <div  id="displayError" style="display:none ">
+                                <div class="col-md-12 no-records-message statusmessage">
+                                    All our Care givers are booked , Please contact us for further assistance !
+                                </div>
+                                <div style="padding-top:50px;">
+                                    @Html.ActionLink("View Contact", "Contact", null, new { @class = "btn btn-success" })
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <!-- //login -->
+
+                <div class="modal fade" id="MapLocations" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content modal-info">
+                            <div class="modal-header">
+                                <button type="button" onclick="" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="login-grids">
+                                    <div class="login">
+                                        <div class="mapStyle">
+                                            @*<input id="pac-input1" class="form-control labelStyle mapTextbox" type="text" placeholder="Type Location">
+                                                <div id="map" style="height:600px;"></div>*@
+                                            <div id="policyContent" style="height:600px;" type="text" readonly="readonly">
+                                            </div>
+
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="modal-header">
+                                        </div>
+                                        <div class="col-md-12 button_align-center">
+                                            <button id="btnAddPlace" data-dismiss="modal" class="btn btn-primary">Select Location</button>
+                                        </div>
+                                        <div class="modal-header">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script language="javascript" type="text/javascript">
+    //$('#ToTime').change(function () {
+    //    var fromDate = $('#FromDate').val();
+    //    var fromTime = $('#FromTime').val();
+    //    var toDate = $('#ToDate').val();
+    //    var toTime = $('#ToTime').val();
+    //    if (checkTime()) {
+    //       // debugger
+    //        if (fromDate.length == 0 || fromTime.length == 0 || toDate.length == 0 || toTime.length == 0) {
+    //        }
+    //        else {
+    //            var data = $('#myForm').serialize();
+    //            showProgress();
+    //            $.ajax({
+    //                url: "../Home/SearchCareTaker",
+    //                method: "post",
+    //                data: data,
+    //                success: function (feed) {
+    //                    $('#Result').html('');
+    //                    $('#Result').html(feed);
+    //                    spinnerVisible = true;
+    //                    hideProgress();
+    //                },
+    //                error: function (feed) {
+    //                    $('#Result').html('<div class="col-md-12 no-records-message statusmessage">No Records Found !!!</div>');
+    //                    spinnerVisible = true;
+    //                    hideProgress();
+    //                }
+    //            });
+    //        }
+    //    }
+    //    $('#sortByRate').val('0');
+    //    $('#sortByExp').val('0');
+    //})
+
+
+
+    $("#btnShowmap").click(function () {
+
+        $("#policyContent").html('<iframe name="select_frame" src="@Url.Action("ShowMap", "Admin", new { FilePath = "_FilePath" }) "style="width: 98%; height: 600px" ></iframe>');
+
+
+    });
+
+</script>
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcE8EJhuT8YwoVEICg8cGNMO9xcQmb7F0&libraries=places&callback=initAutocomplete"
+        async defer></script>
+<style>
+    .label-style {
+        font-weight: bold !important;
+        color: #777;
+        margin-top: 7px;
+    }
+</style>
+

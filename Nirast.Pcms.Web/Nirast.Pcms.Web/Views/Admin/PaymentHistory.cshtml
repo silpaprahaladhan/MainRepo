@@ -1,0 +1,280 @@
+﻿@model IList<Nirast.Pcms.Web.Models.PaymentHistory>
+@{
+    ViewBag.Title = "PaymentHistory";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    @Styles.Render("~/css/CustomStyles.css")
+
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+</head>
+<div class="container animsition">
+    @if (ViewBag.Error != null)
+    {
+        if (ViewBag.Error != null)
+        {
+            <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+        }
+    }
+    else
+    {
+        if (TempData["Success"] != null)
+        {
+            <p class="alert alert-success statusmessage">@TempData["Success"].ToString()</p>
+        }
+        <div class="row profile_Style">
+            <div class="panel panel-default report-style " id="main">
+                <div class="panel-heading">
+                    <h4>Select Location</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-2" id="countrydiv">
+                                <label class="label-style">Country</label>
+                                @Html.DropDownListFor(model => model[0].CountryId1, ViewData["ListCountry1"] as SelectList, "--Select--", new { @Id = "ddlCountry1", @class = "form-control labelStyle", @onchange = "GetStates1()" })
+                                @Html.ValidationMessageFor(model => model[0].CountryId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="statediv">
+                                <label class="label-style">State</label>
+                                @Html.DropDownListFor(model => model[0].StateId1, ViewData["StateList1"] as SelectList, "--Select--", new { @Id = "ddlStates1", @class = "form-control labelStyle", @onchange = "GetCities1()" })
+                                @Html.ValidationMessageFor(model => model[0].StateId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-2" id="citydiv">
+                                <label class="label-style">City</label>
+                                @Html.DropDownListFor(model => model[0].CityId1, ViewData["ListCity1"] as SelectList, "--Select--", new { @Id = "ddlCity1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                @Html.ValidationMessageFor(model => model[0].CityId1, "", new { @class = "no-padding required" })
+                            </div>
+
+                            <div class="col-md-2" id="branchdiv">
+                                <label class="label-style">Franchise/Branch</label>
+                                @Html.DropDownListFor(model => model[0].BranchId1, ViewData["ListBranch"] as SelectList, "--Select--", new { @Id = "Branch1", @class = "form-control labelStyle", onchange = "SetCity1()" })
+                                @Html.ValidationMessageFor(model => model[0].BranchId1, "", new { @class = "no-padding required" })
+                            </div>
+                            <div class="col-md-3" style="margin-top:39px;">
+                                <button class="btn btn-primary float-left editButton" title="Edit" onclick="LoadCaretakersByCategoryAndLocation()">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="equal-height-panels">
+                <div class="col-lg-12 col-md-12 col-sm-12 ">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Payment History</h4>
+                        </div>
+
+                        @{Html.RenderAction("PaymentAdvancedSearch");}
+                    </div>
+
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12">
+
+                    @{Html.RenderAction("PaymentList");}
+                </div>
+            </div>
+        </div>
+        TempData["Success"] = null;
+    }
+</div>
+
+
+<script type="text/javascript">
+    function setYear() {
+        $('#Year').val($("#ddlYearly").val());
+    }
+
+    function setMonth() {
+        var d = new Date();
+        $('#Month').val($('#ddlMonthly').val());
+    }
+
+    $(function () {
+
+        $(document).ready(function ()
+        {
+             var role = @Html.Raw(Json.Encode(ViewData["UserWorkRole"]));
+        if (role == 1) {
+            document.getElementById('countrydiv').style.display = "none";
+        }
+        if (role == 2) {
+            document.getElementById('countrydiv').style.display = "none";
+            document.getElementById('statediv').style.display = "none";
+        }
+        if (role == 3) {
+            document.getElementById('countrydiv').style.display = "none";
+            document.getElementById('statediv').style.display = "none";
+            document.getElementById('citydiv').style.display = "none";
+       
+            }
+            if (role == 4) {
+                document.getElementById('main').style.display = "none";
+            }
+            setYear();
+            setMonth();
+            $('#txtFromDate').datepicker({
+                dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+                showStatus: true,
+                showWeeks: true,
+                currentText: 'Now',
+                autoSize: true,
+                gotoCurrent: true,
+                showAnim: 'blind',
+                changeMonth: true,
+                changeYear: true,
+                highlightWeek: true
+            });
+
+            $('#txtToDate').datepicker({
+                dateFormat: "@System.Configuration.ConfigurationManager.AppSettings["DTDateFormat"].ToString()",
+                showStatus: true,
+                showWeeks: true,
+                currentText: 'Now',
+                autoSize: true,
+                gotoCurrent: true,
+                showAnim: 'blind',
+                changeMonth: true,
+                changeYear: true,
+                highlightWeek: true
+            });
+
+            $('#History').DataTable({
+                "pagingType": "full_numbers",
+                "bSort": false
+            });
+
+            $("#ddlYearly").hide();
+            $("#ddlMonthly").hide();
+            $("#txtFromDate").hide();
+            $("#txtToDate").hide();
+
+            $("#divyear").hide();
+            $("#divmonth").hide();
+
+            $("#lblyear").hide();
+            $("#lblmonth").hide();
+            $("#lblfrmdate").hide();
+            $("#lbltodate").hide();
+
+            $("#ddlSearchRange").change(function () {
+                var currentTime = new Date();
+                var year = currentTime.getFullYear();
+                if ($(this).val() == "1") { // It doesn't work over here.
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+
+                    $("#divyear").show();
+                    $("#divmonth").hide();
+
+                    $("#lblyear").show();
+                    $("#lblmonth").hide();
+                    $("#lblfrmdate").hide();
+                    $("#lbltodate").hide();
+
+                    $("#ddlYearly").val(year);
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                    //$("#Month").val(0);
+                    //$("#Year").val(currentTime.getFullYear());
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                    setYear();
+                    setMonth();
+
+                } else if ($(this).val() == "2") {
+                    $('#Year').val('');
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").show();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+
+                    $("#divyear").show();
+                    $("#divmonth").show();
+
+                    $("#lblyear").show();
+                    $("#lblmonth").show();
+                    $("#lblfrmdate").hide();
+                    $("#lbltodate").hide();
+                    $("#ddlYearly").val(year);
+                    $("#ddlMonthly").val(currentTime.getMonth() + 1);
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                    setYear();
+                    setMonth();
+                }
+                else if ($(this).val() == "3") {
+                    $('#Year').val('');
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").show();
+                    $("#txtToDate").show();
+
+                    $("#divyear").show();
+                    $("#divmonth").show();
+
+                    $("#lblyear").hide();
+                    $("#lblmonth").hide();
+                    $("#lblfrmdate").show();
+                    $("#lbltodate").show();
+                    $("#ddlYearly").val(year);
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                    setYear();
+                    setMonth();
+                }
+
+                else {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+
+                    $("#divyear").hide();
+                    $("#divmonth").hide();
+
+                    $("#lblyear").hide();
+                    $("#lblmonth").hide();
+                    $("#lblfrmdate").hide();
+                    $("#lbltodate").hide();
+
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                    $("#ddlYearly").val(year);
+                    $("#ddlMonthly").val(currentTime.getMonth() + 1);
+                    setYear();
+                    setMonth();
+                }
+            });
+        });
+    });
+
+
+
+    $("#ddlCity1").change(function () {
+        var cityId = $('#ddlCity1').val();
+        //alert(stateId);
+
+        $.ajax({
+            url: '/Admin/GetBranch?city=' + cityId,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            success: function (data) {
+                console.log(data);
+                var ddlState = $("#Branch1");
+                ddlState.empty().append('<option selected="selected" value="0">--Select--</option>');
+
+                $.each(data, function (data, value) {
+
+                    ddlState.append($("<option></option>").val(value.BranchId).html(value.BranchName));
+                });
+
+            }
+        });
+    });
+</script>

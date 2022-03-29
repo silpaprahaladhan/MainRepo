@@ -1,0 +1,298 @@
+﻿@model Nirast.Pcms.Web.Models.CaretakerScheduling
+
+@{
+    ViewBag.Title = "CaretakerScheduling";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("CaretakerScheduling", "Scheduler", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="container padT25">
+        <div class="panel panel-default col-md-10 no-padding margin-right-15">
+            <div class="panel-heading"><strong>Schedule a Caregiver</strong></div>
+            <div class="panel-body">
+                <div style="margin: 0 auto;">
+                    <h4 class="heading-color h4-label">Client Details</h4>
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    @Html.Label("Client Name")
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.Label(Model.ClientName, new { @class = " labelStyle" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    @Html.Label("Address")
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.Label(Model.Address1, new { @class = " labelStyle" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    @Html.Label("Province")
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.Label(Model.Province1, new { @class = " labelStyle" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    @Html.Label("City")
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.Label(Model.City1, new { @class = " labelStyle" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4  labelStyle">
+                                    @Html.Label("Phone Number")
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.Label(Model.PhoneNo1, new { @class = " labelStyle" })
+                                </div>
+                            </div>
+                            @* Address 2 Details *@
+                            @if (Model.Address2 != string.Empty && Model.Address2 != null)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-4  label-style">
+                                        @Html.Label("Address")
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.Label(Model.Address2, new { @class = " labelStyle" })
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.Province2 != string.Empty && Model.Province2 != null)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-4  label-style">
+                                        @Html.Label("Province")
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.Label(Model.Province2, new { @class = " labelStyle" })
+                                    </div>
+                                </div>
+                            }
+
+                            @if (Model.City2 != string.Empty && Model.City2 != null)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-4  label-style">
+                                        @Html.Label("City")
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.Label(Model.City2, new { @class = " labelStyle" })
+                                    </div>
+                                </div>
+                            }
+
+                            @if (Model.PhoneNo2 != string.Empty && Model.PhoneNo2 != null)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-4  label-style">
+                                        @Html.Label("Phone Number")
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.Label(Model.PhoneNo2, new { @class = " labelStyle" })
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    @Html.Label("Orientation(s)")
+                                </div>
+                                <div class="col-md-7">
+                                    <table>
+                                        @foreach (var orientation in Model.Orientations)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @orientation.Orientation
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+
+                        </fieldset>
+                    </form>
+
+                </div>
+                <h4 class="heading-color h4-label">Caregiver Details</h4>
+            
+                <div style="margin: 0 auto;">
+                    <form class="form-horizontal">
+                        <fieldset>
+
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    <strong>@Html.Label("Caregiver Name", new { @class = " " })</strong> 
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.Label(Model.CaretakerName, new { @class = " labelStyle" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    <strong>@Html.Label("Phone No", new { @class = " " })</strong>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.Label("+121-234644", new { @class = " labelStyle" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    <strong>@Html.Label("Address", new { @class = " " })</strong>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.Label("Adle, St. Thomas Rd, Canada", new { @class = " labelStyle" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    @Html.Label("Caregiver Category", new { @class = "" })
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.Label(Model.CaretakerCategory, new { @class = " labelStyle" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4  label-style">
+                                    @Html.Label("Caregiver Service(s)", new { @class = "" })
+                                </div>
+                                <div class="col-md-7">
+                                    <table class="table custom-table">
+                                        @foreach (var service in Model.ServicesByCaretaker)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @service
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                            <h4 class="heading-color h4-label">Schedule Details</h4>
+
+                            <div class="form-group">
+                                <div class="col-xs-6 col-md-4 label-style">
+                                    @Html.Label("Work & Time Shift")
+
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control labelStyle">
+                                        <option>--Select--</option>
+                                        <option>Floor Shift</option>
+                                        <option>Individual</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control labelStyle">
+                                        <option>--Select--</option>
+                                        <option>4 hr.</option>
+                                        <option>8 hr.</option>
+                                        <option>12 hr.</option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group"> 
+                                <div class="col-xs-6 col-md-4 label-style">
+                                    @Html.Label("From Date & Time")
+
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("FromDate", "", new { @class = "inputFormStyle" })
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("fromTime", "", new { @class = "inputFormStyle" })
+                                </div>
+                            </div>
+
+                           
+                            <div class="form-group">
+                                <div class="col-xs-6 col-md-4 label-style" >
+                                    @Html.Label("To Date & Time")
+
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("ToDate", "", new { @class = "inputFormStyle" })
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.TextBox("toTime", "", new { @class = "inputFormStyle" })
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+
+                        </fieldset>
+                    </form>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row newsright button_align-center" style="padding-right: 15px;">
+                                <button onclick="nextTab()" class="btn btn-primary float-right">Book Now</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"> </div>
+    </div>
+}
+<script>
+    $(function () {
+        $("#FromDate").datepicker();
+    });
+    $(function () {
+        $("#ToDate").datepicker();
+    });
+    $(function () {
+        $("#fromTime").timepicker({ 'timeFormat': 'h:i A' });
+        $("#toTime").timepicker({ 'timeFormat': 'h:i A' });
+    });
+</script>
+
+<style type="text/css">
+    .custom-table {
+        width: 55%;
+    }
+
+.inputFormStyle {
+    width: 100% !important;
+}
+
+.heading-color {
+    /*color: #FDA30E;*/
+    margin-bottom: 15px;
+}
+        .custom-table td, .custom-table > tbody > tr > td,
+        .custom-table > tbody > tr > th,
+        .custom-table > tfoot > tr > td,
+        .custom-table > tfoot > tr > th,
+        .custom-table > thead > tr > td,
+        .custom-table > thead > tr > th {
+            padding: 5px !important;
+        }
+</style>

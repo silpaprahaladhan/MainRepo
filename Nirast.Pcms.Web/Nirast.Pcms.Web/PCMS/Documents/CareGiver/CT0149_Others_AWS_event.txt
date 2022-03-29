@@ -1,0 +1,46 @@
+- <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+- <System>
+  <Provider Name="ASP.NET 4.0.30319.0" /> 
+  <EventID Qualifiers="32768">1310</EventID> 
+  <Level>3</Level> 
+  <Task>3</Task> 
+  <Keywords>0x80000000000000</Keywords> 
+  <TimeCreated SystemTime="2019-03-19T10:24:48.217715100Z" /> 
+  <EventRecordID>1150</EventRecordID> 
+  <Channel>Application</Channel> 
+  <Computer>EC2AMAZ-KJJGQDG</Computer> 
+  <Security /> 
+  </System>
+- <EventData>
+  <Data>3008</Data> 
+  <Data>A configuration error has occurred.</Data> 
+  <Data>3/19/2019 10:24:48 AM</Data> 
+  <Data>3/19/2019 10:24:48 AM</Data> 
+  <Data>4035f1f3877745019aa4f48a8316d814</Data> 
+  <Data>1</Data> 
+  <Data>1</Data> 
+  <Data>0</Data> 
+  <Data>/LM/W3SVC/1/ROOT-22-131974646879307131</Data> 
+  <Data>Full</Data> 
+  <Data>/</Data> 
+  <Data>C:\inetpub\wwwroot\</Data> 
+  <Data>EC2AMAZ-KJJGQDG</Data> 
+  <Data /> 
+  <Data>5820</Data> 
+  <Data>w3wp.exe</Data> 
+  <Data>IIS APPPOOL\DefaultAppPool</Data> 
+  <Data>ConfigurationErrorsException</Data> 
+  <Data>Could not load file or assembly 'Nirast.Pcms.Web.Logger' or one of its dependencies. The process cannot access the file because it is being used by another process. (Exception from HRESULT: 0x80070020) at System.Web.Configuration.CompilationSection.LoadAssemblyHelper(String assemblyName, Boolean starDirective) at System.Web.Configuration.CompilationSection.LoadAllAssembliesFromAppDomainBinDirectory() at System.Web.Configuration.CompilationSection.LoadAssembly(AssemblyInfo ai) at System.Web.Compilation.BuildManager.GetReferencedAssemblies(CompilationSection compConfig) at System.Web.Compilation.BuildManager.GetPreStartInitMethodsFromReferencedAssemblies() at System.Web.Compilation.BuildManager.CallPreStartInitMethods(String preStartInitListPath, Boolean& isRefAssemblyLoaded) at System.Web.Compilation.BuildManager.ExecutePreAppStart() at System.Web.Hosting.HostingEnvironment.Initialize(ApplicationManager appManager, IApplicationHost appHost, IConfigMapPathFactory configMapPathFactory, HostingEnvironmentParameters hostingParameters, PolicyLevel policyLevel, Exception appDomainCreationException) Could not load file or assembly 'Nirast.Pcms.Web.Logger' or one of its dependencies. The process cannot access the file because it is being used by another process. (Exception from HRESULT: 0x80070020) at System.Reflection.RuntimeAssembly._nLoad(AssemblyName fileName, String codeBase, Evidence assemblySecurity, RuntimeAssembly locationHint, StackCrawlMark& stackMark, IntPtr pPrivHostBinder, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks) at System.Reflection.RuntimeAssembly.InternalLoadAssemblyName(AssemblyName assemblyRef, Evidence assemblySecurity, RuntimeAssembly reqAssembly, StackCrawlMark& stackMark, IntPtr pPrivHostBinder, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks) at System.Reflection.RuntimeAssembly.InternalLoad(String assemblyString, Evidence assemblySecurity, StackCrawlMark& stackMark, IntPtr pPrivHostBinder, Boolean forIntrospection) at System.Reflection.RuntimeAssembly.InternalLoad(String assemblyString, Evidence assemblySecurity, StackCrawlMark& stackMark, Boolean forIntrospection) at System.Reflection.Assembly.Load(String assemblyString) at System.Web.Configuration.CompilationSection.LoadAssemblyHelper(String assemblyName, Boolean starDirective)</Data> 
+  <Data>http://ec2-18-224-2-148.us-east-2.compute.amazonaws.com/signalr/reconnect?transport=webSockets&messageId=d-1AF44334-B,0|0,0|1,1&clientProtocol=1.5&connectionToken=T1bUmBstMnm6wWUKeyGD0GCJwn1MZGtCAUQ4pOEkvGuCVhLIH0PYElGcKN0LC3TU1rVra61wcLTLmCBXtx33vpMvZX0W3hzfb4MX/wsaCds8xcZ6U21e51jnwN8QXeNB&connectionData=[{"name":"notificationhub"}]&tid=1</Data> 
+  <Data>/signalr/reconnect</Data> 
+  <Data>103.107.143.26</Data> 
+  <Data /> 
+  <Data>False</Data> 
+  <Data /> 
+  <Data>IIS APPPOOL\DefaultAppPool</Data> 
+  <Data>14</Data> 
+  <Data>IIS APPPOOL\DefaultAppPool</Data> 
+  <Data>False</Data> 
+  <Data>at System.Web.Configuration.CompilationSection.LoadAssemblyHelper(String assemblyName, Boolean starDirective) at System.Web.Configuration.CompilationSection.LoadAllAssembliesFromAppDomainBinDirectory() at System.Web.Configuration.CompilationSection.LoadAssembly(AssemblyInfo ai) at System.Web.Compilation.BuildManager.GetReferencedAssemblies(CompilationSection compConfig) at System.Web.Compilation.BuildManager.GetPreStartInitMethodsFromReferencedAssemblies() at System.Web.Compilation.BuildManager.CallPreStartInitMethods(String preStartInitListPath, Boolean& isRefAssemblyLoaded) at System.Web.Compilation.BuildManager.ExecutePreAppStart() at System.Web.Hosting.HostingEnvironment.Initialize(ApplicationManager appManager, IApplicationHost appHost, IConfigMapPathFactory configMapPathFactory, HostingEnvironmentParameters hostingParameters, PolicyLevel policyLevel, Exception appDomainCreationException)</Data> 
+  </EventData>
+  </Event>

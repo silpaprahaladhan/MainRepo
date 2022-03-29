@@ -1,0 +1,83 @@
+﻿
+@model IEnumerable<Nirast.Pcms.Web.Models.InvoiceSearchInpts>
+<div>
+    <div class="filterable table-responsive">
+        <table id="tableBookingHistory" class="table table-borderless table-striped table-earning padding-top-10" style="width:100%">
+            <thead>
+                <tr>
+                    <th style="width:10%">Invoice Number</th>
+                    <th style="width:10%">Client Name</th>
+                    <th style="width:10%">Invoice Date</th>
+                    <th style="width:10%">Category</th>
+                    <th style="width:10%">Description</th>
+                    <th style="width:10%">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count() != 0)
+                {
+                    foreach (var item in Model)
+                    {
+                <tr>
+                    @Html.Hidden("FileId", item.InvoiceSearchInputId)
+                    @Html.Hidden("ClientName", item.ClientName)
+                    <td onclick="viewSchedule(@item.InvoiceSearchInputId,'@item.ClientEmail','@item.ClientName')">@item.InvoicePrefix  @item.InvoiceNumber</td>
+                    <td onclick="viewSchedule(@item.InvoiceSearchInputId,'@item.ClientEmail','@item.ClientName')">@item.ClientName</td>
+                    <td onclick="viewSchedule(@item.InvoiceSearchInputId,'@item.ClientEmail','@item.ClientName')">@item.InvoiceDate.ToShortDateString()</td>
+                    <td onclick="viewSchedule(@item.InvoiceSearchInputId,'@item.ClientEmail','@item.ClientName')">@item.Category</td>
+                    <td onclick="viewSchedule(@item.InvoiceSearchInputId,'@item.ClientEmail','@item.ClientName')">@item.Description</td>
+                    <td>
+                        <button class="btn btn-xs btn-primary" title="Details" onclick="viewSchedule(@item.InvoiceSearchInputId,'@item.ClientEmail')"><span class="fa fa-eye"></span></button>
+                        @if (Convert.ToString(Session["UserType"]) == "ADMINISTRATOR")
+                        {
+                            <a class="btn btn-xs btn-primary fa" title="Regenerate" href="@Url.Action("RegenerateInvoiceDetails", "Client", new { InvoiceSearchInputId = item.InvoiceSearchInputId })"><span class="glyphicon glyphicon-repeat"></span></a>
+                        }
+                    </td>
+
+
+                </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">
+                            No Records Found!!!
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-invoice">
+    <div class="modal-dialog" style="width: 80%;">
+        <div class="modal-custom">
+            <div class="panel panel-group panel-success">
+                <div class="panel-heading" style="padding:10px 15px">
+                    <h4 class="modal-title"> Invoice <span class="fa fa-close float-right" data-dismiss="modal"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12" style="margin-top:5px;">
+                                <label class=" label-style no-padding">Email ID</label><span class="mandatoryField">*</span>
+                                @Html.TextBox("EmailTxt", new { @class = "form-control labelStyle" })
+                                <input type="hidden" id="hdnSearchInputId" name="hdnSearchInputId" />
+                                <button class="btn btn-primary" onclick="SendEmail()" value="" id="SendMail" style="margin-bottom: inherit;margin-left: 15px;">Send</button>
+                                <span class="col-md-12 no-padding labelStyle info" title="" style="margin-bottom:10px;">Report will be sent to the above Email ID</span>
+                            </div>
+                        </div>
+                        <div id="policyContent" class="policyContent" type="text" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

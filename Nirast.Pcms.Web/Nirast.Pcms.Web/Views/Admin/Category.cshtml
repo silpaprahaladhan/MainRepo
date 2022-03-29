@@ -1,0 +1,183 @@
+﻿@model Nirast.Pcms.Web.Models.CategoryViewModel
+@{
+    ViewBag.Title = "Category";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<head>
+    <script type="text/javascript" language="javascript" src="~/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link href="~/css/AdminDashboard/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    @Styles.Render("~/css/CustomStyles.css")
+    @Styles.Render("~/build/css/Common.css")
+
+</head>
+
+<div class="container animsition">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 ">
+                @if (TempData["Success"] != null)
+                {
+                    <p class="alert alert-success statusmessage">@TempData["Success"]</p>
+                }
+                @if (TempData["Failure"] != null)
+                {
+                    <p class="alert alert-danger statusmessage">@TempData["Failure"]</p>
+                }
+                @if (ViewBag.Error != null)
+                {
+                    if (ViewBag.Error != null)
+                    {
+                        <div><p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p></div>
+                    }
+                }
+                else
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Manage Caregiver Category</h4>
+                        </div>
+                        <div class="panel-body">
+
+                            @using (Html.BeginForm("CreateCategory", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="col-md-12 innerDiv">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.CategoryId, "", new { @class = "hidden" })
+                                            @Html.Label("Category", new { @class = "control-label label-style marginTopStyle" })<span class="mandatoryField">*</span>
+                                            @Html.TextBoxFor(model => model.Name, "", new { @class = "labelStyle form-control " })
+                                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "required" })
+                                        </div>
+                                        <div class="col-md-5">
+                                            @Html.Label("Color", new { @class = "control-label label-style marginTopStyle" })
+                                            @Html.DropDownListFor(model => model.Color, new SelectList(Model.ColorList, "Value", "Key"), "--Select--", new { @style = "padding: 1px;border: 1px solid #ccc !important;height: 40px;", @Id = "ddlColor", @class = "form-control control-label labelStyle"})
+                                        </div>
+                                        <div class="col-md-1" style="margin-top:28px;">
+                                            <input type="button" id="colorbtn" style="padding: 10px 20px;pointer-events:none;border:1px solid transparent;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    @if (ViewBag.AllowEdit)
+                                    {
+                                        <input type="submit" class="btn btn-primary m-t-10" value="Save">
+                                        <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                    }
+                                    else
+                                    {
+                                        <div class="wrapper">
+                                            <input type="submit" class="btn btn-primary m-t-10" value="Save" disabled>
+                                            <label class="btn btn-primary m-t-10" value="Cancel" onclick="reload()">Cancel</label>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        @{Html.RenderAction("CategoryList");}
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(document).ready(function () {
+            colorbtn.style.background = "transparent";
+            $('#CategoryList').DataTable({
+                "pagingType": "full_numbers"
+            });
+
+            $("#ddlColor").change(function () {
+                if ($(this).val() == ""){
+                    colorbtn.style.background = "transparent";
+                }
+                else {
+                    colorbtn.style.background = $(this).val();
+                }
+            });
+
+           
+            function GetColors() {
+                $('#ddlCountry').change(function () {
+                    var countryId = $('#ddlCountry').val();
+                    $.ajax({
+                        url: '/Admin/GetColors',
+                        type: "GET",
+                        dataType: "JSON",
+                        success: function (data) {
+                            $("#StateId").html(""); // clear before appending new list
+                            $("#StateId").append(
+                                $('<option></option>').val(0).html("--Select--"));
+                            $("#CityId").html(""); // clear before appending new list
+                            $("#CityId").append(
+                                $('<option></option>').val(0).html("--Select--"));
+                            $.each($.parseJSON(data), function (i, state) {
+
+                                $("#StateId").append(
+                                    $('<option></option>').val(state.StateId).html(state.Name));
+                            });
+                        },
+                        error: function (data) {
+                        logError(data.statusText + ' - Error occurred while populating the Caretakers. Function: $(document).ready(function ()). Page: CaretakerWiseBooking.cshtml');
+                            //alert('Some network error has occurred. Please try again after some time.');
+                        }
+                    });
+                });
+            }
+            $("#ddlYearly").hide();
+            $("#ddlMonthly").hide();
+            $("#txtFromDate").hide();
+            $("#txtToDate").hide();
+            $("#ddlSearchRange").change(function () {
+                if ($(this).val() == "1") { // It doesn't work over here.
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+
+                } else if ($(this).val() == "2") {
+                    $("#ddlYearly").show();
+                    $("#ddlMonthly").show();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                }
+                else if ($(this).val() == "3") {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").show();
+                    $("#txtToDate").show();
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+                else {
+                    $("#ddlYearly").hide();
+                    $("#ddlMonthly").hide();
+                    $("#txtFromDate").hide();
+                    $("#txtToDate").hide();
+                    document.getElementById("txtFromDate").value = "";
+                    document.getElementById("txtToDate").value = "";
+                    document.getElementById("ddlYearly").selectedIndex = "0";
+                    document.getElementById("ddlMonthly").selectedIndex = "0";
+                }
+            });
+        });
+    });
+</script>

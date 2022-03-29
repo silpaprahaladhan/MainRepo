@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="CaretakerBookingDataSet" targetNamespace="http://tempuri.org/CaretakerBookingDataSet.xsd" xmlns:mstns="http://tempuri.org/CaretakerBookingDataSet.xsd" xmlns="http://tempuri.org/CaretakerBookingDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="CaretakerBookingDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="CaretakerBookingDataSet" msprop:Generator_UserDSName="CaretakerBookingDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="BookingList" msprop:Generator_TableClassName="BookingListDataTable" msprop:Generator_TableVarName="tableBookingList" msprop:Generator_TablePropName="BookingList" msprop:Generator_RowDeletingName="BookingListRowDeleting" msprop:Generator_RowChangingName="BookingListRowChanging" msprop:Generator_RowEvHandlerName="BookingListRowChangeEventHandler" msprop:Generator_RowDeletedName="BookingListRowDeleted" msprop:Generator_UserTableName="BookingList" msprop:Generator_RowChangedName="BookingListRowChanged" msprop:Generator_RowEvArgName="BookingListRowChangeEvent" msprop:Generator_RowClassName="BookingListRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Caretaker" msprop:Generator_ColumnVarNameInTable="columnCaretaker" msprop:Generator_ColumnPropNameInRow="Caretaker" msprop:Generator_ColumnPropNameInTable="CaretakerColumn" msprop:Generator_UserColumnName="Caretaker" type="xs:string" minOccurs="0" />
+              <xs:element name="Service" msprop:Generator_ColumnVarNameInTable="columnService" msprop:Generator_ColumnPropNameInRow="Service" msprop:Generator_ColumnPropNameInTable="ServiceColumn" msprop:Generator_UserColumnName="Service" type="xs:string" minOccurs="0" />
+              <xs:element name="BookedBy" msprop:Generator_ColumnVarNameInTable="columnBookedBy" msprop:Generator_ColumnPropNameInRow="BookedBy" msprop:Generator_ColumnPropNameInTable="BookedByColumn" msprop:Generator_UserColumnName="BookedBy" type="xs:string" minOccurs="0" />
+              <xs:element name="FromTime" msprop:Generator_ColumnVarNameInTable="columnFromTime" msprop:Generator_ColumnPropNameInRow="FromTime" msprop:Generator_ColumnPropNameInTable="FromTimeColumn" msprop:Generator_UserColumnName="FromTime" type="xs:string" minOccurs="0" />
+              <xs:element name="ToTime" msprop:Generator_ColumnVarNameInTable="columnToTime" msprop:Generator_ColumnPropNameInRow="ToTime" msprop:Generator_ColumnPropNameInTable="ToTimeColumn" msprop:Generator_UserColumnName="ToTime" type="xs:string" minOccurs="0" />
+              <xs:element name="TotalHours" msprop:Generator_ColumnVarNameInTable="columnTotalHours" msprop:Generator_ColumnPropNameInRow="TotalHours" msprop:Generator_ColumnPropNameInTable="TotalHoursColumn" msprop:Generator_UserColumnName="TotalHours" type="xs:string" minOccurs="0" />
+              <xs:element name="BookingDate" msprop:Generator_ColumnVarNameInTable="columnBookingDate" msprop:Generator_ColumnPropNameInRow="BookingDate" msprop:Generator_ColumnPropNameInTable="BookingDateColumn" msprop:Generator_UserColumnName="BookingDate" type="xs:string" minOccurs="0" />
+              <xs:element name="UserLocation" msprop:Generator_ColumnVarNameInTable="columnUserLocation" msprop:Generator_ColumnPropNameInRow="UserLocation" msprop:Generator_ColumnPropNameInTable="UserLocationColumn" msprop:Generator_UserColumnName="UserLocation" type="xs:string" minOccurs="0" />
+              <xs:element name="FromDateTime" msprop:Generator_ColumnVarNameInTable="columnFromDateTime" msprop:Generator_ColumnPropNameInRow="FromDateTime" msprop:Generator_ColumnPropNameInTable="FromDateTimeColumn" msprop:Generator_UserColumnName="FromDateTime" type="xs:string" minOccurs="0" />
+              <xs:element name="ToDateTime" msprop:Generator_ColumnVarNameInTable="columnToDateTime" msprop:Generator_ColumnPropNameInRow="ToDateTime" msprop:Generator_ColumnPropNameInTable="ToDateTimeColumn" msprop:Generator_UserColumnName="ToDateTime" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,296 @@
+﻿@model Nirast.Pcms.Web.Models.TermsAndPolicyModel
+@{
+    ViewBag.Title = "TermsAndPolicy";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+<head>
+    @Styles.Render("~/css/CustomStyles.css")
+</head>
+<div class="container animsition" style="padding-bottom: 15px;">
+
+    <div class="row profile_Style">
+        <div class="equal-height-panels">
+            <div class="ui segment">
+                <div id="dvMain" name="dvMain">
+                    <div class="clr"></div>
+                    <div class="col-md-12">
+                        @{
+                            if (ViewBag.Error != null)
+                            {
+                                <div><p class="alert custom-alert-danger col-md-12 statusmessage">@ViewBag.Error</p></div>
+                            }
+                            else
+                            {
+                                using (Html.BeginForm("SaveTermsAndPolicy", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form", id = "caretakerRegistration" }))
+                                {
+                                    if (TempData["Failure"] != null)
+                                    {
+                                        <div><p class="alert custom-alert-danger col-md-12  statusmessage">@TempData["Failure"].ToString()</p></div>
+                                    }
+                                    if (TempData["Success"] != null)
+                                    {
+                                        <div><p class="alert alert-success col-md-12 statusmessage">@TempData["Success"].ToString()</p></div>
+                                    }
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default termsandpolicy">
+                                            <div class="panel-heading">
+                                                <h4>Company Documents</h4>
+                                            </div>
+                                            <div class="panel-body">
+
+                                                <div style="padding-bottom: 50px;margin-top:15px;">
+                                                    <div class="col-md-4 mid-align">
+                                                        <label class="label-style"><strong>Choose Terms and Conditions: </strong><span class="fa fa-info-circle" title="Upload *.txt file"></span></label>
+                                                    </div>
+                                                    <div class="col-md-4" style="margin-top: 7px;">
+                                                        @{
+                                                            if (ViewBag.AllowEdit != null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.TermsnCondition, "", new { @type = "file", @accept = ".txt", @class = "disableUpload" })
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="wrapper">
+                                                                    <input type="file" name="postedFiles" value="" id="myFile" disabled />
+                                                                </div>
+                                                            }
+                                                            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy"))
+                                                            {
+                                                                var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy\TermsAndConditions.pdf";
+                                                                if (System.IO.File.Exists(absolutePath))
+                                                                {
+                                                                    @*<div style="margin-top:5px;"><span> TermsAndConditions.pdf </span></div>*@
+                                                                    <p><a href="#" class="privacy-popup" data-toggle="modal" data-target="#TermsPopup">Terms and Conditions</a> </p>
+                                                                   
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                <div style="padding-bottom: 50px;margin-top:15px;">
+                                                    <div class="col-md-4 mid-align">
+                                                        <label class="label-style"><strong>Choose Privacy and Policy: </strong><span class="fa fa-info-circle" title="Upload *.txt file"></span></label>
+                                                    </div>
+                                                    <div class="col-md-4" style="margin-top: 7px;">
+                                                        @{
+                                                            if (ViewBag.AllowEdit != null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.PrivacyPolicy, "", new { @type = "file", @accept = ".txt", @class = "disableUpload" })
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="wrapper">
+                                                                    <input type="file" name="postedFiles" value="" id="myFile" disabled />
+                                                                </div>
+                                                            }
+                                                            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy"))
+                                                            {
+                                                                var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy\PrivacyPolicy.pdf";
+                                                                if (System.IO.File.Exists(absolutePath))
+                                                                {
+                                                                    @*<div style="margin-top:5px;"><span> PrivacyPolicy.pdf </span></div>*@
+                                                                    <p><a href="#" class="privacy-popup" data-toggle="modal" data-target="#PrivacyPopup">Privacy Policy</a></p>
+
+
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div style="padding-bottom: 50px; margin-top:15px;">
+                                                    <div class="col-md-4 mid-align">
+                                                        <label class="label-style"><strong>Choose Consent Form: </strong><span class="fa fa-info-circle" title="Upload *.pdf file"></span></label>
+                                                    </div>
+                                                    <div class="col-md-4" style="margin-top: 7px;">
+                                                        @{
+                                                            if (ViewBag.AllowEdit != null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.ConsentForm, "", new { @type = "file", @accept = ".pdf", @class = "disableUpload" })
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="wrapper">
+                                                                    <input type="file" name="postedFiles" value="" id="myFile" disabled />
+                                                                </div>
+                                                            }
+                                                            if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\ConsentForm"))
+                                                            {
+                                                                var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\ConsentForm\ConsentForm.pdf";
+                                                                if (System.IO.File.Exists(absolutePath))
+                                                                {
+                                                                    @*<div style="margin-top:5px;"><span> ConsentForm.pdf </span></div>*@
+                                                                    <p><a href="#" class="privacy-popup" data-toggle="modal" data-target="#ConsentPopUp">Consent Form</a></p>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="row col-md-12">
+                                                    <div class="padT25 text-center">
+                                                        @*<button type="button" class="theme-button" onclick="clearCanvas()">Clear</button>*@
+                                                        @{
+                                                            if (ViewBag.AllowEdit != null)
+                                                            {
+                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                                <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="wrapper">
+                                                                    <button type="button" class="btn btn-primary" disabled>Submit</button>
+                                                                    <label class="btn btn-primary" value="Cancel" onclick="reload()">Cancel</label>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <input type="hidden" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="TermsPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title h4-label" style="text-align:center">Terms and Conditions</h4>
+            </div>
+            <div class="modal-body">
+                <p class="policy" style="overflow-x: visible !important;">
+                    @if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\PCMS\Settings\Company\TermsAndPrivacy"))
+                    {
+                        var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"\PCMS\Settings\Company\TermsAndPrivacy\TermsAndConditions.pdf";
+                        if (System.IO.File.Exists(absolutePath))
+                        {
+                            <iframe type="application/pdf" style="width: 100%; height: 395px" src="\PCMS\Settings\Company\TermsAndPrivacy\TermsAndConditions.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+                        }
+                    }
+                </p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Close</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="PrivacyPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title h4-label" style="text-align:center">Privacy Policy</h4>
+            </div>
+            <div class="modal-body">
+
+                <p class="policy" style="overflow-x: visible !important;">
+                    @if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy"))
+                    {
+                        var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\TermsAndPrivacy\PrivacyPolicy.pdf";
+                        if (System.IO.File.Exists(absolutePath))
+                        {
+                            <iframe type="application/pdf" style="width: 100%; height: 395px" src="\PCMS\Settings\Company\TermsAndPrivacy\PrivacyPolicy.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+                        }
+                    }
+                </p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Close</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ConsentPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title h4-label" style="text-align:center">Consent Form</h4>
+            </div>
+            <div class="modal-body">
+
+                <p class="policy" style="overflow-x: visible !important;">
+                    @if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\ConsentForm"))
+                    {
+                        var absolutePath = AppDomain.CurrentDomain.BaseDirectory + @"PCMS\Settings\Company\ConsentForm\ConsentForm.pdf";
+                        if (System.IO.File.Exists(absolutePath))
+                        {
+                            <iframe type="application/pdf" style="width: 100%; height: 395px" src="\PCMS\Settings\Company\ConsentForm\ConsentForm.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+                        }
+                    }
+                </p>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Close</button>
+
+                @*<button type="button" class="btn btn-default newsrightModel" data-dismiss="modal">Decline</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        if (window.FileReader) {
+            debugger;
+            $('#TermsnCondition').on('change', function (e) {
+                var file = e.target.files[0];
+                if (file.name.split('.')[1] != 'pdf') {
+                    alert("Only pdf files are supported.");
+                    e.target.value = '';
+                    return false;
+                }
+            });
+
+            $('#PrivacyPolicy').on('change', function (e) {
+                debugger;
+                var file = e.target.files[0];
+                if (file.name.split('.')[1] != 'txt') {
+                    alert("Only pdf files are supported.");
+                    e.target.value = '';
+                    return false;
+                }
+            });
+        } else {
+            console.log("no support");
+        }
+
+
+
+
+    });
+</script>
+@*<style>
+        .profile_Style {
+            margin-top: 60px;
+        }
+    </style>*@

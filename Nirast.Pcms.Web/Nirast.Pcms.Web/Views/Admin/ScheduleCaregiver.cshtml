@@ -1,0 +1,1615 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminDashboardLayout.cshtml";
+}
+@model Nirast.Pcms.Web.Models.UserBooking
+@Styles.Render("~/css/CustomStyles.css")
+@Styles.Render("~/build/css/Common.css")
+<style>
+    textarea {
+        resize: none;
+    }
+</style>
+@{
+    if (ViewBag.Error != null)
+    {
+        <div class="padT25">
+            <p class="alert custom-alert-danger col-md-6 col-md-offset-3 statusmessage">@ViewBag.Error</p>
+        </div>
+    }
+    else
+    {
+       
+        <div class="container animsition">
+            <div class="row profile_Style">
+                <div class="equal-height-panels">
+                    <div class="col-lg-12 col-md-12 col-sm-12 ">
+                        <h3 class="h4-label">Scheduling Calendar View</h3>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Schedule Requirements</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-12 innerDiv">
+                                    <div class="row">
+                                        <div class="col-md-2 col-lg-2">
+                                            <label class="label-style">Public User Name:</label>
+                                            @Html.TextBoxFor(m => m.BookedUser, new { @autocomplete = "off", @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <label class="label-style">Service Name:</label>
+                                            @Html.TextBoxFor(m => m.Service, "", new { @autocomplete = "off", @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <label class="label-style">Service Required From:</label>
+                                            @Html.TextBoxFor(m => m.FromDateTime, "", new { @autocomplete = "off", @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <label class="label-style">Service Required To :</label>
+                                            @Html.TextBoxFor(m => m.ToDateTime, "", new { @autocomplete = "off", @class = "form-control", @readonly = "readonly" })
+                                        </div>
+
+                                        <div class="col-md-3 col-lg-3" style="display:inline-flex;margin-top: 30px;" id="legends">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2">
+                                        @Html.CheckBoxFor(Model => Model.IsFullDay, new { onclick = "return false" })
+                                        @Html.Label("Full Day", new { @class = "label-style fullday" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="calender"></div>
+        </div>
+
+        <div id="myModal" class="modal fade" role="dialog" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="panel panel-group panel-success">
+                    <div class="panel-heading" style="padding:5px 15px">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><span id="eventTitle"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="pDetails"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">
+                            Close
+                        </button>
+                        @{
+                            if (ViewBag.AllowDelete)
+                            {
+                                <button id="btnDelete" class="btn btn-primary pull-right">
+                                    Remove
+                                </button>
+                            }
+                            if (ViewBag.AllowEdit)
+                            {
+                                <button id="btnEdit" class="btn btn-primary pull-right" style="margin-right:5px;">
+                                    Edit
+                                </button>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="myModalSave" class="modal fade" role="dialog" aria-hidden="false" tabindex="-1" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-custom">
+                    <div class="panel panel-group panel-success">
+                        <div class="panel-heading" style="padding:5px 15px">
+                            <button type="button" class="close" data-dismiss="modal" style="margin-top:7px;">&times;</button>
+                            <h4><label style="padding-left:unset;font-size: 18px;font-weight: 500;" id="clientNameLbl"></label></h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <input type="hidden" id="hdEventID" value="0" />
+                                <input type="hidden" id="hdStartDate" value="0" />
+                                <input type="hidden" id="hdncaretakerId" value="0" />
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select id="ddServiceType" class="form-control"> </select>
+                                </div>
+                                <label for="chkPassport">
+                                    <input type="checkbox" id="chkPassport" />
+                                    Custom
+                                </label>
+                                <div id="dvBothTime" style="display: none">
+                                    <table>
+                                        <tr>
+                                            <td style="padding-right: 5px;">
+                                                <label>From Time</label>
+                                            </td>
+                                            <td style="padding-right: 5px;padding-left: 25px;">
+                                                <input type="text" name="fromTime" id="fromTime" class="inputFormStyle" />
+                                            </td>
+                                            <td style="padding-right: 5px;padding-left: 25px;">
+                                                <label>To Time</label>
+                                            </td>
+                                            <td style="padding-right: 5px;padding-left: 25px;">
+                                                <input type="text" name="toTime" id="toTime" class="inputFormStyle" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="dvOneTime">
+                                    <label>Time Shift</label>
+                                    <select id="ddWorkTime" class="form-control"></select>
+                                    @*<input type="text" name="workTime" id="workTime" class="inputFormStyle" />*@
+                                </div>
+                                <div class="form-group" style="display:none">
+                                    <label>Start</label>
+                                    <div class="input-group date" id="dtp1">
+                                        <input type="text" id="txtStart" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="display:none">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" id="chkIsFullDay" checked="checked" />  Is Full Day event</label>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="divEndDate" style="display:none">
+                                    <label>End</label>
+                                    <div class="input-group date" id="dtp2">
+                                        <input type="text" id="txtEnd" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top:9px;">
+                                    <label>Caregiver Name</label>
+                                    <select id="ddCareTaker" class="form-control" style="display:none"></select>
+                                    <input type="text" readonly="readonly" id="txtCaretakerName" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Available Caregiver</label>
+                                    <input type="text" onkeyup="myFunction()" placeholder="Search for Caregiver names.." id="myInput" class="form-control" style="margin-bottom: 10px;" />
+                                    <div style="max-height: 225px;overflow: auto;">
+                                        <table class="table table-borderless table-striped table-earning dynamic-table" id="tblTimeShift">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-7" style="padding-left: 20px;"><strong>Caregiver Name</strong></th>
+                                                    <th class="col-md-5" style="padding-left: 20px;"><strong>Phone Number</strong>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            <tbody id="addedTimeShiftList"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea id="txtDescription" rows="3" maxlength="100" class="form-control"></textarea>
+                                </div>
+                                @*<div class="form-group">
+                                        <label for="chkMailCareGiver">
+                                            <input type="checkbox" id="chkMailCareGiver" checked="checked" />
+                                            Send Mail to Caregiver
+                                        </label>&nbsp;&nbsp;
+                                        <label for="chkMailClient">
+                                            <input type="checkbox" id="chkMailClient" />
+                                            Send Mail to Client
+                                        </label>
+                                    </div>*@
+
+                                <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary pull-right" id="clearValues">Cancel</button>
+                                @if (ViewBag.AllowEdit)
+                                {
+                                    <button type="button" id="btnSave" class="btn btn-primary pull-right">Schedule</button>
+                                }
+                            </form>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            <div id="myModalReject" class="modal fade" role="dialog" aria-hidden="true" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-custom">
+                        <div class="panel panel-group panel-success">
+                            <input type="hidden" id="hdRejectedCaretakerID" value="0" />
+                            <div class="panel-heading" style="padding:7px 15px">
+                                <button type="button" class="close" id="closereject">&times;</button>
+                                <h4 class="modal-title"><span id="rejectedcaretaker"></span></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Rejected reason</label>
+                                    <textarea id="txtRejectReason" rows="3" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="btnreject" class="btn btn-primary" style="margin-right:5px;">
+                                    <span class="glyphicon"></span>OK
+                                </button>
+                                <button type="button" class="btn btn-primary" id="rejectCancel">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+        <link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+        @section Scripts{
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+            @*<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>*@
+            <script src="~/js/fullCalendar.js"></script>
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+            <script>
+                function GetResidentName(clientId) {
+                    var residentName = [];
+                    var clientId = $('#ddlClient').val();
+                    $.ajax({
+                        url: '../Admin/LoadResidentList',
+                        type: "GET",
+                        data: { clientId: clientId },
+                        success: function (feed) {
+
+                            $.each($.parseJSON(feed), function (index, value) {
+
+                                residentName.push(value.ResidentName);
+                            });
+                            $("#txtConatctPerson").autocomplete({
+                                source: residentName,
+                                select: function (event, ui) {
+
+                                    $('#txtDescription').val(ui.item.value);
+                                    $('#txtConatctPerson').val(ui.item.value);
+                                    return false;
+                                }
+                            });
+
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while populating the Residents. Function: $(document).ready(function ()). Page: ScheduledCalenderView.cshtml');
+                            //alert('Some network error has occurred. Please try again after some time.');
+                        }
+                    });
+                }
+                var eventList = [];
+                $(document).ready(function () {
+                    CaretaketType();
+
+                });
+                function CaretaketType() {
+                    var colorLegends = '';
+                    $.ajax({
+                        url: '/Admin/GetCaretakerType',
+                        type: "GET",
+                        dataType: "JSON",
+                        success: function (data) {
+                            $.each($.parseJSON(data), function (i, color) {
+                                if (color.Color != null)
+                                    colorLegends += '<div><input type="button" class="legend-style" style="background-color:' + color.Color + '" /> <label class="label-style" style="padding-right: 10px;">' + color.TypeName + '</label> </div>';
+                            });
+                            $('#legends').html(colorLegends);
+                        },
+                        error: function (data) {
+                            logError(data.statusText + ' - Error occurred while loading Caregiver Type. Function: CaretaketType(). Page: ScheduledCalenderView.cshtml');
+                            //alert('Some network error has occurred. Please try again after some time.');
+                        }
+                    });
+                }
+            </script>
+            <script>
+
+                function myFunction() {
+                    var input, filter, table, tr, td, i, txtValue;
+                    input = document.getElementById("myInput");
+                    filter = input.value.toUpperCase();
+                    table = document.getElementById("tblTimeShift");
+                    tr = table.getElementsByTagName("tr");
+                    for (i = 0; i < tr.length; i++) {
+                        td = tr[i].getElementsByTagName("td")[0];
+                        if (td) {
+                            txtValue = td.textContent || td.innerText;
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                            } else {
+                                tr[i].style.display = "none";
+                            }
+                        }
+                    }
+                }
+
+                $('.modal-dialog').draggable({
+
+                    handle: ".modal-custom"
+               });
+
+
+
+               $(function () {
+               //sets the avilable caretaker name from dynamic table to caretaker textbox
+                   $(document).on("click", "input.checkbox", function () {
+                       $('input.checkbox').not(this).prop('checked', false);
+                       if ($(this).prop("checked") == true) {
+                           var id = $(this).closest("tr").find('td:eq(1)').text();
+                           $("#txtCaretakerName").val(id);
+                       }
+                       else {
+                           $("#txtCaretakerName").val("");
+                       }
+                   });
+
+                   var saveDate = new Date();
+
+                   $('#rejectCancel').click(function () {
+                       $('#myModalReject').modal('toggle');
+                   });
+
+                   $('#closereject').click(function () {
+                       $('#myModalReject').modal('toggle');
+                   });
+
+                   $('#btnreject').click(function () {
+                       var data = [];
+                       var Description = $('#txtRejectReason').val();
+                       var ClientId = ($('#ddlClient').val() == null || $('#ddlClient').val() == 'null' || $('#ddlClient').val() == '' || $('#ddlClient').val() == NaN) ? 0 : parseInt($('#ddlClient').val());
+                       var CaretakerId = $('#hdRejectedCaretakerID').val();
+                       var start = 0;
+                       if ($('#ddWorkTime').val() != "") {
+                           start = $('#ddWorkTime').val().split('|');
+                       }
+                       var Workshift = 0;
+
+                       if (start != 0) {
+                           Workshift = start[start.length - 3];
+                       }
+                       else {
+                           Workshift = start;
+                       }
+
+                       var ScheduleDate = $('#hdStartDate').val()
+                       data.push({
+                           CaretakerId: CaretakerId,
+                           Description: Description,
+                           ClientId: ClientId,
+                           Workshift: Workshift,
+                           ScheduleDate: ScheduleDate
+                       });
+
+                       if (data != "") {
+                           RejectCaretaker(data);
+
+                       }
+
+                   });
+
+                   function RejectCaretaker(data) {
+                       $.ajax({
+                           type: "POST",
+                           url: '/Client/RejectCaretaker',
+                           data: { data: data },
+                           dataType: "json",
+                           success: function (data) {
+                               if (data.status == true) {
+                                   $('#myModalReject').modal('toggle');
+                                   AvailableCaretakerDynamicTable();
+                               }
+                           },
+                           error: function (data) {
+                               logError(data.statusText + ' - Error occurred while rejecting a caretaker. Function: RejectCaretaker(data). Page: ScheduledCalenderView.cshtml');
+                               //alert('Some network error has occurres. Please try again after some time.');
+                           }
+                       })
+                   }
+
+                   $("#fromTime").timepicker({ 'timeFormat': 'h:i A' });
+                   $("#toTime").timepicker({ 'timeFormat': 'h:i A' });
+                   $("#workTime").timepicker({ 'timeFormat': 'h:i A' });
+
+
+                   $("#tblTimeShift").on('click', '.col-md-4', function () {
+
+                       $(".modal-dialog").css({
+                           top: 0,
+                           left: 0
+                       });
+                       var rows = $('#tblTimeShift').find('> tbody > tr');
+                       rows.css({ "font-weight": "initial", "background-color": "initial" });
+                       var currentRow = $(this).closest("tr"); // get current row 1st TD value
+                       currentRow.css({ "font-weight": "bold" });
+                       var CaretakerId = currentRow.find('.detelecaretakerID').val();
+
+                       var col2 = currentRow.find("td:eq(0)").text(); // get current row 2nd TD
+                       $('#myModalReject #rejectedcaretaker').text(col2);
+                       $('#txtRejectReason').val('');
+                       $('#myModalReject').modal('toggle');
+                       $('#hdRejectedCaretakerID').val(CaretakerId);
+
+                   });
+
+                   $("#tblTimeShift").on('click', '.col-md-5', function () {
+                       var rows = $('#tblTimeShift').find('> tbody > tr');
+                       rows.css({ "font-weight": "initial", "background-color": "initial" });
+
+                       var currentRow = $(this).closest("tr");
+                       currentRow.css({ "font-weight": "bold" });
+                       var col2 = currentRow.find("td:eq(0)").text();
+                       $(this).closest('tr').find(':checkbox').prop('checked', this.checked);
+                       $("#txtCaretakerName").val(col2);
+                       var CaretakerId = currentRow.find('.detelecaretakerID').val();
+                       $('#hdncaretakerId').val(CaretakerId);
+                       //alert($('#hdncaretakerId').val())
+
+                   });
+                   $("#tblTimeShift").on('click', '.col-md-7', function () {
+
+                       var rows = $('#tblTimeShift').find('> tbody > tr');
+                       rows.css({ "font-weight": "initial", "background-color": "initial" });
+                       var currentRow = $(this).closest("tr");
+                       currentRow.css({ "font-weight": "bold" });
+                       var col2 = currentRow.find("td:eq(0)").text();
+                       $(this).closest('tr').find(':checkbox').prop('checked', this.checked);
+                       $("#txtCaretakerName").val(col2);
+                       var CaretakerId = currentRow.find('.detelecaretakerID').val();
+                       $('#hdncaretakerId').val(CaretakerId);
+                   });
+
+               //calendar event starts
+                   var holidays = [];
+
+                   $(document).ready(function () {
+
+                       //sets client if redirected from search page
+                       var clientSearchID = 0;
+                       clientSearchID = localStorage.getItem("clientId");
+                       if (clientSearchID === undefined) {
+                           clientSearchID = 0
+                       }
+                       //get client id from querystring
+                       function GetParameterValues(param) {
+                           var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                           for (var i = 0; i < url.length; i++) {
+                               var urlparam = url[i].split('=');
+                               if (urlparam[0] == param) {
+                                   return urlparam[1];
+                               }
+                           }
+                       }
+                       $.ajax({
+                           url: "/Client/LoadClient",
+                           type: "GET",
+                           contentType: "application/json; charset=utf-8",
+                           datatype: JSON,
+                           success: function (result) {
+                               $("#ddlClient").html(""); // clear before appending new list
+                               $("#ddlClient").append($('<option></option>').val("").html("--Select--"));
+                               $.each($.parseJSON(result), function (i, care) {
+                                   $("#ddlClient").append($('<option></option>').val(care.ClientId).html(care.ClientName));
+                               })
+
+                               if (clientSearchID != 0) {
+                                   $("#ddlClient").val(clientSearchID);
+                               }
+                               else {
+                                   $("#ddlClient").val("");
+                               }
+                               GenerateCalender();
+                           },
+                           error: function (data) {
+                               logError(data.statusText + ' - Error occurred while loading Clients. Function: "/Client/LoadClient". Page: ScheduledCalenderView.cshtml');
+                               alert('Some network error has occurred. Please try again after some time.');
+                           }
+                       });
+
+                       $.ajax({
+                           url: "/Client/LoadCategory",
+                           type: "GET",
+                           contentType: "application/json; charset=utf-8",
+                           datatype: JSON,
+                           success: function (result) {
+
+                               $("#ddServiceType").html(""); // clear before appending new list
+                               $("#ddServiceType").append($('<option></option>').val("").html("--Select--"));
+                               $.each($.parseJSON(result), function (i, care) {
+                                   $("#ddServiceType").append($('<option></option>').val(care.CategoryId).html(care.Name));
+
+                               })
+
+                               $("#ddServiceType").val(0);
+                               $('#ddServiceType').change();
+
+                           },
+                           error: function (data) {
+                               logError(data.statusText + ' - Error occurred while loading Caretaker Type. Function: "/Client/LoadCategory". Page: ScheduledCalenderView.cshtml');
+                               alert('Some network error has occurred. Please try again after some time.');
+                           }
+                       });
+                   });
+
+                   $.ajax({
+
+                       url: "/Client/GetHolidays",
+                       type: "GET",
+                       contentType: "application/json; charset=utf-8",
+                       datatype: JSON,
+                       success: function (result) {
+                              debugger;
+                           $.each($.parseJSON(result), function (i, care) {
+                               var holidaydate = new Date(care.HolidayDate);
+                               holidaydate = new Date(holidaydate.getTime() + (holidaydate.getTimezoneOffset() * 60000));
+
+                               holidays.push({
+                                   'dates': holidaydate
+                               });
+                           })
+                       },
+                       error: function (data) {
+                           logError(data.statusText + ' - Error occurred while loading Holidays. Function: "/Client/GetHolidays". Page: ScheduledCalenderView.cshtml');
+                           //alert('Some network error has occurred. Please try again after some time.');
+                       }
+                   });
+
+
+
+
+                   $.ajax({
+                       url: "/Client/LoadTimeShift",
+                       type: "GET",
+                       contentType: "application/json; charset=utf-8",
+                       datatype: JSON,
+
+                       success: function (result) {
+                           $("#ddWorkTime").html(""); // clear before appending new list
+                           $("#ddWorkTime").append($('<option></option>').val("").html("--Select--"));
+                           $.each($.parseJSON(result), function (i, care) {
+
+                               $("#ddWorkTime").append($('<option></option>').val(care.TimeShiftId + '|' + care.WorkingHours + '|' + moment(care.StartTime).format('hh:mm A')).html(care.TimeShiftName));
+                           })
+                       },
+                       error: function (data) {
+                           logError(data.statusText + ' - Error occurred while loading Time Shifts. Function: "/Client/LoadTimeShift". Page: ScheduledCalenderView.cshtml');
+                           //alert('Some network error has occurred. Please try again after some time.');
+                       }
+                   });
+
+                   var events = [];
+                   var selectedEvent = null;
+
+                   //to load all schedule details
+                   function FetchEventAndRenderCalendar(month,year) {
+                       events = [];
+                       $.ajax({
+                           type: "POST",
+                           url: "/Client/GetEvents",
+                           data: { month: month, year: year },
+                           success: function (data) {
+
+                               $.each(data, function (i, v) {
+                                   events.push({
+
+                                       eventID: v.Id,
+                                       title: v.CareTakerName + '  ' + v.CareTakerTypeName + '  ' + v.FromTime + ' - ' + v.EndTime,
+                                       description: v.Description !=null? v.Description : "",
+                                       start: (v.Start),
+                                       end: (v.Start),
+                                       endshow: v.End != null ? moment(v.End).subtract(1,"days") : null,
+                                       color: v.ThemeColor,
+                                       allDay: v.IsFullDay,
+                                       caretaker: v.CareTaker,
+                                       careTakerType: v.CareTakerType,
+                                       careTakerTypeName: v.CareTakerTypeName,
+
+                                       workshifdetails:v.WorkShifDetails,
+                                       worktime: v.WorkTime,
+                                       customtiming: v.CustomTiming,
+                                       caretakername: v.CareTakerName,
+                                       workitimename: v.WorkTimeName,
+
+                                       contactperson: v.ContactPerson,
+                                       workitimedetails: v.WorkTimeDetails,
+                                       clientname: v.ClientName,
+                                       fromtime: v.FromTime,
+                                       endtime: v.EndTime,
+                                       allDay:false
+                                   });
+                               })
+                               GenerateCalender(events);
+                           },
+                           error: function (data) {
+                               logError(data.statusText + ' - Error occurred while rendering the Client scheduling . Function: FetchEventAndRenderCalendar(). Page: ScheduledCalenderView.cshtml');
+                               alert('Some network error has occurred. Please try again after some time.');
+                           }
+                       })
+                   }
+
+
+
+                   //function to generate calendar
+                   function GenerateCalender() {
+                       $('#calender').fullCalendar('destroy');
+                       $('#calender').fullCalendar({
+                           contentheight: 'auto',
+                           //height: 650,
+                           height: 'auto',
+                           defaultDate: saveDate,
+                           header: {
+                               left: 'prev,next today',
+                               center: 'title',
+                               right: 'month,basicWeek,basicDay'
+                           },
+                           droppable: false,
+                           eventDrop: false,
+                           eventOrder: "start",
+                           slotminutes: 15,
+                           eventLimit: true,
+                           views: {
+                               month: {
+                                   eventLimit: 11
+                               },
+                               day: {
+                                   eventLimit:11
+                               },
+                               week:{
+                                   eventLimit:11
+                       }
+                           },
+                           displayEventTime: false,
+                           timezone: 'utc',
+
+                           dayClick: function (date, jsEvent, view) {
+
+                               $('#hdStartDate').val(date.format());
+
+                           },
+                           dayRender: function (date, cell, $el) {
+
+                               var check = $.fullCalendar.formatDate(date, 'DD/MM/YYYY');
+
+                               var fullDate = new Date()
+                               var twoDigitMonth = ((fullDate.getMonth().length + 1) === 1) ? (fullDate.getMonth() + 1) : '0' + (fullDate.getMonth() + 1);
+                               var currentDate = fullDate.getDate() + "/" + twoDigitMonth + "/" + fullDate.getFullYear();
+
+
+
+                               $.each(holidays, function (index, value) {
+
+
+                                   var Month;
+                                   var daterec;
+                                   var montStr = value.dates.getMonth().toString();
+
+                                   if (value.dates.getMonth() + 1 < 9) {
+                                       Month = '0' + (value.dates.getMonth() + 1);
+                                   }
+                                   else {
+                                       Month = (value.dates.getMonth() + 1);
+                                   }
+
+                                   if (value.dates.getDate() < 9) {
+                                       daterec = '0' + (value.dates.getDate());
+                                   }
+                                   else {
+                                       daterec = (value.dates.getDate());
+                                   }
+
+                                   var HolidayDate = daterec + "/" + Month + "/" + value.dates.getFullYear();
+                                   if (HolidayDate == check) {
+                                       cell.css("background-color", "yellow");
+                                       //cell.css("background-color", "#f2dede");
+                                       //cell.css("border-color", "#ebccd1")
+                                   }
+                               });
+                           },
+                           eventRender: function (calEvent, $el) {
+                           },
+                           eventMouseover: function (data, events, jsEvent, view) {
+                               $.each(events, function (index, value) {
+                                   tooltip = '<div class="tooltiptopicevent" style="border-radius: 25px;border: 2px solid ;-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);box-shadow:7px 7px 5px 0px rgba(50, 50, 50, 0.75);width:auto;height:auto;background:white;position:absolute;z-index:10001;padding:10px 10px 10px 10px ;  line-height: 200%;">' + '<b>Caregiver : </b>' + data.caretakername + '</br>' + '<b>Category : </b>' + data.careTakerTypeName + '</br>'  + '<b>Time Shift : </b>' + data.fromtime + ' ' + '<b> - </b>' + data.endtime + '</br>' + '<b>Description : </b>' + data.description + '</div>';
+                               });
+
+                               $("body").append(tooltip);
+                               $(this).mouseover(function (e) {
+                                   $(this).css('z-index', 10000);
+                                   $('.tooltiptopicevent').fadeIn('500');
+                                   $('.tooltiptopicevent').fadeTo('10', 1.9);
+                               }).mousemove(function (e) {
+                                   $('.tooltiptopicevent').css('top', e.pageY + 10);
+                                   $('.tooltiptopicevent').css('left', e.pageX + 20);
+                               });
+                           },
+                           eventMouseout: function (data, jsEvent, view) {
+                               $(this).css('z-index', 8);
+
+                               $('.tooltiptopicevent').remove();
+                           },
+                           events: function (start, end, timezone, callback) {
+                               debugger;
+                               var date = new Date($('#calender').fullCalendar('getDate'));
+                               var month = date.getUTCMonth() + 1;
+                               var year = date.getUTCFullYear();
+                               var publicUserId =@ViewBag.PublicUserId;
+                                var bookingId =@ViewBag.BookingId;
+
+                               if ($('#ddlClient').val() != "" && $('#ddlClient').val() != null && $('#ddlClient').val() != 'null' && $('#ddlClient').val() != NaN) {
+                                   var ID = $('#ddlClient').val();
+                               }
+                               else {
+                                   var ID = 0;
+                               }
+                              GetCalenderEvents(bookingId, month, year, callback);
+                           },
+                           eventClick: function (calEvent, jsEvent, view) {
+
+                                   populateTimeShiftByClientId();
+                                   selectedEvent = calEvent;
+                               var username = $("#BookedUser").val();
+                               $('#myModal #eventTitle').text(username + ' - ' + calEvent.caretakername + ' - '+ calEvent.start.format("DD-MMM-YYYY"));
+                                   var $description = $('<div/>');
+                                   $description.append($('<p/>').html('<b>Work Time : </b>' + calEvent.fromtime + ' - ' + calEvent.endtime));
+
+                                   //if (calEvent.end != null) {
+                                   //    $description.append($('<p/>').html('<b>End:</b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+                                   //}
+                                   $description.append($('<p/>').html('<b>Description : </b>' + calEvent.description));
+                                   $('#myModal #pDetails').empty().html($description);
+
+                                   $('#myModal').modal();
+
+                           },
+                           selectable: true,
+                           select: function (start, end) {
+                               if (start.add('days', 1).date() != end.date()) {
+                                   $('#calendar').fullCalendar('unselect');
+                                   return true;
+                               }
+                               selectedEvent = {
+                                   eventID: 0,
+                                   title: '',
+                                   description: '',
+                                   start: start,
+                                   end: end,
+                                   allDay: false,
+                                   color: ''
+                               };
+
+
+                                   openAddEditForm();
+
+
+
+                               $('#calendar').fullCalendar('unselect');
+                           },
+                           editable: false,
+                           eventDurationEditable: false,
+                       })
+                   }
+
+                   function GetCalenderEvents(ID, month, year, callback) {
+                       debugger;
+                       if (eventList != null && eventList.filter(x => x.year == year && x.month == month).length <= 0) {
+                           var data = { bookingId: ID, month: month, year: year }
+                           showProgress();
+                           $.ajax({
+                               type: "POST",
+                               url: '/PublicUser/GetEventsByPublicUserId',
+                               data: data,
+                               success: function (data) {
+                                   events = [];
+                                   $.each(data, function (i, v) {
+                                       events.push({
+                                           eventID: v.Id,
+                                           title: v.CareTakerName + '  ' + v.CareTakerTypeName + '  ' + v.FromTime + ' - ' + v.EndTime,
+                                           description: v.Description,
+                                           start: (v.Start),
+                                           end: (v.Start),
+                                           endshow: v.End != null ? moment(v.End).subtract(1, "days") : null,
+                                           color: v.ThemeColor,
+                                           allDay: v.IsFullDay,
+                                           caretaker: v.CareTaker,
+                                           careTakerType: v.CareTakerType,
+                                           careTakerTypeName: v.CareTakerTypeName,
+
+                                           workshifdetails: v.WorkShifDetails,
+                                           worktime: v.WorkTime,
+                                           customtiming: v.CustomTiming,
+                                           caretakername: v.CareTakerName,
+                                           workitimename: v.WorkTimeName,
+
+                                           contactperson: v.ContactPerson,
+                                           workitimedetails: v.WorkTimeDetails,
+                                           clientname: v.ClientName,
+                                           fromtime: v.FromTime,
+                                           endtime: v.EndTime,
+                                           allDay: false
+                                       });
+                                   })
+                                   eventList.push({ month, year, events });
+                                   callback(events);
+                                   spinnerVisible = true;
+                                   hideProgress();
+                               },
+                               error: function (data) {
+                                   logError(data.statusText + ' - Error occurred while loading Client Events. Function: GenerateCalender- events. Page: ScheduledCalenderView.cshtml');
+                                   alert('Some network error has occurred. Please try again after some time.');
+                               }
+                           })
+                       }
+                       else {
+                           callback(eventList.filter(x => x.year == year && x.month == month)[0].events);
+                       }
+                   }
+
+                   var saveDate = new Date();
+                   function populateTimeShiftByClientId()
+                   {
+                       if ($('#ddlClient').val() != "" && $('#ddlClient').val() != null && $('#ddlClient').val() != 'null' && $('#ddlClient').val() != NaN) {
+                           var ID = $('#ddlClient').val();
+                       }
+                       else {
+                           var ID = 0;
+                       }
+                       $.ajax({
+                           url: "/Client/LoadTimeShiftByClientId",
+                           type: "GET",
+                           contentType: "application/json; charset=utf-8",
+                           datatype: JSON,
+                           data:{clientId:ID},
+                           success: function (result) {
+                               $("#ddWorkTime").html(""); // clear before appending new list
+                               $("#ddWorkTime").append($('<option></option>').val("").html("--Select--"));
+                               $.each($.parseJSON(result), function (i, care) {
+
+                                   $("#ddWorkTime").append($('<option></option>').val(care.TimeShiftId + '|' + care.WorkingHours + '|' + moment(care.StartTime).format('hh:mm A')).html(care.TimeShiftName));
+                               })
+                           },
+                           error: function (data) {
+                               logError(data.statusText + ' - Error occurred while loading TimeShift for Client. Function: populateTimeShiftByClientId(). Page: ScheduledCalenderView.cshtml');
+                               alert('Some network error has occurred. Please try again after some time.');
+                           }
+                       });
+                   }
+
+                   //edit buttuon inside popup
+                   $('#btnEdit').click(function () {
+                       //Open modal dialog for edit event
+                       openAddEditForm();
+                   })
+
+                   //csearch according to client in dropdown
+                   $('#btnSearch').click(function () {
+                       GenerateCalender();
+                   })
+
+                   //to deleete a schedule
+                   $('#btnDelete').click(function () {
+                        var publicUserId =@ViewBag.PublicUserId;
+
+                       var data = { ScheduleId: selectedEvent.eventID,UserId:publicUserId}
+                       if (selectedEvent != null && confirm('Are you sure you want to remove the selected schedule?'))
+                       {
+                           DeletEvent(data)
+                       }
+
+                   })
+
+                   function DeletEvent(data)
+                   {
+                       $.ajax({
+                           type: "POST",
+                           url: '/PublicUser/DeleteEvent',
+                           data: { ScheduleId: data.ScheduleId, PublicUserID: data.UserId, SiteURL: null },
+                           success: function (data) {
+                               if (data.status) {
+                                   deletefromArray();
+                                   GenerateCalender();
+                                   $('#myModal').modal('hide');
+                                   alert("Schedule Deleted");
+                               }
+
+                           },
+                           error: function (data) {
+                               logError(data.statusText + ' - Error occurred while Deleting a Client Schedule. Function: DeletEvent(data). Page: ScheduledCalenderView.cshtml');
+                               alert('Some network error has occurred. Please try again after some time.');
+                           }
+                       })
+                   }
+
+                   $('#dtp1,#dtp2').datetimepicker({
+                       format: 'DD/MM/YYYY HH:mm A'
+                   });
+
+                   $('#chkIsFullDay').change(function () {
+                       if ($(this).is(':checked')) {
+                           $('#divEndDate').hide();
+                       }
+                       else {
+                           $('#divEndDate').hide();
+                       }
+                   });
+
+                   $('#chkPassport').change(function () {
+                       $('#fromTime').val('');
+                       $('#toTime').val('');
+                       $('#ddWorkTime').val('');
+
+                       if ($(this).is(":checked")) {
+                           $("#dvBothTime").show();
+                           $("#dvOneTime").hide();
+                       } else {
+                           $("#dvBothTime").hide();
+                           $("#dvOneTime").show();
+                       }
+                   })
+
+
+
+                   $('#txtConatctPerson').change(function () {
+                       $('#txtDescription').val(this.value);
+                   });
+
+                   $('#txtConatctPerson').keyup(function () {
+                       $('#txtDescription').val(this.value);
+                   });
+
+                   $('#fromTime').change(function () {
+                       if($('#toTime').val!='')
+                       {
+                           if (selectedEvent.eventID == 0) {
+                               $("#txtCaretakerName").val("");
+                           }
+                           AvailableCaretakerDynamicTable();
+                       }
+                   })
+
+                   $('#toTime').change(function () {
+                       if (selectedEvent.eventID == 0) {
+                           $("#txtCaretakerName").val("");
+                       }
+                       AvailableCaretakerDynamicTable();
+                   })
+
+                   $('#ddWorkTime').change(function () {
+                       if (selectedEvent.eventID == 0 ) {
+                           $("#txtCaretakerName").val("");
+                       }
+                       populateCaretakerByDateAndTime();
+                       AvailableCaretakerDynamicTable();
+                   })
+
+                   $('#ddServiceType').change(function () {
+                       if (selectedEvent != null) {
+                           if (selectedEvent.eventID == 0) {
+                               $("#txtCaretakerName").val("");
+                           }
+                       }
+                       AvailableCaretakerDynamicTable();
+                   })
+
+                   function AvailableCaretakerDynamicTable() {
+                        debugger;
+                       var sHours = " ";
+                       var sMinutes = " ";
+                       var totalhours = "0";
+
+                       var worktimid = 0;
+                       if ($('#ddWorkTime').val() != null && $('#ddWorkTime').val() != "") {
+                           worktimid = $('#ddWorkTime').val().split('|');
+                       }
+                       var Workshift = 0;
+
+                       if (worktimid != 0) {
+                           Workshift = worktimid[worktimid.length - 3];
+                       }
+                       else {
+                           Workshift = worktimid;
+                       }
+
+                       var start = "";
+                       if ($('#ddWorkTime').val() != null && $('#ddWorkTime').val() != "") {
+                            start = $('#ddWorkTime').val().split('|');
+                           if (start.length > 0) {
+                               totalhours = start[start.length - 2];
+                           }
+                       }
+                           if (start != "") {
+                               var time = start[start.length - 1];
+                               var hours = Number(time.match(/^(\d+)/)[1]);
+                               var minutes = Number(time.match(/:(\d+)/)[1]);
+                               var AMPM = time.match(/\s(.*)$/)[1];
+                               if (AMPM == "PM" && hours < 12) hours = hours + 12;
+                               if (AMPM == "AM" && hours == 12) hours = hours - 12;
+                               sHours = hours.toString();
+                               sMinutes = minutes.toString();
+                               if (hours < 10) sHours = "0" + sHours;
+                               if (minutes < 10) sMinutes = "0" + sMinutes;
+                               //alert(sHours + ":" + sMinutes);
+                           }
+                           var from = $('#fromTime').val(); var to = $('#toTime').val();
+                           if (from != "" & to != "") {
+                               var time = $('#fromTime').val();
+                               var toTime = $('#toTime').val();
+                               var timeStart = new Date("01/01/2007 " + time).getHours();
+                               var timeEnd = new Date("01/01/2007 " + toTime).getHours();
+                               var hourDiff = timeEnd - timeStart;
+                               // alert(hourDiff)
+                               if (hourDiff < 0) {
+                                   hourDiff = 24 - Math.abs(hourDiff)
+                               }
+                               totalhours = hourDiff;
+                               var appSettingHourValue = '@(System.Configuration.ConfigurationManager.AppSettings["HourLimit"].ToString())'
+                               if (hourDiff > 0) {
+                                   if (hourDiff > appSettingHourValue) {
+                                       //alert('Schedule time Limit has exceeded ' + appSettingHourValue + ' Hours');
+                                       //return
+                                   }
+                                   else {
+                                       // alert("Limit ok")
+                                   }
+                               }
+                               else if (hourDiff == 0) {
+                                   alert('Please choose minimum one hour shift for scheduling!');
+                                   $("#toTime").val("");
+                                   return
+                               }
+                               else {
+                                   var limit = -Math.abs(appSettingHourValue);
+                                   if (limit < hourDiff) {
+                                       //alert('Schedule time Limit has exceeded ' + appSettingHourValue + ' Hours');
+                                       //return
+                                   }
+                                   else {
+                                       //  alert("Limit ok")
+                                   }
+                               }
+
+                           }
+
+                       var startDatetime = $('#hdStartDate').val();
+                       var endDateTime = "";
+                       var time;
+                       if (sHours != " ") {
+                           time = sHours + ":" + sMinutes;
+                           startDatetime = startDatetime + " " + time;
+
+                       }
+                       else {
+                           time = 0;
+                       }
+                       if (from != "")
+                       {
+                           startDatetime = startDatetime + " " + from;
+                       }
+
+                       if ($('#ddServiceType option:selected').text() != '' && $('#ddServiceType option:selected').text() != '--Select--') {
+                           var categoryId = $('#ddServiceType').val();
+                           var clientId = ($('#ddlClient').val() == null || $('#ddlClient').val() == 'null' || $('#ddlClient').val() == '' || $('#ddlClient').val() == NaN)? 0: parseInt( $('#ddlClient').val());
+                           $.ajax({
+
+
+                               url: '/PublicUser/LoadAvailableCaretakers',
+                               type: "GET",
+                               dataType: "JSON",
+                               data: { categoryId: categoryId, startDatetime: startDatetime, totalhours: totalhours, Workshift: Workshift },
+                               success: function (data) {
+                                   var strQual = "";
+                                   $('#addedTimeShiftList').html('');
+                                   if (data != "null") {
+                                       $.each($.parseJSON(data), function (i, care) {
+                                           strQual = strQual + "<tr >" +
+                                               "<td class='col-md-7' style=color:" + care.rejectedstatus + ";>" + care.CareTakerName + "</td>" +
+                                               "<td class='col-md-5'>" + care.Phone1 + "</td>" +
+                                               "<td><input style=display:none; type=checkbox id=" + care.CaretakerId + " class=checkbox /><input type=hidden class=detelecaretakerID value=" + care.CaretakerId + " /></td>" +
+                                               "<td class='col-md-4'><span class='btn btn-primary'>Reject</span></td>" +
+                                               "</tr>";
+                                       });
+                                   }
+                                   $('#addedTimeShiftList').html(strQual);
+
+
+                                   $("#ddCareTaker").html(""); // clear before appending new list
+                                   $("#ddCareTaker").append(
+                                       $('<option></option>').val("").html("--Select--"));
+                                   if (data != "null") {
+                                       $.each($.parseJSON(data), function (i, care) {
+                                           $("#ddCareTaker").append(
+
+                                               $('<option></option>').val(care.CaretakerId).html(care.CareTakerName));
+                                       });
+                                   }
+                               },
+                               error: function (data) {
+                                   logError(data.statusText + ' - Error occurred while loading Caretaker by Category and Date. Function: AvailableCaretakerDynamicTable(). Page: ScheduledCalenderView.cshtml');
+                                   alert('Some network error has occurred. Please try again after some time.');
+                               }
+                           });
+                       }
+                   }
+
+
+
+                   function populateCaretakerByDateAndTime() {
+                       var sHours = " ";
+                       var sMinutes = " ";
+                       var totalhours = "0";
+
+                       if ($('#ddWorkTime').val() != null || $('#ddWorkTime').val() != "") {
+                           var start = $('#ddWorkTime').val().split('|');
+                           if (start.length > 0) {
+                               totalhours = start[start.length - 2];
+                           }
+
+                           if (start != "") {
+                               var time = start[start.length - 1];
+                               var hours = Number(time.match(/^(\d+)/)[1]);
+                               var minutes = Number(time.match(/:(\d+)/)[1]);
+                               var AMPM = time.match(/\s(.*)$/)[1];
+                               if (AMPM == "PM" && hours < 12) hours = hours + 12;
+                               if (AMPM == "AM" && hours == 12) hours = hours - 12;
+                               sHours = hours.toString();
+                               sMinutes = minutes.toString();
+                               if (hours < 10) sHours = "0" + sHours;
+                               if (minutes < 10) sMinutes = "0" + sMinutes;
+                               //alert(sHours + ":" + sMinutes);
+                           }
+                           var from = $('#fromTime').val();
+                           if (from != "") {
+                               var time = $('#fromTime').val();
+                               var toTime = $('#toTime').val();
+                               var timeStart = new Date("01/01/2007 " + time).getHours();
+                               var timeEnd = new Date("01/01/2007 " + toTime).getHours();
+                               var hourDiff = timeEnd - timeStart;
+                               totalhours = hourDiff;
+                               var appSettingHourValue = '@(System.Configuration.ConfigurationManager.AppSettings["HourLimit"].ToString())'
+                               if (hourDiff > 0) {
+                                   if (hourDiff > appSettingHourValue) {
+                                       //alert('Maximum time Limit is ' + appSettingHourValue + ' Hours');
+                                       //return
+                                   }
+                                   else {
+                                       // alert("Limit ok")
+                                   }
+                               }
+                               else {
+                                   var limit = -Math.abs(appSettingHourValue);
+                                   if (limit < hourDiff) {
+                                       //alert('Maximum time Limit is ' + appSettingHourValue + ' Hours');
+                                       //return
+                                   }
+                                   else {
+                                       //  alert("Limit ok")
+                                   }
+                               }
+
+                           }
+                       }
+                       var startDatetime = $('#hdStartDate').val();
+                       var endDateTime = "";
+                       var time;
+                       if (sHours != " ") {
+                           time = sHours + ":" + sMinutes;
+                           startDatetime = startDatetime + " " + time;
+
+                       }
+                       else {
+                           time = 0;
+                       }
+                       if (from != "")
+                       {
+                           startDatetime = startDatetime + " " + from;
+                       }
+
+                       if ($('#ddServiceType option:selected').text() != '' && $('#ddServiceType option:selected').text() != '--Select--') {
+                           var categoryId = $('#ddServiceType').val();
+                           var clientId = ($('#ddlClient').val() == null || $('#ddlClient').val() == 'null' || $('#ddlClient').val() == '' || $('#ddlClient').val() == NaN) ? 0 : parseInt($('#ddlClient').val());
+                           $.ajax({
+                               url: '/Client/LoadCaretakersByCategoryAndDate',
+                               type: "GET",
+                               dataType: "JSON",
+                               data: { categoryId: categoryId, startDatetime: startDatetime, totalhours: totalhours, clientId: clientId },
+                               success: function (data) {
+                                   $("#ddCareTaker").html(""); // clear before appending new list
+                                   $("#ddCareTaker").append(
+                                         $('<option></option>').val("").html("--Select--"));
+                                   $.each($.parseJSON(data), function (i, care) {
+                                       $("#ddCareTaker").append(
+
+                                           $('<option></option>').val(care.CaretakerId).html(care.CareTakerName));
+
+                                   });
+                                   if (selectedEvent != null) {
+                                       $('#ddCareTaker').val(selectedEvent.caretaker);
+                                       $('#txtCaretakerName').val(selectedEvent.caretakername);
+                                   }
+                                   else {
+                                       $('#ddCareTaker').val("--Select--");
+                                   }
+
+                               },
+                               error: function (data) {
+                                   logError(data.statusText + ' - Error occurred while loading Caretaker by Category and Date. Function: populateCaretakerByDateAndTime(). Page: ScheduledCalenderView.cshtml');
+                                   alert('Some network error has occurred. Please try again after some time.');
+                               }
+                           });
+                       }
+                   }
+
+
+                   $('#ddlClient').change(function () {
+                       localStorage.setItem("clientId", 0);
+                       eventList = [];
+                       GenerateCalender();
+                   })
+                    function CaretaketType() {
+                var colorLegends = '';
+                $.ajax({
+                    url: '/Admin/GetCaretakerType',
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (data) {
+                        $.each($.parseJSON(data), function (i, color) {
+                            if (color.Color != null)
+                                colorLegends += '<div><input type="button" class="legend-style" style="background-color:' + color.Color + '" /> <label class="label-style" style="padding-right: 10px;">' + color.TypeName + '</label> </div>';
+                        });
+                        $('#legends').html(colorLegends);
+                    },
+                });
+            }
+
+                   function openAddEditForm() {
+                       debugger;
+                       if (selectedEvent.eventID != 0) {
+                           var username = $("#BookedUser").val();
+
+
+                           $('#txtConatctPerson').val(selectedEvent.contactperson);
+
+                           $('#clientNameLbl').text(username + " - " +  selectedEvent.start.format('DD-MMM-YYYY'));
+                           $('#hdEventID').val(selectedEvent.eventID);
+                           $('#txtSubject').val(selectedEvent.title);
+                           $('#chkMailCareGiver').prop("checked", true);
+                           $('#chkMailClient').prop("checked", true);
+
+                           if (selectedEvent.worktime == 0) {
+                               $('#chkPassport').prop("checked", true)
+                               $('#chkPassport').change();
+
+                               var setFrom = selectedEvent.fromtime;
+                               var setEnd = selectedEvent.endtime;
+
+                               $('#fromTime').val(setFrom);
+                               $('#toTime').val(setEnd);
+                           }
+                           else {
+                               $('#chkPassport').prop("checked", false)
+                               $('#chkPassport').change();
+                               $('#ddWorkTime').val(selectedEvent.workitimedetails);
+                           }
+                           $('#hdStartDate').val(selectedEvent.start.format("YYYY-MM-DD"));
+
+                           $('#txtStart').val(selectedEvent.start.format('DD/MM/YYYY hh:mm'));
+                           $('#chkIsFullDay').prop("checked", selectedEvent.allDay || false);
+                           $('#chkIsFullDay').change();
+                           $('#txtEnd').val(selectedEvent.end != null ? selectedEvent.end.format('DD/MM/YYYY hh:mm') : '');
+                           $('#txtDescription').val(selectedEvent.description);
+                           $('#ddThemeColor').val(selectedEvent.color);
+                           $('#ddServiceType').val(selectedEvent.careTakerType).change();
+                           $('#ddCareTaker').val(selectedEvent.caretaker);
+                           $('#txtCaretakerName').val(selectedEvent.caretakername);
+                           $('#hdncaretakerId').val(selectedEvent.caretaker);
+
+
+                       }
+                       else {
+                           var username = $("#BookedUser").val();
+                           var crDate = $('#hdStartDate').val();
+                           var d = new Date(crDate);
+                           var dateDisplay = moment.utc(d).format('DD') + '-' + moment.utc(d).format('MMM') + '-' + moment.utc(d).format('YYYY');
+                           //var reversedArray = dateDisplay.split("/");
+                           //var reversedDate = reversedArray[2] + "/" + reversedArray[1] + "/" + reversedArray[0]
+                           $('#clientNameLbl').text(username + " - " + dateDisplay);
+                           $('#ddWorkTime').val("");
+                           $('#chkPassport').prop("checked", false)
+                           $('#chkPassport').change();
+                           $('#ddServiceType').val(1).change();
+                           $('#txtConatctPerson').val("");
+                           $('#hdEventID').val(0);
+                           $('#txtSubject').val("");
+
+                           //$('#ddWorkTime').val("");
+                           $('#txtDescription').val("");
+
+
+                       }
+                       $('#myModal').modal('hide');
+                       $('#myModalSave').modal();
+                       $(".modal-dialog").css({
+                           top: 0,
+                           left: 0
+                       });
+                   }
+
+                   var getDayTimeDiff = function (start, end) {
+                       var date1 = new Date(start);
+                       var date2 = new Date(end);
+                       alert(date1.getTime())
+                       return date2.getTime() - date1.getTime();
+                   }
+
+                   var toMillis = function (time) {
+                       var parts = time.split('.');
+                       return (parts[0] * 60 + +parts[1]) * 60 * 1000;
+                   }
+
+                   function test(t1, t2) {
+                       var timeDiff = getDayTimeDiff(t1, t2);
+
+                       alert(timeDiff)
+                       var time2Calc = "12.00";
+                       var base = toMillis(time2Calc);
+                       alert(base)
+
+                       var result = (Math.abs(timeDiff) < base);
+                       alert(t1 + ' : ' + t2 + ' -> ' + result);
+                   }
+
+
+               //get client id from querystring
+                   var clientSaveID = 0;
+                   clientSaveID = GetParameterValues('clientId');
+                   if (clientSaveID === undefined) {
+                       clientSaveID = 0
+                   }
+
+                   function GetParameterValues(param) {
+                       var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                       for (var i = 0; i < url.length; i++) {
+                           var urlparam = url[i].split('=');
+                           if (urlparam[0] == param) {
+                               return urlparam[1];
+                           }
+                       }
+                   }
+
+
+                   $('#btnSave').click(function () {
+                       //alert("cal view");
+                       var appSettingHourValue = '@(System.Configuration.ConfigurationManager.AppSettings["HourLimit"].ToString())'
+                       var valuestart = $("#fromTime").val();
+                       var valuestop = $("#toTime").val();
+                       var timeStart = new Date("01/01/2007 " + valuestart).getHours();
+                       var timeEnd = new Date("01/01/2007 " + valuestop).getHours();
+
+
+
+
+
+                       if ($('#ddServiceType').val() == "") {
+                           alert('Select any Category');
+                           return;
+                       }
+
+
+                       if ($('#chkPassport').is(':checked') == true) {
+                           if ($('#fromTime').val().trim() == "" || $('#toTime').val().trim() == "")
+                           {
+                               alert('Select From time and To time');
+                               return;
+                           }
+                           var valuestart = $("#fromTime").val();
+                           var valuestop = $("#toTime").val();
+                           var timeStart = new Date("01/01/2007 " + valuestart);
+                           var timeEnd = new Date("01/01/2007 " + valuestop);
+
+                           var hourDiff = 0;
+                           if (timeEnd - timeStart > 0) {
+                               hourDiff = timeEnd - timeStart;
+                           }
+                           else {
+                               var endDateNew = new Date(timeEnd);
+                               endDateNew.setDate(endDateNew.getDate() + 1);
+                               hourDiff = endDateNew - timeStart;
+                           }
+
+                           var mins = Math.abs(Math.floor(hourDiff / 60000));
+
+                           if (mins > 0) {
+                               if (mins > (appSettingHourValue * 60)) {
+                                   //alert('Schedule time limit has exceeded ' + appSettingHourValue + ' Hours');
+                                   if (!confirm(' Schedule time limit has exceeded ' + appSettingHourValue + ' Hours. Do you want to continue scheduling?')) {
+                                       return
+                                   }
+                               }
+                               else {
+                                   // alert("Limit ok")
+                               }
+                           }
+                           else if (mins < 60) {
+                               alert('Please choose minimum one hour shift for scheduling!');
+                               $("#toTime").val("");
+                               return
+                           }
+                           else {
+                               var limit = -Math.abs(appSettingHourValue);
+                               if (limit < hourDiff) {
+                                   //alert('Schedule time Limit has exceeded ' + appSettingHourValue + ' Hours');
+                                   if (!confirm('Schedule time limit has exceeded ' + appSettingHourValue + ' Hours. Do you want to continue scheduling?'))
+                                   {
+                                       return
+                                   }
+
+                               }
+                               else {
+                                 //  alert("Limit ok")
+                               }
+                           }
+                       }
+                       else
+                       {
+                           if ($('#ddWorkTime').val() == "") {
+                               alert('Please select any time shift');
+                               return;
+                           }
+
+                       }
+                       if ($("#txtCaretakerName").val() == "") {
+                           alert('Please select a caretaker');
+                           return;
+                       }
+
+                       var AvailCaretakerId;
+
+                       var IsExists = false;
+                       var ddloption = document.getElementById('ddCareTaker').options;
+                       for (var i = 1; i < ddloption.length; i++) {
+                           if (ddloption[i].value === $('#hdncaretakerId').val()) {
+                               IsExists = true;
+                               console.log("IsExists true,Id:"+ddloption[i].value);
+                               break;
+                           }
+                       }
+                       if (IsExists != true)
+                       {
+                           console.log("IsExists false");
+                           if (!confirm('Are you sure you want to modify the existing schedule?')) {
+                               return IsExists;
+                           }
+                       }
+
+
+
+
+
+                       AvailCaretakerId = $('#hdncaretakerId').val();
+
+                        var publicUserId=@ViewBag.PublicUserId;
+                       var bookingId =@ViewBag.BookingId;
+                         var ServiceId=@ViewBag.ServiceId;
+
+                       var data = {
+                           Id: $('#hdEventID').val(),
+                          //CareTaker: $('#ddCareTaker').val(),
+                           CareTaker: AvailCaretakerId,
+                           PublicUserId:publicUserId,
+                           CareTakerType: $('#ddServiceType').val(),
+                           WorkMode:ServiceId,
+
+                           WorkTimeDetails: $('#ddWorkTime').val(),
+
+                           CustomTiming: $('#chkPassport').prop('checked'),
+                           ContactPerson: $('#txtConatctPerson').val(),
+                           FromTime: $('#fromTime').val(),
+                           EndTime: $('#toTime').val(),
+                           BookingId:bookingId,
+
+                           //CareTakerName: $("#ddCareTaker option:selected").text(),
+                           CareTakerName: $("#txtCaretakerName").val(),
+
+                           ServiceTypeName: $("#ddServiceType option:selected").text(),
+                          // Subject: $('#txtSubject').val().trim(),
+                           Start: $('#hdStartDate').val(),
+                          // End: $('#chkIsFullDay').is(':checked') ? null : $('#txtEnd').val().trim(),
+                           Description: $('#txtDescription').val(),
+                           //SendMailCaregiver: $('#chkMailCareGiver').prop('checked'),
+                           //SendMailClient:$('#chkMailClient').prop('checked')
+                          // ThemeColor: $('#ddThemeColor').val(),
+                         //  IsFullDay: $('#chkIsFullDay').is(':checked')
+                       }
+
+                       saveDate = $('#hdStartDate').val();
+                       SaveEvent(data);
+                       // call function for submit data to the server
+                   })
+
+                   function SaveEvent(data) {
+                       debugger;
+                       var date = new Date($('#calender').fullCalendar('getDate'));
+                       var month = date.getMonth() + 1;
+                       var year = date.getFullYear();
+
+                       showProgress();
+                       $.ajax({
+                           type: "POST",
+                           url: '/PublicUser/SaveBookingDetails',
+                           data: data,
+                           success: function (data) {
+                               if (data.status) {
+                                   //Refresh the calender
+
+                                   if (clientSaveID == 0) {
+                                       deletefromArray();
+                                       GenerateCalender();
+                                   }
+                                   else {
+                                       $('#ddlClient').val(clientSaveID)
+                                       deletefromArray();
+                                       GenerateCalender();
+                                   }
+                                   $('#myModalSave').modal('hide');
+                               }
+                               hideProgress();
+                           },
+                           error: function (data) {
+                               logError(data.statusText + ' - Error occurred while loading Caretaker by Category and Date. Function: $("#btnSave").click(function ()). Page: ScheduledCalenderView.cshtml');
+                               alert('Some network error has occurred. Please try again after some time.');
+                               hideProgress();
+                           }
+                       })
+                   }
+               })
+                function deletefromArray() {
+                    var date = new Date($('#calender').fullCalendar('getDate'));
+                    var month = date.getMonth() + 1;
+                    var year = date.getFullYear();
+                    if (eventList != null && eventList.filter(x => x.year == year && x.month == month).length > 0) {
+                        var index = eventList.indexOf(eventList.filter(x => x.year == year && x.month == month)[0]);
+                        if (index > -1) {
+                            eventList.splice(index, 1);
+                        }
+                    }
+                }
+
+               $('#clearValues').click(function () {
+                   $('#ddServiceType').val('');
+                   $('#txtDescription').val('');
+                   $('#txtConatctPerson').val('');
+
+                   $('#ddCareTaker').val('');
+                   $('#chkMailCareGiver').removeAttr('checked');
+                   $('#chkMailClient').removeAttr('checked');
+
+                   $('#chkPassport').removeAttr('checked');
+                   if ($('#chkPassport').is(":checked")) {
+                       $("#dvBothTime").show();
+                       $("#dvOneTime").hide();
+                   } else {
+                       $("#dvBothTime").hide();
+                       $("#dvOneTime").show();
+                   }
+                   $('#txtCaretakerName').val('');
+                   $('#fromTime').val('');
+                   $('#toTime').val('');
+                   $('#ddWorkTime').val('');
+
+               })
+            </script>
+            <style>
+                #calendar-container {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                }
+
+                #ui-id-1 {
+                    z-index: 1500;
+                }
+            </style>
+        }
+    }
+}
+

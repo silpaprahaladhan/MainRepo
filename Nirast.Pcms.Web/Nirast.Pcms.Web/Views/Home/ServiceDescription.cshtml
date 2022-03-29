@@ -1,0 +1,210 @@
+﻿<div class="container">
+
+
+    <div class="panel-heading">
+        
+        <h2 class="titleMain" style="margin-top: 1.4em" >@ViewBag.Service</h2>
+    </div>
+    <div class="row">
+        @if (TempData["SaveBooking"] != null)
+        {
+            if (TempData["SaveBooking"].ToString() == "Booking failed" || TempData["SaveBooking"].ToString() == "Booking already exist for this Caregiver!")
+            {
+                <p class="alert alert-danger statusmessage" id="successMessage">@TempData["SaveBooking"]</p>
+            }
+            else
+            {
+                <p class="alert alert-success statusmessage" id="successMessage">@TempData["SaveBooking"]</p>
+            }
+
+        }
+        @if (ViewBag.Service == "DOMESTIC ASSISTANCE")
+        {
+            <div class="col-md-8 col-sm-8">
+                <div class="contentAlign">
+                    <p>Home help services include basic household tasks such as cleaning, cooking and shopping. Our Support Workers are able to undertake the light duties that you would usually carry out on a regular basis such as:<br></p>
+                    <p><br></p>
+                    <u1>
+                        <li>Washing/ironing<br></li>
+                        <li>Cleaning bath, toilet and shower<br></li>
+                        <li>Cleaning kitchen and white goods<br></li>
+                        <li>Running errands<br></li>
+                        <li>Meal preparation<br></li>
+                        <li>Care of pot plants and pets<br></li>
+                        <li>Vacuuming, dusting and polishing<br></li>
+                        <li>Sweeping floors and paths etc and<br></li>
+                        <li>Shopping.<br></li>
+                    </u1>
+                    <p><br></p>
+                    <p> We would work with you to identify and agree on which tasks will be performed, and how often, before we start to provide services.<br></p>
+
+                </div>
+                <div>
+                    <button type="button" onclick="location.href='@Url.Action("CareTakerBooking", "PublicUser", new { serviceId = @ViewBag.ServiceId,CaretakerId=0,CaretakerName=""})'" id="btnSearch" class="btn btn-primary " style="padding:10px 10px;">BOOK NOW</button>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-8">
+                <img src="data:image;base64,@((ViewBag.ServicePicture != null) ? @System.Convert.ToBase64String(ViewBag.ServicePicture) : @System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg"))))" alt="" class="pro-image-front" style="width: 100%;height:216px">
+
+            </div>
+        }
+        @if (ViewBag.Service == "PERSONAL CARE")
+        {
+            <div class="col-md-8">
+                <div class="contentAlign">
+                    <p>Our personal care services can help you with activities of daily living, which you would normally undertake for yourself, but are unable to due to illness, disability or frailty. We  provide best quality Registered Nurses,Registered Practical Nurses,Personal Care Workers<br></p>
+                    <p><br></p>
+                    <p>We ensure that we provide quality personal care services by:</p>
+                    <p><br></p>
+                    <ol>
+                        <li>Complying fully with the Care Plan developed with you and your Case Manager, treating medical professionals, occupational therapist and other allied health professionals<br></li>
+                        <li>Ensuring a safe, sensitive, private and dignified care environment<br></li>
+                        <li>Working with you and your Case Manager to ensure that the services you are receiving meet your needs (any changes to your Care Plan will be made by discussing these changes with you first); and<br></li>
+                        <li>Assisting with daily living tasks, including:<br></li>
+
+                    </ol>
+                    @*<p><br></p>*@
+
+                    <ul style="margin-left:50px;">
+                        <li>Bathing, showering and sponging;<br></li>
+                        <li>Dressing and undressing;</li>
+                        <li>Shaving, hair care and grooming;<br></li>
+                        <li>Assisting with rehabilitation and associated therapies;</li>
+                        <li>Continence support;</li>
+                        <li>Supervision of medication;</li>
+                        <li>Assisting with mobility and transfers;</li>
+                        <li>Support with aids and appliances;</li>
+                        <li>Assistance with eating and drinking;</li>
+                        <li>Food preparation; and</li>
+                        <li>Accompanying Care Recipients on community access and participation activities.<br></li>
+                    </ul>
+                    <p><br></p>
+                    <p>In order for us to provide the best care, in the safest way possible for you and our support Workers, we need to work with you to firstly ensure that:<br></p>
+                    <p><br></p>
+                    <ul>
+                        <li>Your home is assessed to be a safe work environment and support Workers only do the tasks assigned to them;<br></li>
+                        <li>Your medication is provided in an approved aid such as a Webster pack or dosette box; and</li>
+                        <li>Your health is stable and does not require monitoring by medical personnel.<br></li>
+                    </ul>
+                    <p><br></p>
+                    <p>We will also work with you to identify and agree on the personal care tasks that will best help you, prior to starting to provide services to you.<br></p>
+
+                </div>
+                <div>
+                    <button type="button" onclick="location.href='@Url.Action("CareTakerBooking", "PublicUser", new { serviceId = @ViewBag.ServiceId,CaretakerId=0,CaretakerName=""})'" id="btnSearch" class="btn btn-primary " style="padding:10px 10px;">BOOK NOW</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img src="data:image;base64,@((ViewBag.ServicePicture != null) ? @System.Convert.ToBase64String(ViewBag.ServicePicture) : @System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg"))))" alt="" class="pro-image-front" style="width: 100%;height:216px">
+            </div>
+        }
+        @if (ViewBag.Service == "INDEPENDENT LIVING")
+        {
+            <div class="col-md-8">
+                <div class="contentAlign">
+                    <p>This service helps people to develop their independent living skills and to work towards the personal goals that they, and their treating health care team, have identified are important to them. Services may include:<br></p>
+                    <p><br></p>
+                    <ul><li>Assistance with personal care<br></li><li>Assistance with meeting vocational and /or recreational goals</li><li>Assistance with community access and participation<br></li><li>Therapy and rehabilitation support.<br></li></ul>
+                    <p><br></p>
+                </div>
+                <div>
+                    <button type="button" onclick="location.href='@Url.Action("CareTakerBooking", "PublicUser", new { serviceId = @ViewBag.ServiceId,CaretakerId=0,CaretakerName=""})'" id="btnSearch" class="btn btn-primary " style="padding:10px 10px;">BOOK NOW</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img src="data:image;base64,@((ViewBag.ServicePicture != null) ? @System.Convert.ToBase64String(ViewBag.ServicePicture) : @System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg"))))" alt="" class="pro-image-front" style="width: 100%;height:216px">
+            </div>
+        }
+        @if (ViewBag.Service == "RESPITE")
+        {
+            <div class="col-md-8">
+                <div class="contentAlign">
+                    <p><br></p>
+                    <p>Regular respite is an important strategy for maintaining the health and well being of both support Workers and care recipients. Respite services provide the care recipient with enjoyable activities that are appropriate for their age. These services may be provided at home or may involve community outings.<br></p>
+                    <p><br></p>
+                    <p>Respite services may be planned for regular intervals or may be provided in response to an emergency or crisis situation. Respite services are designed to meet individual needs and may include care on weekdays, week-ends, overnight or for holidays.</p>
+                    <p>In providing respite care services, Tranquil Care will assist by:<br></p>
+                    <p><br></p>
+                    <ul>
+                        <li>Providing the primary support Worker with a break from their caring responsibilities and<br></li>
+                        <li>Providing care ranging from home help to personal care services, that may include:</li>
+                        <li>High needs attendant care for people with varying disabilities, including intellectual, cognitive or physical disability<br></li>
+                        <li>Support for care recipients who have challenging behaviours<br></li>
+                        <li>Social support and<br></li>
+                        <li>An activity such as an outing to the theatre , sporting event etc.<br></li>
+                    </ul>
+                </div>
+                <div>
+                    <button type="button" onclick="location.href='@Url.Action("CareTakerBooking", "PublicUser", new { serviceId = @ViewBag.ServiceId,CaretakerId=0,CaretakerName=""})'" id="btnSearch" class="btn btn-primary " style="padding:10px 10px;">BOOK NOW</button>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <img src="data:image;base64,@((ViewBag.ServicePicture != null) ? @System.Convert.ToBase64String(ViewBag.ServicePicture) : @System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg"))))" alt="" class="pro-image-front" style="width: 100%;height:216px">
+
+            </div>
+        }
+        @if (ViewBag.Service == "LIVE IN CARE")
+        {
+            <div class="col-md-8">
+                <div class="contentAlign">
+                    <p>Live-in care services are a combination of personal care, leisure, recreation and domestic services, provided by one staff member for each 24-hour period.<br></p>
+                    <p>Live-in care is designed to support the needs of people with low to medium care requirements who have an active lifestyle, often with many out-of-home activities. Live-in care may also be a suitable option for holiday periods, respite periods or for extended travel or overnight stays relating to specialist medical appointments.<br></p>
+                </div>
+                <div>
+                    <button type="button" onclick="location.href='@Url.Action("CareTakerBooking", "PublicUser", new { serviceId = @ViewBag.ServiceId,CaretakerId=0,CaretakerName=""})'" id="btnSearch" class="btn btn-primary " style="padding:10px 10px;">BOOK NOW</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img src="data:image;base64,@((ViewBag.ServicePicture != null) ? @System.Convert.ToBase64String(ViewBag.ServicePicture) : @System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg"))))" alt="" class="pro-image-front" style="width: 100% ;height:216px">
+
+            </div>
+        }
+        @if (ViewBag.Service == "PHYSIOTHERAPY")
+        {
+
+    <div class="col-md-8">
+        <div class="contentAlign">
+            <p>
+                Tranquil Care’s qualified and professional Physiotherapists helps you to assess, diagnose, treat and work to prevent disease and disability through movement and exercise. 
+                Our Physiotherapists are experts in body movement and function. 
+                They work with people affected by injury, illness or disability to help them improve the movement and functioning of their body.
+
+
+
+                @*Tranquil Care’s qualified and professional Physiotherapists helps you to assesses, diagnoses, treats and works to
+                prevent disease and disability through movement and exercise. Our Physiotherapists are experts in body movement and function.
+                They work with people affected by injury, illness or disability to help them improve the movement and functioning of their body*@.<br>
+            </p>
+            <br>
+            <h4>Services provided</h4>
+            <p><br></p>
+            <ul>
+                <li>Assessment, diagnosis and treatment services for movement issues.</li>
+                <li>Development of treatment programs</li>
+                <li>Development of exercise programs.</li>
+                <li>Injury treatment</li>
+                <li>Manual therapy, such as massage and joint manipulation</li>
+                <li>Electrotherapy, such as ultrasound and TENS (transcutaneous electrical nerve stimulation) </li>
+                <li>Technique correction</li>
+                <li>Taping and splinting</li>
+                <li>Advice on mobility aids</li>
+            </ul>
+            <p><br></p>
+        </div>
+        <div>
+            <button type="button" onclick="location.href='@Url.Action("CareTakerBooking", "PublicUser", new { serviceId = @ViewBag.ServiceId,CaretakerId=0,CaretakerName=""})'" id="btnSearch" class="btn btn-primary " style="padding:10px 10px;">BOOK NOW</button>
+        </div>
+
+    </div>
+    <div class="col-md-4">
+        <img src="data:image;base64,@((ViewBag.ServicePicture != null) ? @System.Convert.ToBase64String(ViewBag.ServicePicture) : @System.Convert.ToBase64String(System.IO.File.ReadAllBytes(Server.MapPath(@"~/images/NOImage.jpg"))))" alt="" class="pro-image-front" style="width: 100% ;height:216px">
+
+    </div>
+
+}
+    </div>
+</div>
+
+
+

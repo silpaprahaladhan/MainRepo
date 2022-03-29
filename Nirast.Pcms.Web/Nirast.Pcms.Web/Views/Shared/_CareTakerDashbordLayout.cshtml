@@ -1,0 +1,295 @@
+﻿<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tranquil Care - Delivering Care Excellence | Home :: Tranquil Care</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Personal Care, Child care,Services" />
+    <script type="application/x-javascript">
+        addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+               function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- //for-mobile-apps -->
+    <link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- pignose css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+
+    <!-- //pignose css -->
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!-- //New added css -->
+    <link href="~/css/CustomStyles.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/Dashboard_css/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
+    <link href="~/css/Dashboard_css/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="~/css/theme.css" rel="stylesheet" media="all">
+
+    <!-- jQuery -->
+    <script src="~/css/Dashboard_css/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/css/Dashboard_css/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FullCalendar -->
+    <script src="~/css/Dashboard_css/moment/min/moment.min.js"></script>
+    <script src="~/css/Dashboard_css/fullcalendar/dist/fullcalendar.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script src="~/build/js/custom.min.js"></script>
+    <script src="~/css/Dashboard_css/chartjs/Chart.bundle.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <link href="~/css/theme.css" rel="stylesheet" media="all">
+    <script>
+      
+
+            $(document).ready(function() {
+
+                $(".alert").fadeTo(10000, 500).slideUp(500, function () {
+                    $(".alert").slideUp(500);
+                });
+
+
+                $('#calendar').fullCalendar({
+                });
+
+    });
+
+    </script>
+    
+</head>
+<body class="animsition">
+	<!-- header-bot -->
+    <div class="container">
+        <!-- MENU SIDEBAR-->
+        <aside class="menu-sidebar d-none d-lg-block">
+            <div class="logo borderless_logo">
+                <img class="submit" onclick="location.href ='@Url.Action("Index", "Home")'" src="~/images/logo.jpg" />
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1">
+
+            </div>
+        </aside>
+        <!-- END MENU SIDEBAR-->
+        <header class="header-desktop borderless_header">
+            <div class="section__content section__content--p30">
+                <div class="container-fluid">
+                    <div class="header-wrap">
+                        <div class="ban-top menu-banner-margin">
+                            <div class="container">
+                                <div class="top_nav_left">
+                                    <nav class="navbar navbar-default">
+                                        <div class="container-fluid">
+                                            <!-- Brand and toggle get grouped for better mobile display -->
+                                            <div class="navbar-header">
+                                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                                    <span class="sr-only">Toggle navigation</span>
+                                                    <span class="icon-bar"></span>
+                                                    <span class="icon-bar"></span>
+                                                    <span class="icon-bar"></span>
+                                                </button>
+                                            </div>
+                                            <!-- Collect the nav links, forms, and other content for toggling -->
+                                            <div class="collapse navbar-collapse menu--shylock" id="bs-example-navbar-collapse-1">
+                                                <ul class="nav navbar-nav menu__list">
+                                                    <li class="active menu__item menu__item--current">@Html.ActionLink("HOME", "Index", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" }) <span class="sr-only">(current)</span></li>
+
+                                                    <li class=" menu__item">
+                                                        @Html.ActionLink("ABOUT US", "About", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+
+                                                    </li>
+                                                    <li class=" menu__item">
+                                                        @Html.ActionLink("DASHBOARD", "CareTakerDashboard", "CareTaker", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+                                                    </li>
+                                                    
+                                                    <li class=" menu__item">
+                                                        @Html.ActionLink("MY PROFILE", "CareTakerProfile", "CareTaker", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "menu__link" })
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="header-button">
+                            @{Html.RenderAction("CaretakerNotification");}
+                            <div class="account-wrap">
+                                <div class="account-item clearfix js-item-menu">
+                                    <div class="image">
+                                        <img class="submit" onclick="location.href ='@Url.Action("CareTakerProfile", "Home")'" src="~/images/icon/avatar-01.jpg" alt="tranquilcarelogo" />
+                                    </div>
+                                    <div class="content">
+                                        <a class="js-acc-btn" href="#">john doe</a>
+                                    </div>
+                                    <div class="account-dropdown js-dropdown">
+                                        <div class="info clearfix">
+                                            <div class="image">
+                                                <img class="submit" onclick="location.href ='@Url.Action("CareTakerProfile", "Home")'" src="~/images/icon/avatar-01.jpg" alt="tranquilcarelogo" />
+                                            </div>
+                                            <div class="content">
+                                                <h5 class="name">
+                                                    <a href="#">john doe</a>
+                                                </h5>
+                                                <span class="email">johndoe@example.com</span>
+                                            </div>
+                                        </div>
+                                        <div class="account-dropdown__body">
+                                            <div class="account-dropdown__item">
+                                                <a href="#">
+                                                    <i class="zmdi zmdi-account"></i>Account
+                                                </a>
+                                            </div>
+                                            <div class="account-dropdown__item">
+                                                <a href="#">
+                                                    <i class="zmdi zmdi-settings"></i>Setting
+                                                </a>
+                                            </div>
+                                            <div class="account-dropdown__item">
+                                                <a href="#">
+                                                    <i class="zmdi zmdi-money-box"></i>Billing
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="account-dropdown__footer">
+                                            <a href="#">
+                                                <i class="zmdi zmdi-power"></i>Logout
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          
+        </header>
+    </div>
+			<div class="clearfix"></div>
+		
+	
+	<!-- //header-bot -->
+	<!-- banner -->
+
+	<!-- //banner-top -->
+	<!-- banner -->
+	
+	<!-- //banner -->
+	<!-- content -->
+    
+	<div>
+		@RenderBody()
+	</div>
+	
+		<!-- footer -->
+    <div class="footer">
+
+        <div class="container">
+
+            <div class="col-md-3 header-right footer-left">
+                <h2><img class="footerimg submit" onclick="location.href ='@Url.Action("Index", "Home")'" src="~/images/logo.jpg" alt="tranquilcarelogo" /></h2>
+                <ul>
+                    <li><a class="fb" href="#"></a></li>
+                    <li><a class="twi" href="#"></a></li>
+                </ul>
+            </div>
+            <div class="col-md-9 footer-right">
+                <div class="clearfix"></div>
+                <div class="sign-grds">
+
+                    <div class="col-md-2 sign-gd-two"></div>
+                    <div class="col-md-6 sign-gd-two">
+                        <h4>Tranquil Care Inc.</h4>
+                        Address : 240 Duncan Mill Rd , Ste 501, <br><span>Toronto ON-M3B 3S6, Canada.</span>
+
+                    </div>
+                    <div class="col-lg-4 sign-gd-two" style="margin-bottom: 5px;">
+                        <p>Email : <a href="mailto:Info@tranquilcare.ca">Info@tranquilcare.ca</a><br></p>
+                        <p>Fax : +1 416 960 1042<br></p>
+                        <p>Toll Free : +1 800 892 6066   </p>
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <p class="copy-right" style="margin-top: 5px;background-color:#000">© 2018 Tranquil Care Inc. All rights reserved | Design by <a href="http://nirasystems.com/" class="h4-label" target="_blank">NIRA Systems</a></p>
+
+    </div>
+	<!-- //footer -->
+	<!-- login -->
+	<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content modal-info">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body modal-spa">
+					<div class="login-grids">
+						<div class="login">
+							<div class="login-bottom">
+								<h3>Sign up for free</h3>
+								<form>
+									<div class="sign-up">
+										<h4>Email :</h4>
+										<input type="text" value="Type here" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Type here';}" required="">
+									</div>
+									<div class="sign-up">
+										<h4>Password :</h4>
+										<input type="password" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" required="">
+
+									</div>
+									<div class="sign-up">
+										<h4>Re-type Password :</h4>
+										<input type="password" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" required="">
+
+									</div>
+									<div class="sign-up">
+										@Html.ActionLink("REGISTER NOW", "CaretakerRegistration", "Home", routeValues: null, htmlAttributes: new { id = "loginLink",@class= "item_add single-item hvr-outline-out button2" })
+										
+									</div>
+
+								</form>
+							</div>
+							<div class="login-right">
+								<h3>Sign in with your account</h3>
+								<form>
+									<div class="sign-in">
+										<h4>Email :</h4>
+										<input type="text" value="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Type here';}" required="">
+									</div>
+									<div class="sign-in">
+										<h4>Password :</h4>
+										<input type="password" value="Password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" required="">
+										<a href="#">Forgot password?</a>
+									</div>
+									<div class="single-bottom">
+										<input type="checkbox" id="brand" value="">
+										<label for="brand"><span></span>Remember Me.</label>
+									</div>
+									<div class="sign-in">
+										<input type="submit" value="SIGNIN">
+									</div>
+								</form>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<p>By logging in you agree to our <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="~/css/Dashboard_css/wow/wow.min.js"></script>
+    <script src="~/css/Dashboard_css/animsition/animsition.min.js"></script>
+    <script src="~/build/js/custom.js"></script>
+    <script src="~/css/Dashboard_css/chartjs/Chart.bundle.min.js"></script>
+    <script src="~/js/main.js"></script>
+</body>
+
+
+</html>

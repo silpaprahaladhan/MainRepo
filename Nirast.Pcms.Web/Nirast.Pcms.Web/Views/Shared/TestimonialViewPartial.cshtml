@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.Testimonial>
+<div id="clientCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Carousel indicators -->
+    @if (Model != null)
+    {
+        <ol class="carousel-indicators">
+
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                var classStyle = (i == 0) ? "active" : "";
+                <li data-target="#clientCarousel" data-slide-to="@(i)" class="@classStyle"></li>
+            }
+        </ol>
+    <!-- Wrapper for carousel items -->
+        <div class="container">
+
+            <div class="carousel-inner">
+                @{ int index = 0;}
+                @foreach (var item in Model)
+                {
+
+                    var classStyle = (index == 0) ? "active" : "";
+                <div class="item carousel-item @classStyle">            
+                    <p class="testimonial">@item.Description</p>
+                    <p class="overview"><b>@item.ClientName @item.Designation</b><a href="@(item.URL.Contains("http")?item.URL:"http://"+item.URL)" target="_blank">@item.URL</a></p>
+                    <div class="star-rating">
+                        <ul class="list-inline">
+                            @for (int i = 1; i <= 5; i++)
+                                {
+                                    var style = (i <= item.Rating) ? "fa fa-star" : "fa fa-star-o";
+                            <li class="list-inline-item"><i class="@(style)"></i></li>
+                                }
+                        </ul>
+                    </div>
+                </div>
+                    index++;
+                }
+            </div>
+
+        </div>
+                    }
+    <!-- Carousel controls -->
+    <a class="carousel-control left carousel-control-prev" href="#clientCarousel" data-slide="prev">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    <a class="carousel-control right carousel-control-next" href="#clientCarousel" data-slide="next">
+        <i class="fa fa-angle-right"></i>
+    </a>
+</div>

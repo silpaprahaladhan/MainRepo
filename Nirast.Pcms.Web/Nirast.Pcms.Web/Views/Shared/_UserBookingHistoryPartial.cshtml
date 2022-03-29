@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Nirast.Pcms.Web.Models.BookingHistoryViewModel>
+<h2 class="title-1 m-b-25 h4-label">Booking History</h2>
+<div class="table-responsive  m-b-40">
+    <table class="table table-borderless table-striped table-earning">
+        <thead>
+            <tr>
+                <th>date</th>
+                <th>Caregiver</th>
+                <th>Profile Id</th>
+                <th>Service</th>
+                <th class="text-right">Rate</th>
+                <th class="text-right">Status</th>
+                @*<th class="text-right">total</th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.BookingDateString</td>
+                        <td>@item.BookedCaretaker</td>
+                        <td>@item.BookedCaretakerProfileId</td>
+                        <td>@item.BookedService</td>
+
+                        <td class="text-right">$@item.ServiceRate</td>
+                        <td class="text-right">@item.BookingStatus</td>
+                    </tr>
+                }
+            }
+            </tbody>
+    </table>
+</div>

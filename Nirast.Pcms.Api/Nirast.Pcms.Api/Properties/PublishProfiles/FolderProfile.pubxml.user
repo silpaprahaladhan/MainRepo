@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>E:\PUBS\PCMS\API</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="ApplicationInsights.config">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>03/24/2020 17:37:44</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.pdb">
+      <publishTime>03/24/2020 17:37:44</publishTime>
+    </File>
+    <File Include="bin/ApplicationInsights.config">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="bin/Autofac.dll">
+      <publishTime>03/24/2020 17:37:44</publishTime>
+    </File>
+    <File Include="bin/Autofac.Integration.WebApi.dll">
+      <publishTime>03/24/2020 17:37:44</publishTime>
+    </File>
+    <File Include="bin/Autofac.Integration.WebApi.pdb">
+      <publishTime>03/24/2020 17:37:44</publishTime>
+    </File>
+    <File Include="bin/Dapper.dll">
+      <publishTime>03/24/2020 17:37:44</publishTime>
+    </File>
+    <File Include="bin/EmailTemplates/BookingInvoicePayment.html">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="bin/EmailTemplates/EmailVerificationLink.html">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>03/24/2020 17:37:44</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.SqlServer.dll">
+      <publishTime>03/24/2020 17:37:44</publishTime>
+    </File>
+    <File Include="bin/itextsharp.dll">
+      <publishTime>03/24/2020 17:37:56</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.Agent.Intercept.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.DependencyCollector.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.PerfCounterCollector.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.ServerTelemetryChannel.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.Web.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AI.WindowsServer.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.ApplicationInsights.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.Identity.Core.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.Identity.EntityFramework.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.Identity.Owin.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.TelemetryCorrelation.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Host.SystemWeb.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Cookies.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Facebook.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Google.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.MicrosoftAccount.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.OAuth.dll">
+      <publishTime>03/24/2020 17:37:54</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Owin.Security.Twitter.dll">
+      <publishTime>03/24/2020 17:37:54</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>03/24/2020 17:37:54</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>03/24/2020 17:37:54</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Ap.Application.dll">
+      <publishTime>11/02/2020 11:06:21</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Ap.Application.dll.config">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Ap.Application.pdb">
+      <publishTime>11/02/2020 11:06:21</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Api.Data.dll">
+      <publishTime>11/02/2020 11:06:20</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Api.Data.pdb">
+      <publishTime>11/02/2020 11:06:20</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Api.dll">
+      <publishTime>11/02/2020 11:06:25</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Api.dll.config">
+      <publishTime>05/28/2020 15:52:40</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Api.Logger.dll">
+      <publishTime>11/02/2020 11:06:20</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Api.Logger.pdb">
+      <publishTime>11/02/2020 11:06:20</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Api.pdb">
+      <publishTime>11/02/2020 11:06:25</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Api.Sdk.dll">
+      <publishTime>11/02/2020 11:06:19</publishTime>
+    </File>
+    <File Include="bin/Nirast.Pcms.Api.Sdk.pdb">
+      <publishTime>11/02/2020 11:06:19</publishTime>
+    </File>
+    <File Include="bin/Owin.dll">
+      <publishTime>03/24/2020 17:37:54</publishTime>
+    </File>
+    <File Include="bin/Serilog.dll">
+      <publishTime>03/24/2020 17:37:54</publishTime>
+    </File>
+    <File Include="bin/Serilog.pdb">
+      <publishTime>03/24/2020 17:37:54</publishTime>
+    </File>
+    <File Include="bin/Serilog.Settings.AppSettings.dll">
+      <publishTime>03/24/2020 17:37:56</publishTime>
+    </File>
+    <File Include="bin/Serilog.Sinks.File.dll">
+      <publishTime>03/24/2020 17:37:56</publishTime>
+    </File>
+    <File Include="bin/System.Diagnostics.DiagnosticSource.dll">
+      <publishTime>03/24/2020 17:37:56</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>03/24/2020 17:37:50</publishTime>
+    </File>
+    <File Include="bin/System.Web.Cors.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.Cors.dll">
+      <publishTime>03/24/2020 17:37:50</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>03/24/2020 17:37:50</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.Owin.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>03/24/2020 17:37:50</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>03/24/2020 17:37:48</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>03/24/2020 17:37:52</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>03/24/2020 17:37:56</publishTime>
+    </File>
+    <File Include="Content/bootstrap-grid.css">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap-grid.css.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap-grid.min.css">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap-grid.min.css.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap-reboot.css">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap-reboot.css.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap-reboot.min.css">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap-reboot.min.css.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap.css">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap.css.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap.min.css">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/bootstrap.min.css.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Content/Site.css">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="EmailTemplates/BookingInvoicePayment.html">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="EmailTemplates/EmailCommon.html">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="EmailTemplates/EmailVerificationLink.html">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="EmailTemplates/VerifyTemplete.html">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="favicon.ico">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="LogFiles/PCMSLogger.log">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Logs/Nira.Pcms.Api.log">
+      <publishTime>10/20/2020 19:35:34</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.bundle.js">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.bundle.js.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.bundle.min.js">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.bundle.min.js.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.js">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.js.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.min.js">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.min.js.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/esm/popper-utils.js">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/esm/popper-utils.js.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/esm/popper-utils.min.js">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/esm/popper-utils.min.js.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/esm/popper.js">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/esm/popper.js.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/esm/popper.min.js">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/esm/popper.min.js.map">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.3.1.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.3.1.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.3.1.min.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.3.1.slim.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.3.1.slim.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.3.1.slim.min.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/modernizr-2.6.2.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/modernizr-2.8.3.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/popper-utils.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/popper-utils.js.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/popper-utils.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/popper-utils.min.js.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/popper.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/popper.js.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/popper.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/popper.min.js.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/README.md">
+      <publishTime>03/24/2020 17:37:40</publishTime>
+    </File>
+    <File Include="Scripts/respond.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/respond.matchmedia.addListener.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/respond.matchmedia.addListener.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/respond.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/umd/popper-utils.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/umd/popper-utils.js.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/umd/popper-utils.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/umd/popper-utils.min.js.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/umd/popper.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/umd/popper.js.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/umd/popper.min.js">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Scripts/umd/popper.min.js.map">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Views/Home/Index.cshtml">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Views/Shared/Error.cshtml">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>03/24/2020 17:37:42</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>11/02/2020 11:06:26</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,31 @@
+﻿@using Nirast.Pcms.Web.Models;
+@model CompanyProfile
+
+<div class="col-md-3 footer-left">
+    <h2><img class="footerimg submit" onclick="location.href ='@Url.Action("Index", "Home")'" src="data:image;base64,@(Model != null?System.Convert.ToBase64String(Model.Logo): "")" alt="logo" /></h2>
+</div>
+<div class="col-md-9 footer-right">
+    <div class="clearfix"></div>
+    <div class="sign-grds">
+
+        <div class="col-md-2 sign-gd-two"></div>
+        <div class="col-md-6 sign-gd-two">
+            <h4>Tranquil Care Inc.</h4>
+            Address : @(Model != null ? Model.AddressLine : "NA,") <br><span>@(Model != null ? Model.City + "," : "NA,") @(Model != null ? Model.State : "NA-")@(Model != null ? "-" + Model.Zipcode + "," : "NA,") @(Model != null ? Model.Country + "." : " NA.")</span>
+
+        </div>
+        <div class="col-lg-4 sign-gd-two" style="margin-bottom: 5px;">
+            <p>
+                <a href="https://www.facebook.com/Tranquil-Care-Inc-1393884644168343/" target="_blank"><i class="fa fa-facebook-square fa-lg" aria-hidden="true"></i></a>
+                <a href="https://twitter.com/IncTranquil/" target="_blank"><i class="fa fa-twitter-square fa-lg" aria-hidden="true"></i></a>
+                <a href="https://www.instagram.com/tranquilcareinc/" target="_blank"><i class="fa fa-instagram fa-lg" aria-hidden="true"></i></a>
+                
+            </p>
+            <p>Email : <a href="mailto:@(Model != null? Model.EmailAddress: "NA")">@(Model != null ? Model.EmailAddress : "NA")</a><br></p>
+            <p>Fax : @(Model != null ? Model.Fax : "NA")<br></p>
+            <p>Toll Free : @(Model != null ? Model.PhoneNo1 : "NA") </p>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
